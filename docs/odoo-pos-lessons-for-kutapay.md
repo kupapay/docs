@@ -235,7 +235,7 @@ pos_session ──┬── pos_order ──────────┬── or
 
 **Non-negotiable fields** that Odoo does not have:
 - `fiscal_number` — assigned by USB device, never by POS software
-- `device_id` — DEF NID, identifies the fiscal authority
+- `device_id` — DEF NID, identifies the fiscal device
 - `auth_code` — cryptographic signature from secure element
 - `timestamp` — trusted time from device RTC
 - `hash_chain_prev` — hash of previous invoice for chain integrity
