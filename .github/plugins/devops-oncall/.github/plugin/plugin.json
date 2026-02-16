@@ -1,0 +1,42 @@
+{
+  "name": "devops-oncall",
+  "description": "A focused set of prompts, instructions, and a chat mode to help triage incidents and respond quickly with DevOps tools and Azure resources.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Awesome Copilot Community"
+  },
+  "repository": "https://github.com/github/awesome-copilot",
+  "license": "MIT",
+  "tags": [
+    "devops",
+    "incident-response",
+    "oncall",
+    "azure"
+  ],
+  "display": {
+    "ordering": "manual",
+    "show_badge": true
+  },
+  "items": [
+    {
+      "path": "prompts/azure-resource-health-diagnose.prompt.md",
+      "kind": "prompt"
+    },
+    {
+      "path": "instructions/devops-core-principles.instructions.md",
+      "kind": "instruction"
+    },
+    {
+      "path": "instructions/containerization-docker-best-practices.instructions.md",
+      "kind": "instruction"
+    },
+    {
+      "path": "agents/azure-principal-architect.agent.md",
+      "kind": "agent"
+    },
+    {
+      "path": "prompts/multi-stage-dockerfile.prompt.md",
+      "kind": "prompt"
+    }
+  ]
+}
