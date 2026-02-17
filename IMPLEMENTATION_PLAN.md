@@ -608,7 +608,8 @@ Include Mermaid deployment diagram.
 
 ### TASK-019: Offline-first sync design
 ```
-Status:     READY (after TASK-018)
+Status:     DONE (after TASK-018)
+Completed:  2026-02-17
 Depends:    TASK-018
 Agent:      @gem-documentation-writer
 Sources:    spec/architecture-kutapay-system-1.md,
