@@ -285,7 +285,8 @@ Document the major data flows:
 
 ### TASK-008: Excalidraw system diagram (optional, visual)
 ```
-Status:     READY (after TASK-001)
+Status:     DONE (after TASK-001)
+Completed:  2026-02-17
 Depends:    TASK-001
 Agent:      excalidraw-diagram-generator skill
 Sources:    spec/architecture-kutapay-system-1.md
