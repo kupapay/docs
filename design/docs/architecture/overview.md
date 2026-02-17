@@ -4,100 +4,116 @@ title: Architecture Overview
 
 # Architecture Overview
 
-This page gives new developers a grounding in the Bono Pay system: the POS clients that operate in untrusted spaces, the trusted USB Fiscal Memory device that enforces compliance, and the cloud services that consolidate audit data and relay sealed invoices to the DGI. The text below draws directly from the architecture specification, the technical design brief, and the Copilot instructions so that everyone touching the docs stays aligned with the trust boundary, offline-first, and security-element requirements.
+Bono Pay is fiscal invoicing infrastructure for the DRC. This page explains the cloud-first architecture that treats the Cloud Signing Service as the trusted authority, keeps clients in the untrusted zone, and preserves offline behavior inspired by the Odoo lessons (PWA, service workers, IndexedDB queues). We describe who interacts with Bono Pay, why the trust boundary matters, and how the layered components work together to produce sealed invoices, reports, and DGI-ready data.
 
 ## System Context (C4)
 
-Developers joining the project must know who depends on Bono Pay and what the platform communicates outward. Cashiers, outlet owners, and auditors interact with the platform directly, while sealed invoices leave the platform only once they are ready for the DGI or payment providers. This C4 context diagram keeps that actor-level view front and center.
+Merchants, developers, and auditors rely on Bono Pay to fiscalize commerce, document every fiscal event, and surface auditable reports, while the platform shares sealed invoices with the DGI and notifies payment partners about settlement status. The context diagram keeps these actors, the Bono Pay Platform services, and the external systems visible so newcomers can trace how requests flow from the client to the fiscal authority.
 
 ```mermaid
 flowchart LR
-    Cashier["Cashier / Teller"]
-    Owner["Outlet Owner"]
+    Merchant["Merchant / Finance Team"]
+    Developer["Developer / Integration"]
     Auditor["Auditor / Regulator"]
-    Bono Pay["Bono Pay Platform\n(POS + Fiscal Service + Cloud)"]
-    DGI["DGI MCF / e-MCF"]
-    PaymentProviders["Payment Providers"]
-    Cashier -->|Issues fiscal invoice| Bono Pay
-    Owner -->|Monitors compliance| Bono Pay
-    Auditor -->|Requests reports & audits| Bono Pay
-    Bono Pay -->|Sealed invoice upload| DGI
-    Bono Pay -->|Payment events + status| PaymentProviders
+    BonoPay["Bono Pay Platform\n(Invoicing API + Dashboard + Cloud Signing + Sync)"]
+    DGI["DGI (MCF / e-MCF)"]
+    Payment["Payment Providers"]
+    Merchant -->|Creates invoices & monitors dashboards| BonoPay
+    Developer -->|Builds API/SDK integrations| BonoPay
+    Auditor -->|Requests Z/X/A/audit exports| BonoPay
+    BonoPay -->|Sealed invoice + security elements| DGI
+    BonoPay -->|Payment status, webhooks, receipts| Payment
 ```
 
 ## Trust Boundary
 
-The USB Fiscal Memory device is the only trusted execution point: it validates canonical payloads, increments the monotonic counter, signs the invoice, stores it immutably, and returns the security elements (fiscal number, device ID, signature, timestamp, QR). All POS/Cloud services, even the local fiscal service trusted to serialize commands, remain in the untrusted zone and must never claim those security elements as their own.
-
-!!! warning "Trust boundary enforcement"
-    Never let the POS or cloud fabric fabricate fiscal numbers, signatures, device IDs, or timestamps. The USB Fiscal Memory device is the sole source of truth; every canonical payload must be serialized, sent via the PREPARE → COMMIT handshake, and the sealed invoice (fiscal response) returned before any receipt is printed or uploaded.
-
-### Trust boundary diagram
+The Cloud Signing Service (HSM-backed) is the sole trusted component in Phase 1. All client applications stay untrusted: Web Dashboard (PWA), API consumers, SDKs, and future POS terminals prepare canonical payloads (mandated identifiers, deterministic field ordering, 14 DGI tax groups), queue them locally when offline, and send them to Bono Pay Cloud. The Cloud Signing Service validates the payload, consults the Tax Engine, coordinates with the Monotonic Counter Manager, and produces the five security elements (fiscal number, fiscal authority ID, authentication code, trusted timestamp, QR payload) before returning a sealed response. Clients may only display or deliver those elements and must never fabricate them.
 
 ```mermaid
 flowchart LR
-    subgraph Untrusted Zone
-        POSApp[POS App + Sync Queue]
-        FiscalService["Local Fiscal Service<br/>tokenizes PREPARE/COMMIT"]
+    subgraph "Untrusted Zone"
+        Dashboard["Web Dashboard (PWA)"]
+        API["API Consumers"]
+        SDK["SDK & Libraries"]
+        FuturePOS["Future POS / Terminals"]
     end
-    subgraph Trusted Zone
-        USBDevice[USB Fiscal Memory Device]
+    subgraph "Trusted Zone"
+        Signer["Cloud Signing Service (HSM)"]
+        Tax["Tax Engine"]
+        Counter["Monotonic Counter Manager"]
+        Ledger["Fiscal Ledger"]
+        Reports["Report Generator (Z/X/A + audit)"]
+        Sync["Sync Agent"]
     end
-    POSApp -->|Canonical payload\n(outlet_id + pos_terminal_id + cashier_id)| FiscalService
-    FiscalService -->|PREPARE / COMMIT\n〈nonce, deterministic JSON〉| USBDevice
-    USBDevice -->|Fiscal response\n(fiscal_number, auth_code, timestamp, QR)| FiscalService
-    FiscalService -->|Sealed response / receipt print| POSApp
-    USBDevice -->|Reports (Z/X/A + audit export)| POSApp
+    Dashboard -->|Canonical payload + queued invoices| Signer
+    API -->|Invoice requests| Signer
+    SDK -->|Queued drafts & retries| Signer
+    FuturePOS -->|API-level integration| Signer
+    Counter --> Signer
+    Tax --> Signer
+    Signer --> Ledger
+    Ledger --> Reports
+    Ledger --> Sync
+    Reports --> Sync
+    Sync -->|Sealed payload uploads| DGI["DGI (MCF / e-MCF)"]
 ```
+
+!!! note
+    The trust boundary is enforced by the Cloud Signing Service (HSM) in Phase 1. Phase 3 reserves a role for the archived USB Fiscal Memory device as an optional trust anchor, but until DEF homologation is required the cloud produces and stores every security element. Clients can only report back statuses (`fiscalized`, `queued`, `synced`) via the API/Webhooks or the dashboard indicators.
 
 ## Component Map
 
-The layered component map spells out responsibilities: the POS layer collects items and tax details, the fiscal service mediates multi-terminal concurrency and serializes canonical payloads, the USB device enforces cryptographic seals and journaling, and the cloud layer stores sealed invoices, syncs when connectivity returns, and surfaces dashboards. The Mermaid map below emphasizes how data flows from the cashier through these layers.
+The Bono Pay platform is composed of four layers: clients that originate invoices, platform services that normalize and secure requests, the fiscal core where signing happens, and external integrations that consume sealed data. The component diagram below highlights how sales data flows from dashboards or SDKs into canonical serializers, travels through multi-user policies, reaches the Cloud Signing Service, and finally feeds the fiscal ledger, reports, and sync agents.
 
 ```mermaid
 graph LR
-    subgraph POS Layer
-        SaleEntry[Sale Entry + Tax UI]
-        ReceiptPrinter[Receipt Printer]
-        SyncQueue[Sync Queue]
-        TaxUI[Tax Engine UI]
+    subgraph "Client Layer"
+        Dashboard["Web Dashboard (PWA)"]
+        APICl["API Consumers"]
+        SDKs["SDK & Libraries"]
+        Mobile["Mobile App (PWA)"]
+        FuturePOS["Future POS / Terminals"]
     end
-    subgraph Fiscal Service
-        CanonicalSerializer[Canonical Serializer]
-        MultiTermMediator[Multi-Terminal Mediator]
-        DeviceProxy[Device Proxy]
-        TaxCalculation[Tax Calculation Engine]
+    subgraph "Platform Services"
+        Canonical["Canonical Serializer"]
+        Invoicing["Invoicing API"]
+        TaxEngine["Tax Calculation Engine"]
+        MultiAccess["Multi-User Access Control (API keys, roles, outlets)"]
+        Delivery["Receipt Delivery (email/WhatsApp/PDF/print)"]
     end
-    subgraph USB Device
-        SchemaValidator[Schema Validator]
-        MonotonicCounter[Monotonic Counter]
-        Signer[ECDSA Signer]
-        HashJournal[Hash-Chained Journal]
-        RTC["RTC / Trusted Timestamp"]
-        ReportGen["Report Generator: Z/X/A + audit"]
+    subgraph "Fiscal Core (Trusted)"
+        Signer["Cloud Signing Service (HSM)"]
+        Counter["Monotonic Counter Manager"]
+        Ledger["Hash-Chained Fiscal Ledger"]
+        Reports["Report Generator (Z/X/A + audit)"]
     end
-    subgraph Cloud Layer
-        CloudAPI[Cloud API & Device Registry]
-        SyncEngine[Sync Engine + Invoice Store]
-        Dashboard[Dashboard]
+    subgraph "External"
+        SyncAgent["DGI Sync Agent"]
+        Payment["Payment Gateway / Notification Service"]
     end
 
-    SaleEntry --> TaxCalculation
-    SaleEntry --> CanonicalSerializer
-    TaxUI --> CanonicalSerializer
-    CanonicalSerializer --> MultiTermMediator
-    MultiTermMediator --> DeviceProxy
-    DeviceProxy --> SchemaValidator
-    SchemaValidator --> MonotonicCounter
-    SchemaValidator --> Signer
-    Signer --> HashJournal
-    HashJournal --> ReportGen
-    HashJournal --> SyncEngine
-    ReportGen --> Dashboard
-    SyncEngine --> CloudAPI
-    CloudAPI --> Dashboard
+    Dashboard --> Canonical
+    APICl --> Canonical
+    SDKs --> Canonical
+    Mobile --> Canonical
+    FuturePOS --> Canonical
+    Canonical --> Invoicing
+    MultiAccess --> Invoicing
+    Invoicing --> TaxEngine
+    TaxEngine --> Signer
+    Canonical --> Signer
+    Signer --> Counter
+    Signer --> Ledger
+    Ledger --> Reports
+    Reports --> Delivery
+    Delivery --> Payment
+    Ledger --> SyncAgent
 ```
 
 ## Operational Notes
 
-This architecture must stay offline-first: the local fiscal service queues canonical payloads, negotiates PREPARE/COMMIT with the USB device, and only after receiving the fiscal response does it let the POS print or sync. Multi-terminal outlets rely on the mediator to prevent nonce reuse and to tag every payload with `outlet_id`, `pos_terminal_id`, and `cashier_id` before the USB device increments its per-outlet counter. The cloud layer stores sealed invoices, uploads them in arrival order when connectivity returns, and exposes dashboards/reports to auditors. Every sealed invoice still includes the five mandatory security elements sourced from the trusted device, not the POS.
+- **Offline resilience:** Clients use IndexedDB/SQLite queues, service workers, and other Odoo-inspired PWA patterns so tablets can keep capturing invoices even when disconnected. Queued payloads include canonical identifiers (`merchant_nif`, `outlet_id`, `pos_terminal_id`, `cashier_id`, `client`, `tax_groups`, `totals`, `payments`) plus metadata about the user or API key. When connectivity returns, invoices are retried against the Invoicing API and fiscalized by the Cloud Signing Service.
+- **Sequential numbering:** The Monotonic Counter Manager enforces serializable isolation per outlet, so every tenant sees strictly increasing fiscal numbers even under concurrent crews, multi-user dashboards, or SDK threads.
+- **Security elements & reporting:** The Cloud Signing Service (HSM) never hands out fiscal numbers, signatures, timestamps, or QR payloads to clients; it stores the sealed events in the hash-chained ledger, feeds the Report Generator with Z/X/A/audit exports, and surfaces ledger hashes for compliance reviews.
+- **Sync & notifications:** The Sync Agent uploads sealed invoices to the DGI (MCF/e-MCF) and exposes statuses via webhook notifications plus the dashboard's green/yellow/red telemetry. Payment Providers receive delivery updates but never see confidential signing secrets.
+- **Phase 3 reminder:** When DEF homologation is required, the archived USB Fiscal Memory device takes over signing for that outlet, but the cloud ledger continues to mirror its outputs for auditability. Until then, the Bono Pay Cloud remains the trusted fiscal authority that developers and finance teams rely on.

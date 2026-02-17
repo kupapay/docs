@@ -373,7 +373,8 @@ Update the remaining spec files to reflect the pivot:
 
 ### TASK-008: Rewrite architecture overview
 ```
-Status:     READY (after TASK-006)
+Status:     DONE
+Completed:  2026-02-17
 Depends:    TASK-006
 Agent:      manual
 Sources:    design/docs/architecture/overview.md (current), spec/architecture-kutapay-system-1.md (updated),
