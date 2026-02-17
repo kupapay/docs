@@ -421,7 +421,8 @@ Heavy rewrite for software-first trust boundary:
 
 ### TASK-010: Rewrite component map
 ```
-Status:     READY (after TASK-008)
+Status:     DONE
+Completed:  2026-02-17
 Depends:    TASK-008
 Agent:      manual
 Sources:    design/docs/architecture/components.md (current), design/docs/architecture/overview.md (updated)

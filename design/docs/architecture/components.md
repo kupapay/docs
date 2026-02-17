@@ -1,125 +1,140 @@
 # Component Map
 
-This page captures the actors and services that hold Bono Pay together. The goal is to make every dependency and input/output explicit so new engineers can see how the untrusted POS, the trusted USB Fiscal Memory device, and the cloud sync terrain collaborate to satisfy the EARS requirements in `spec/architecture-kutapay-system-1.md`.
+This page records the layered services, actors, and dependencies that deliver Bono Pay's software-first invoicing platform. It highlights how untrusted clients feed canonical payloads into the platform services, how the trusted fiscal core seals invoices, and how cloud infrastructure stores, syncs, and observes every fiscal event.
 
-!!! warning "Trust boundary reminder"
-    The USB Fiscal Memory device is the only component that grades, signs, numbers, and timestamps invoices. Everything else runs in the untrusted zone and must treat device responses as the single source of truth.
+!!! note "Phase 1 trust boundary"
+    The Cloud Signing Service (HSM-backed) is the only trusted component in Phase 1. Clients (dashboard, API consumers, SDKs, and future POS integrations) remain untrusted, and every security element (fiscal number, auth code, timestamp, QR) originates inside the cloud. Phase 3 reserves the archived USB Fiscal Memory device as an optional trust anchor, but until DEF homologation is required the cloud signs and stores every invoice.
 
-## POS Layer Components
+## Client Layer
 
-| Component | Purpose | Inputs | Outputs | Dependencies |
-| --- | --- | --- | --- | --- |
-| Sale Entry | Guides the cashier through the invoice, ensuring every line item, price, quantity, and client classification is captured. | Merchant input, Product Catalog metadata, Tax Engine UI configuration, Multi-Terminal Mediator throttling. | Raw transaction record sent to the Tax Calculation Engine and Canonical Serializer. | Product Catalog, Tax Engine UI, Multi-Terminal Mediator. |
-| Receipt Printer | Produces the customer-facing fiscal receipt (paper or digital) once the USB device approves the invoice. | Fiscal response (fiscal number, device ID, auth code, timestamp, QR) from the USB device, Sale Entry layout. | Printed/digital receipt for customer and internal audit copies. | USB Fiscal Memory device, Sale Entry, Sync Queue (for archival). |
-| Sync Queue | Buffers sealed invoices when the network or DGI are unavailable and orders uploads once connectivity returns. | Canonical payload plus fiscal response, device status from the registry. | Ordered requests delivered to the Cloud API/Sync Engine, status updates to the Dashboard. | Cloud API, Device Registry, Sync Engine. |
-| Product Catalog | Stores SKUs, descriptions, tax classifications, and pricing so the POS can reuse them across terminals. | Merchant/ERP imports, dashboard updates. | Enriched items for Sale Entry and Tax Engine UI, trust-labeled tax groups. | Tax Engine UI, Tax Calculation Engine. |
-| Tax Engine UI | Lets operators fine-tune 14 DGI tax groups, client types, rounding rules, and refund policies. | DGI regulatory spec, merchant inputs, Product Catalog links. | Tax definitions consumed by Sale Entry, Fiscal Service, and Cloud reporting. | Product Catalog, spec/architecture-kutapay-system-1.md (14 tax groups). |
+Bono Pay clients live in the untrusted zone. They prepare invoices with deterministic identifiers and tax data, queue drafts while offline, and hand canonical serializers the inputs that the platform services validate and fiscalize.
 
-## Fiscal Service Components
+- `Web Dashboard (PWA)` — Tablet-friendly interface with service workers, IndexedDB queues, simplified invoice entry, and status indicators (green/yellow/red) for fiscalization progress.
+- `API Consumers` — Backend integrations (ERPs, e-commerce, ERP connectors) that call the Invoicing API with canonical payloads, metadata (merchant_nif, outlet_id, pos_terminal_id), and source headers.
+- `SDK & Libraries` — JavaScript/Python/PHP clients that enforce canonical ordering, handle offline queues (IndexedDB/SQLite), and surface callbacks for fiscalized/queued/error states.
+- `Mobile App (future PWA)` — Mobile-first UI that reuses the dashboard experience with push notifications and offline-first behavior.
+- `POS Integrations (Phase 2 preview)` — Legacy POS systems that will plug into the SDKs and delegate signing requests to Bono Pay Cloud instead of local hardware.
 
-| Component | Purpose | Inputs | Outputs | Dependencies |
-| --- | --- | --- | --- | --- |
-| Device Proxy | Marshals canonical payloads into PREPARE/COMMIT USB CDC commands, handles retries, and routes responses back to POS. | Canonical JSON, nonce life cycle from the mediator, device health. | Framed USB commands, fiscal responses, error notifications for the POS. | Multi-Terminal Mediator, USB device, Sync Queue. |
-| Tax Calculation Engine | Computes amounts for each DGI tax group, supports void/refund flags, and generates the totals that the device must sign. | Sale Entry data, Product Catalog tax tags, Tax Engine UI settings. | Structured tax breakdown handed to the Canonical Serializer and Hash-Chained Journal. | Tax Engine UI, Product Catalog. |
-| Canonical Serializer | Builds deterministic JSON with merchant/client IDs, itemized lines, tax breakdown, and outlet/POS/cashier metadata. | Sale Entry capture, Tax Calculation Engine output, Device Registry IDs. | Canonical payload sent to the Device Proxy for PREPARE. | Tax Calculation Engine, Device Registry, Multi-Terminal Mediator. |
-| Multi-Terminal Mediator | Coordinates simultaneous terminals, enforces nonce-based two-phase commit (PREPARE → COMMIT), and queues payloads so the trusted device is never overwhelmed. | Concurrent canonical payloads, device health from the registry, USB readiness. | Serialized request stream, conflict alerts, backlog telemetry. | Device Proxy, Device Registry, Sync Queue. |
+## Platform Services Layer
 
-## USB Device Components
+Platform services normalize, secure, and route every request before the fiscal core signs it. They convert raw user input into deterministic payloads, enforce multi-user policies, apply the tax engine, and deliver receipts.
 
-| Component | Purpose | Inputs | Outputs | Dependencies |
-| --- | --- | --- | --- | --- |
-| Schema Validator | Rejects malformed payloads before counters advance, ensuring the device never accepts sketchy invoices. | Canonical JSON payload from the Device Proxy. | Accept/reject signal, diagnostic code for the POS. | Device Proxy, Tax Calculation Engine. |
-| Monotonic Counter | Supplies the next fiscal number in strict sequence for each outlet, preventing gaps or duplicate numbers. | Prepared PREPARE state once the schema passes. | Fiscal number appended to the response and journal entry. | Hash-Chained Journal, RTC. |
-| ECDSA Signer | Runs in the secure element to sign the journal entry and produce the authentication code (auth_code). | Hashed invoice data, counter, trusted timestamp. | Auth code stored in the journal and returned to the POS. | RTC, secure element hardware. |
-| Hash-Chained Journal | Appends every invoice, void, and refund entry with a pointer to the previous hash so audits can prove immutability. | Signed entries (counter, timestamp, auth_code). | Audit exports, report inputs, ledger proof for DGI. | Monotonic Counter, Report Generator. |
-| RTC | Provides the trusted timestamp every fiscal entry and report references, guarding against back-dating. | Periodic CFG|TIME sync commands from the Cloud. | Timestamp values for responses and journal rows. | Cloud API, Device Proxy. |
-| Report Generator | Streams Z, X, A, and audit exports out of the journal when auditors or merchants request them. | Hash-Chained Journal, device metadata from the registry. | Report payloads delivered over USB commands or to the cloud. | Hash-Chained Journal, Device Registry. |
+- `Canonical Serializer` — Produces deterministic JSON (merchant/outlet identifiers, timestamp, client, items, tax_groups, totals, payments) so the Cloud Signing Service can reproduce hashes and ledger entries.
+- `Invoicing API (REST)` — The developer-facing surface that handles authentication (merchant/outlet-scoped API keys), rate limiting, request validation, and orchestration of tax calculation + signing.
+- `Tax Calculation Engine (14 DGI groups)` — Computes per-tax-group amounts, client classification rules, and rounding adjustments before attaching totals to the canonical payload.
+- `Multi-User Access Control (API keys, roles, outlet scoping)` — Enforces quotas, roles (admin, invoicer, viewer, auditor), and source metadata so only authorized users can fiscalize invoices.
+- `Receipt Delivery (email/WhatsApp/PDF/print)` — Renders sealed invoices with fiscal numbers, auth codes, timestamps, and QR payloads for immediate customer delivery.
 
-## Cloud Layer Components
+## Fiscal Core Layer (trusted)
 
-| Component | Purpose | Inputs | Outputs | Dependencies |
-| --- | --- | --- | --- | --- |
-| Cloud API | Receives sealed invoices from Sync Engine, publishes device configuration, and surfaces health data to dashboards. | Sealed invoices, device heartbeats, merchant queries. | Acknowledgments to Sync Engine, configuration pushes, metrics to Dashboard. | Invoice Store, Device Registry. |
-| Sync Engine | Manages deferred uploads of sealed invoices to the DGI, retries failed transmissions, and tracks synchronization health. | Sync Queue backlog, network availability, DGI responses. | Calls to the DGI endpoint, sync status for the Dashboard, alerts for retries. | Cloud API, Device Registry, DGI credentials. |
-| Invoice Store | Keeps a copy of each sealed invoice, its fiscal response, and DGI reference for replays, audits, and dashboards. | Sealed invoices from Sync Engine, metadata from Device Registry. | Queryable records for Dashboard, DGI reconciliation, and analytics. | Cloud API, Sync Engine. |
-| Device Registry | Tracks which USB devices are paired to which outlets, their firmware, and last sync sync. | Heartbeats from Fiscal Service and direct device pings. | Metadata for the Multi-Terminal Mediator, gating rules for Sync Engine, input to Dashboard. | Cloud API, Dashboard. |
-| Dashboard | Displays device health, upload backlog, report requests, and onboarding guidance so merchant/ops teams can act. | Metrics from Cloud API, invoices from Invoice Store, registry data. | Alerts, onboarding checklists, audit download links. | Cloud API, Device Registry, Invoice Store. |
+The fiscal core contains the Cloud Signing Service and its supporting services that live behind the trust boundary.
 
-## System Component Diagram
+- `Cloud Signing Service (HSM)` — Assigns sequential fiscal numbers, generates authentication codes, anchors trusted timestamps, and builds QR payloads; all operations execute within the HSM so keys never leave the boundary.
+- `Monotonic Counter Manager` — Ensures strictly increasing fiscal numbers per outlet even with concurrent API/SDK/cashier activity via serializable database isolation.
+- `Hash-Chained Fiscal Ledger` — Appends every invoice, void, refund, and report entry with a prev-hash so auditors can verify immutability.
+- `Report Generator (Z/X/A + audit)` — Derives compliance reports from the ledger (fiscal number ranges, auth codes, tax group totals) and surfaces downloads through the dashboard or API.
 
-The diagram below shows how the POS layer, Fiscal Service, USB Fiscal Memory device, and cloud systems interconnect. Canonical payloads traverse the untrusted zone, the trusted device returns fiscal responses, and the cloud syncs sealed invoices to the DGI while providing observability.
+## Cloud Infrastructure Layer
+
+Cloud infrastructure stores sealed invoices, uploads them to the DGI, and gives operators visibility while preserving backups.
+
+- `Sync Agent + Invoice Store` — Queues sealed invoices, retries uploads to the MCF/e-MCF endpoint when connectivity returns, and keeps a copy of every fiscal response for replays or audits.
+- `DGI Integration Agent (MCF / e-MCF)` — Dedicated connector that authenticates to the tax authority, packages sealed payloads, and records acknowledgments (`queued`, `synced`, `failed`).
+- `Merchant & Outlet Registry` — Tracks which merchants, outlets, API keys, and POS integrations are active, their quotas, firmware versions (for future hardware), and metadata required by the fiscal core.
+- `Dashboard & Analytics` — Observability layer for device health, backlog depth, report generation, and sync failures. It consumes metrics from the Invoicing API, Sync Agent, and ledger.
+- `Backup & Archival` — Off-site snapshots of the fiscal ledger, report payloads, and DAG metadata so compliance teams can restore or audit historical data.
+
+## Component Dependency Map
+
+The diagram below shows how the client layer feeds canonical data into the platform services, how the fiscal core seals invoices, and how cloud infrastructure persists and syncs every fiscal event. The labels show the services mentioned above and their calling directions.
 
 ```mermaid
 flowchart LR
-    subgraph "Untrusted POS Layer"
-        ProductCatalog["Product Catalog"]
-        TaxUI["Tax Engine UI"]
-        SaleEntry["Sale Entry"]
-        SyncQueue["Sync Queue"]
-        ReceiptPrinter["Receipt Printer"]
+    subgraph "Client Layer"
+        Dashboard["Web Dashboard (PWA)"]
+        APIConsumers["API Consumers"]
+        SDKs["SDK & Libraries"]
+        MobileApp["Mobile App (future)"]
+        POSIntegrations["POS Integrations (Phase 2)"]
     end
-    subgraph "Fiscal Service"
-        TaxEngine["Tax Calculation Engine"]
-        CanonicalSerializer["Canonical Serializer"]
-        MultiTerminalMediator["Multi-Terminal Mediator"]
-        DeviceProxy["Device Proxy"]
+    subgraph "Platform Services"
+        Canonical["Canonical Serializer"]
+        InvoicingAPI["Invoicing API (REST)"]
+        TaxEngine["Tax Calculation Engine (14 DGI groups)"]
+        MultiAccess["Multi-User Access Control (API keys, roles, outlets)"]
+        Delivery["Receipt Delivery (email/WhatsApp/PDF/print)"]
     end
-    subgraph "Trusted USB Fiscal Memory"
-        USBDevice["USB Device"]
+    subgraph "Fiscal Core (trusted)"
+        CloudSigner["Cloud Signing Service (HSM)"]
+        Counter["Monotonic Counter Manager"]
+        Ledger["Hash-Chained Fiscal Ledger"]
+        Reports["Report Generator (Z/X/A + audit)"]
     end
-    subgraph "Cloud & Audit"
-        SyncEngine["Sync Engine"]
-        CloudAPI["Cloud API"]
-        InvoiceStore["Invoice Store"]
-        DeviceRegistry["Device Registry"]
-        Dashboard["Dashboard"]
+    subgraph "Cloud Infrastructure"
+        SyncAgent["Sync Agent + Invoice Store"]
+        DGI["DGI Integration Agent (MCF / e-MCF)"]
+        Registry["Merchant & Outlet Registry"]
+        Analytics["Dashboard & Analytics"]
+        Backup["Backup & Archival"]
+        Payments["Notification & Payment Partners"]
     end
-    DGI["DGI Tax Authority"]
-
-    ProductCatalog --> SaleEntry
-    TaxUI --> TaxEngine
-    SaleEntry --> TaxEngine
-    SaleEntry --> SyncQueue
-    TaxEngine --> CanonicalSerializer
-    CanonicalSerializer --> MultiTerminalMediator
-    MultiTerminalMediator --> DeviceProxy
-    DeviceProxy --> USBDevice
-    USBDevice --> ReceiptPrinter
-    USBDevice --> SyncQueue
-    SyncQueue --> SyncEngine
-    SyncEngine --> CloudAPI
-    CloudAPI --> InvoiceStore
-    CloudAPI --> Dashboard
-    SyncEngine --> DGI
-    DeviceRegistry --> SyncEngine
-    DeviceRegistry --> MultiTerminalMediator
+    Dashboard --> Canonical
+    APIConsumers --> Canonical
+    SDKs --> Canonical
+    MobileApp --> Canonical
+    POSIntegrations --> Canonical
+    Canonical --> InvoicingAPI
+    MultiAccess --> InvoicingAPI
+    InvoicingAPI --> TaxEngine
+    TaxEngine --> CloudSigner
+    InvoicingAPI --> CloudSigner
+    CloudSigner --> Counter
+    CloudSigner --> Ledger
+    Ledger --> Reports
+    Reports --> Delivery
+    Delivery --> Payments
+    Ledger --> SyncAgent
+    SyncAgent --> DGI
+    Registry --> SyncAgent
+    Registry --> MultiAccess
+    Ledger --> Analytics
+    Analytics --> Backup
+    Reports --> Analytics
+    Payments --> Analytics
 ```
 
-The labelled arrows emphasize the canonical payload, the fiscal response, deferred syncs, and the guarded path to the DGI.
+## Cloud Deployment Diagram
 
-## Deployment Scenarios (Single-terminal vs Multi-terminal)
-
-Single-terminal deployments place one POS directly behind the fiscal service, while multi-terminal deployments keep multiple POS nodes synced through the Multi-Terminal Mediator before they reach the shared USB device. Both paths hand off sealed invoices to the same Sync Queue for cloud upload.
+This deployment diagram emphasizes the cloud services that fiscalize invoices, store them, and sync them to the DGI. Every client hits the Invoicing API, the Cloud Signing Service signs the payload, and the Sync Agent ships the ledger to the tax authority while analytics and payment partners observe the results.
 
 ```mermaid
 flowchart TB
-    subgraph "Single-terminal Deployment"
-        SinglePOS["Single POS Terminal"] --> FiscalServiceSingle["Fiscal Service (single)"]
-        FiscalServiceSingle --> USBDeviceSingle["USB Fiscal Memory"]
-        FiscalServiceSingle --> SyncQueueSingle["Sync Queue"]
+    subgraph "Client Edge"
+        Dashboard["Web Dashboard (PWA)"]
+        SDKs["SDK & Libraries"]
+        APIConsumers["API Consumers"]
     end
-    subgraph "Multi-terminal Deployment"
-        MultiPOSA["POS Terminal A"]
-        MultiPOSB["POS Terminal B"]
-        MultiPOSA --> Mediator["Multi-Terminal Mediator"]
-        MultiPOSB --> Mediator
-        Mediator --> FiscalServiceMulti["Fiscal Service (mediated)"]
-        FiscalServiceMulti --> USBDeviceMulti["USB Fiscal Memory"]
-        FiscalServiceMulti --> SyncQueueMulti["Sync Queue"]
+    subgraph "Cloud Services"
+        InvoicingAPI["Invoicing API (REST)"]
+        CloudSigner["Cloud Signing Service (HSM)"]
+        Ledger["Hash-Chained Fiscal Ledger"]
+        InvoiceStore["Invoice Store"]
+        Reports["Report Generator (Z/X/A + audit)"]
+        SyncAgent["Sync Agent (DGI / e-MCF)"]
+        Analytics["Dashboard & Analytics"]
     end
-    SyncQueueSingle --> CloudAPI2["Cloud API"]
-    SyncQueueMulti --> CloudAPI2
-    CloudAPI2 --> DGI2["DGI Tax Authority"]
+    DGI["DGI (MCF / e-MCF)"]
+    PaymentPartners["Payment & Notification Partners"]
+    Dashboard --> InvoicingAPI
+    SDKs --> InvoicingAPI
+    APIConsumers --> InvoicingAPI
+    InvoicingAPI --> CloudSigner
+    CloudSigner --> Ledger
+    Ledger --> InvoiceStore
+    Ledger --> Reports
+    Reports --> Analytics
+    InvoiceStore --> Analytics
+    Ledger --> SyncAgent
+    SyncAgent --> DGI
+    Reports --> PaymentPartners
 ```
-
-The deployment diagram emphasises how the same trusted device and cloud elevator support both single and multi-terminal outlets, ensuring every canonical payload experiences the PREPARE → COMMIT handshake before syncing.
