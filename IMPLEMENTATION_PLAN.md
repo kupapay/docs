@@ -586,7 +586,8 @@ Include sample report outputs (mock data).
 
 ### TASK-018: Cloud architecture
 ```
-Status:     READY (after TASK-004)
+Status:     DONE (after TASK-004)
+Completed:  2026-02-17
 Depends:    TASK-004
 Agent:      @gem-documentation-writer
 Sources:    spec/architecture-kutapay-system-1.md,
