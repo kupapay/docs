@@ -323,7 +323,8 @@ Rewrite all 7 memory bank files to reflect the pivot:
 
 ### TASK-006: Rewrite architecture specification
 ```
-Status:     READY (after TASK-005)
+Status:     DONE
+Completed:  2026-02-17
 Depends:    TASK-005
 Agent:      manual
 Sources:    spec/architecture-kutapay-system-1.md (current), .github/copilot-instructions.md (updated),
