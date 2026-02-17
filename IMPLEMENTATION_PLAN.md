@@ -690,7 +690,8 @@ Diagrams: single-terminal setup, retail (10 lanes), restaurant (mobile waiters).
 
 ### TASK-022: UI/UX design direction
 ```
-Status:     READY (after TASK-004)
+Status:     DONE (after TASK-004)
+Completed:  2026-02-17
 Depends:    TASK-004
 Agent:      @se-ux-ui-designer + @gem-documentation-writer
 Sources:    docs/odoo-pos-lessons-for-kutapay.md,
