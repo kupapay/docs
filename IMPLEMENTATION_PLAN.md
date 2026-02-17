@@ -409,7 +409,8 @@ Add admonitions for critical rules. Cross-reference ADR-0001.
 
 ### TASK-012: Secure Element deep-dive
 ```
-Status:     READY (after TASK-010)
+Status:     DONE (after TASK-010)
+Completed:  2026-02-17
 Depends:    TASK-010
 Agent:      @gem-documentation-writer + @se-security-reviewer
 Sources:    DISCUSSION.md lines 7285-7400 (SE section),
