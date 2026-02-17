@@ -1,90 +1,68 @@
-# KutaPay — Copilot Instructions
+# Bono Pay — Copilot Instructions
 
 ## What This Project Is
-KutaPay is **fiscal compliance infrastructure** for the Democratic Republic of Congo (DRC). It is NOT an invoicing SaaS — it is the trusted layer that turns commercial activity into legally recognized tax events under DRC's "Facture Normalisée" mandate.
+Bono Pay is **fiscal invoicing infrastructure** for the Democratic Republic of Congo (DRC). It is an API-first invoicing platform (think Stripe Invoices) that seals every commercial activity with the security elements mandated by the Facture Normalisée regime so finance and compliance teams never worry about the underlying trust boundary or fiscalization logic.
 
 The system has two clearly separated halves:
-- **Software (untrusted):** POS application (Odoo-inspired), cloud sync, UI, payments, printing/WhatsApp delivery
-- **Hardware (trusted):** USB Fiscal Memory device — the sole fiscal authority that signs, numbers, timestamps, and immutably stores invoices
+- **Client applications (untrusted):** Web dashboard, REST API consumers, SDK users, and future POS/terminal integrations that prepare canonical payloads, queue work when offline, and deliver signed receipts.
+- **Cloud platform (trusted):** Bono Pay Cloud acts as the fiscal authority in Phase 1. The Cloud Signing Service (HSM-backed) assigns fiscal numbers, signs invoices, timestamps them, and stores them in a hash-chained fiscal ledger before syncing sealed data to the DGI.
 
-## Architecture — Trust Boundary
+## Architecture — Trust Boundary (Phase 1)
 
 ```
-POS/Phone/Tablet (untrusted)  ──canonical payload──►  USB Fiscal Memory (trusted)
-         │                                                    │
-         ▼                                                    │
-   KutaPay Cloud ──sealed invoice──► DGI (Tax Authority)      │
-         ▲                                                    │
-         └────────── fiscal response ─────────────────────────┘
+Client Apps (untrusted)  ──invoice request──►  Bono Pay Cloud (trusted)
+         │                                          │
+         ▼                                          │
+   Web Dashboard / API                              │
+                                                     ├── Cloud Signing Service (HSM)
+                                                     ├── Fiscal Ledger
+   Bono Pay Cloud ──sealed invoice──► DGI           ├── Tax Engine
+                                                     └── Report Generator
 ```
 
-**Key rule:** The USB device never talks to DGI. Only the POS or KutaPay Cloud uploads sealed invoices. The device is per-outlet, not per-cashier — multiple POS terminals share one fiscal authority via local network.
+In Phase 1 the **Cloud Signing Service** is the trusted fiscal authority. Client apps are untrusted. They send canonical payloads (deterministic field order, 14 DGI tax groups, outlet/merchant/user identifiers) to Bono Pay Cloud, which alone signs and numbers invoices before returning the sealed response.
 
-## Core Design Files
-- [kutapay_technical_design.md](../kutapay_technical_design.md) — Architecture, BOM, data structures, API requirements, implementation phases
-- [DISCUSSION.md](../DISCUSSION.md) — Full regulatory analysis, design decisions, competitor analysis, and rationale (12K+ lines of context)
+### Trust boundary rule
+- The Cloud Signing Service (HSM) controls fiscal numbers, signatures, timestamps, and QR codes.
+- Client apps may display or deliver those values but never fabricate them.
+- Invoice mutations (voids, refunds, credit notes) are always new fiscal events; nothing is deleted or altered once sealed.
+- In Phase 3 the **USB Fiscal Memory device** becomes an optional trust anchor for merchants that need DEF homologation, but until then the cloud service owns the trust boundary. Hardware details live in `design/docs-archive/hardware/`.
 
-## Hardware: USB Fiscal Memory
-- USB-C female port, cable-connected (not a dongle)
-- Secure MCU + Secure Element (ATECC608/SE050-class) + Flash + RTC
-- Target COGS: $10–15
-- Inspired by: Italian fiscal memory, African EFDs (Rwanda/Senegal), crypto hardware wallets (Trezor)
-- Must enforce: sequential counters, append-only journal, hash chaining, anti-rollback, secure boot, tamper detection
-- Protocol: USB CDC (virtual serial), two-phase commit (PREPARE → COMMIT), canonical JSON payloads
+## Invoice Lifecycle
+1. Client app (API or dashboard) builds the canonical payload (merchant_nif, outlet_id, terminal_id, cashier_id, client/classification, items, tax_groups, totals, payments, timestamp).
+2. Bono Pay validates the payload, applies the tax engine (14 DGI tax groups + client classification), and enqueues it for signing.
+3. Cloud Signing Service (HSM) assigns the next sequential fiscal number via the Monotonic Counter Manager, signs the payload, timestamps it, and generates the verification QR code.
+4. Fiscal Ledger stores the hash-chained entry (append-only) and the Cloud returns the sealed response (fiscal_number, auth_code, timestamp, qr_payload, fiscal_authority_id).
+5. Client app delivers the receipt via email/WhatsApp/PDF/print while the sealed response is available via the API and dashboard.
+6. Sync Agent uploads the sealed invoice to the DGI (direct MCF/e-MCF) immediately or when connectivity returns. Auditors can query reports (Z/X/A/audit export) generated from the fiscal ledger.
 
-## Invoice Lifecycle (non-negotiable)
-1. POS prepares invoice with items, VAT, totals
-2. POS sends canonical payload to USB device
-3. Device validates, increments counter, signs, stores immutably
-4. Device returns: fiscal number + auth code + timestamp
-5. POS prints/sends receipt with security elements + QR code
-6. POS/Cloud uploads sealed invoice to DGI (immediate or deferred)
+## Security Elements
+Each invoice must include the following elements generated by the **Cloud Signing Service (HSM)** in Phase 1 (Phase 3 still defers to the USB device):
+1. **Sequential fiscal number** — enforced by the Monotonic Counter Manager with serializable database isolation.
+2. **Fiscal authority ID** — identifies the HSM cluster or Cloud Signing Service instance (replaces DEF NID in Phase 1).
+3. **Cryptographic authentication code** — ECDSA signature produced inside the HSM; keys never leave the boundary.
+4. **Trusted timestamp** — UTC timestamp anchored to NTP-synced cloud infrastructure.
+5. **QR code** — encodes fiscal_number, auth_code, timestamp, and verification URL.
 
-**Nothing is ever deleted.** Voids and refunds are new fiscal events referencing the original. Draft cancellations (pre-fiscalization) leave no fiscal trace.
+Clients may display these values and include them in receipts, but they may never attempt to fabricate or modify them.
 
-## Required Invoice Types
-Sale invoice, advance invoice, credit note, export invoice, export credit note
-
-## Required Reports
-Z report (daily closure), X report (periodic), A report (article-level), audit export
-
-## Tax Engine
-Must support **14 DGI-defined tax groups** including: exempt, standard VAT, special regimes, public financing VAT, customs VAT, specific taxes. Client classification is mandatory (individual, company, commercial individual, professional, embassy).
-
-## Security Elements (mandatory on every invoice)
-- Sequential fiscal invoice number (device-controlled)
-- Device ID (DEF NID)
-- Cryptographic authentication code (signature)
-- Trusted timestamp
-- QR code encoding verification data
-
-These must be generated by the trusted fiscal layer, never by the POS alone.
-
-## Offline-First Design
-Offline issuance is mandatory — internet is never an excuse. The device fiscalizes locally; transmission is deferred. Invoices queued in POS/Cloud sync automatically when connectivity returns. The device uses monotonic counters + time anchoring for ordering integrity.
-
-## Multi-Terminal Scaling
-One USB per outlet, not per cashier. For retail (10 lanes) or restaurants (mobile waiters), a local fiscal service mediates between multiple POS clients and one USB device over Wi-Fi/LAN. Each payload includes outlet ID, POS terminal ID, and cashier/waiter ID.
-
-## Current Phase & Strategy
-- **Phase 1:** B2B pilot (service companies, wholesalers, schools) — lower volume, easier compliance
-- **Phase 2:** Retail/restaurants with multi-terminal support
-- **Phase 3:** ERP integrations, large enterprise, national scale
-
-Integration priority: core fiscal API → CSV import/export → accounting export → webhooks → ecommerce plugins → ERP connectors
-
-## Open Unknowns (blocking full implementation)
-- MCF/e-MCF API spec (endpoint, auth, schema, offline rules)
-- Exact signature algorithm and QR payload format
-- Device registration/activation protocol with DGI
-- Key provisioning model (device-generated vs DGI-issued)
+## Phasing
+- **Phase 1 — Software Invoicing (current):** Cloud Signing Service (HSM) is the authoritative fiscal layer. API + dashboard + SDK deliver sealed invoices and reports. Target: B2B pilot (service companies, wholesalers, schools).
+- **Phase 2 — POS & Retail:** POS SDK, multi-user access control, mobile money, and retail UX (reuse Odoo lessons) connect to the same cloud fiscal authority with serialized numbering.
+- **Phase 3 — USB Hardware (archived):** USB Fiscal Memory device (DEF) is introduced for merchants requiring DEF homologation. Cloud still exists to sync, but the device signs invoices locally. Hardware docs live in `design/docs-archive/hardware/` and serve as compliance appendices.
+- **Phase 4 — Enterprise & Integrations:** ERP connectors, fleet management, advanced analytics, and webhook/event streaming on top of the bolstered fiscal platform.
 
 ## Conventions for AI Agents
-- Always respect the trust boundary: POS is untrusted, USB device is the authority
-- Invoice mutations (void/refund) are always new fiscal events, never deletions
-- When designing data models, include: `device_id`, `fiscal_number`, `auth_code`, `timestamp` as mandatory fields
-- Canonical payloads must have deterministic field ordering for reproducible signatures
-- Tax logic must handle all 14 DGI tax groups — do not hardcode a single VAT rate
-- Offline behavior is first-class, not an edge case
-- USB protocol uses two-phase commit; partial states must be handled
-- The device is per-outlet. Never assume one device per user/cashier
+- Always call the product **Bono Pay**, never KutaPay, and refer to it as fiscal invoicing infrastructure (think Stripe Invoices).
+- Respect the trust boundary: client apps are untrusted; the Cloud Signing Service (HSM) is the authority in Phase 1. Phase 3 introduces the optional USB device, but the cloud remains first-class.
+- Invoice mutations (voids, refunds, credit notes) translate into new fiscal events; the ledger is append-only.
+- Canonical payloads must use deterministic field ordering and include mandatory identifiers (`merchant_nif`, `outlet_id`, `pos_terminal_id`, `cashier_id`, `client`, `tax_groups`, `totals`, `payments`).
+- Tax logic must handle all **14 DGI tax groups** and honor client classification (individual, company, commercial individual, professional, embassy). Do not hardcode a single VAT rate.
+- Offline-first behavior is non-negotiable: clients queue invoices locally (IndexedDB/SQLite) and submit them when connectivity returns. Fiscalization happens once the cloud receives the payload.
+- Multi-user multi-terminal scaling: one outlet contains multiple API keys/users, but the Monotonic Counter Manager guarantees serialized fiscal numbering per outlet. Always tag invoices with `outlet_id`, `user_id`/`api_key_id`, and `source`.
+- Use the canonical phrasing: Cloud Signing Service, Fiscal Ledger, Monotonic Counter Manager, Report Generator, Sync Agent. Mention Cloud HSM when describing key protection.
+- When describing diagrams or Mermaid nodes, quote labels with punctuation (e.g., `"Cloud Signing Service (HSM)"`).
+
+## Open Unknowns
+- The DGI MCF/e-MCF endpoint URLs, authentication tokens, and schema remain unpublished — treat them as blockers for the sync layer until clarified.
+- Exact signature algorithm details, QR payload format, device (or service) registration protocol, and key provisioning model remain unresolved. Document assumptions, ask for confirmation, and flag them in future ADRs or specs.

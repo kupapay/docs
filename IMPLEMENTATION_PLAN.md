@@ -262,7 +262,8 @@ Rewrite `design/docs/index.md` to position Bono Pay as fiscal invoicing infrastr
 
 ### TASK-004: Rewrite copilot instructions for invoicing platform
 ```
-Status:     READY (after TASK-003)
+Status:     DONE
+Completed:  2026-02-17
 Depends:    TASK-003
 Agent:      manual
 Sources:    .github/copilot-instructions.md (current), docs/sfe-specifications-v1-summary.md
