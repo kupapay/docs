@@ -1101,7 +1101,8 @@ Save findings to review/architecture-review-findings.md
 
 ### TASK-039: Stress-test assumptions
 ```
-Status:     READY (after TASK-030)
+Status:     DONE (after TASK-030)
+Completed:  2026-02-17
 Depends:    TASK-030
 Agent:      @devils-advocate + @critical-thinking
 Sources:    design/docs/implementation/roadmap.md,
