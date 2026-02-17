@@ -630,7 +630,8 @@ PENDING_SYNC → UPLOADING → ACKNOWLEDGED / RETRY / FAILED.
 
 ### TASK-020: DGI integration (with technical spike)
 ```
-Status:     READY (after TASK-018)
+Status:     DONE (after TASK-018)
+Completed:  2026-02-17
 Depends:    TASK-018
 Agent:      @research-technical-spike + @gem-documentation-writer
 Sources:    docs/sfe-specifications-v1-summary.md,
