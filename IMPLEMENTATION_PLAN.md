@@ -464,7 +464,8 @@ All diagrams use `sequenceDiagram` Mermaid syntax. Quote participant labels with
 
 ### TASK-012: Create platform overview page
 ```
-Status:     READY (after TASK-008)
+Status:     DONE
+Completed:  2026-02-17
 Depends:    TASK-008
 Agent:      manual
 Sources:    .github/copilot-instructions.md (updated), docs/odoo-pos-lessons-for-kutapay.md,
