@@ -666,7 +666,8 @@ Include integration architecture diagram showing KutaPay Cloud → DGI MCF.
 
 ### TASK-021: Multi-terminal design
 ```
-Status:     READY (after TASK-004)
+Status:     DONE (after TASK-004)
+Completed:  2026-02-17
 Depends:    TASK-004
 Agent:      @gem-documentation-writer
 Sources:    spec/architecture-kutapay-system-1.md,
