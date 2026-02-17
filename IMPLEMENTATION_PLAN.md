@@ -443,7 +443,8 @@ Incorporate security review findings as admonitions.
 
 ### TASK-013: BOM & manufacturing
 ```
-Status:     READY (after TASK-010)
+Status:     DONE
+Completed:  2026-02-17
 Depends:    TASK-010
 Agent:      manual
 Sources:    DISCUSSION.md lines 7200-7285 (BOM section),
