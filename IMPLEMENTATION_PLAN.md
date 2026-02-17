@@ -1050,7 +1050,8 @@ Save to docs/adr/adr-0003-pos-technology-stack.md
 
 ### TASK-037: Full security review
 ```
-Status:     READY (after Phases 2-3 complete)
+Status:     DONE (after Phases 2-3 complete)
+Completed:  2026-02-17
 Depends:    TASK-012, TASK-016
 Agent:      @se-security-reviewer
 Sources:    design/docs/hardware/*.md, design/docs/fiscal/*.md,
