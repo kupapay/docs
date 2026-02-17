@@ -239,7 +239,8 @@ rmdir design/docs/pos
 
 ### TASK-003: Update home page for invoicing platform
 ```
-Status:     READY (after TASK-002)
+Status:     DONE
+Completed:  2026-02-17
 Depends:    TASK-002
 Agent:      manual
 Sources:    design/docs/index.md (current), docs/odoo-pos-lessons-for-kutapay.md (for UX principles)
