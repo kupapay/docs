@@ -72,7 +72,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#sfe-specifications" class="md-skip">
+        <a href="#sfe-specifications-v1" class="md-skip">
           Skip to content
         </a>
       
@@ -1119,6 +1119,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SFE Specifications
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -1135,6 +1153,91 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#mandatory-invoice-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mandatory Invoice Types
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#14-dgi-tax-groups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14 DGI Tax Groups
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#required-reports" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Required Reports
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#security-elements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security Elements
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#offline-behavior-dgi-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Offline Behavior &amp; DGI Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-integrity-immutability-and-mutations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Integrity, Immutability, and Mutations
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1638,6 +1741,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#mandatory-invoice-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mandatory Invoice Types
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#14-dgi-tax-groups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14 DGI Tax Groups
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#required-reports" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Required Reports
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#security-elements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security Elements
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#offline-behavior-dgi-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Offline Behavior &amp; DGI Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-integrity-immutability-and-mutations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Integrity, Immutability, and Mutations
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1653,11 +1830,234 @@
 
 
 
-<h1 id="sfe-specifications">SFE Specifications<a class="headerlink" href="#sfe-specifications" title="Permanent link">&para;</a></h1>
-<div class="admonition note">
-<p class="admonition-title">Coming soon</p>
-<p>This document will be populated as the technical design matures.</p>
+<h1 id="sfe-specifications-v1">SFE Specifications (v1)<a class="headerlink" href="#sfe-specifications-v1" title="Permanent link">&para;</a></h1>
+<p>This page distills the DGI Système de Facturation d'Entreprise (SFE) requirements so the KutaPay design team can trace every regulatory demand to our architecture, fiscal flows, and hardware guarantees.</p>
+<p>The official summary calls out the layered deployment (SFE → DEF → MCF/e-MCF → DGI), mandates five invoice types, demands all 14 tax groups, requires Z/X/A/audit reporting, and insists security elements come from the trusted fiscal layer—not the POS. These constraints steer the content on the fiscal engine, hardware, and reports pages.</p>
+<div class="admonition warning">
+<p class="admonition-title">Trust boundary reminder</p>
+<p>The USB Fiscal Memory device is the only component that can generate fiscal numbers, authentication codes, trusted timestamps, or QR codes. Everything else (POS, fiscal service, cloud sync) must treat the device as the trusted boundary; see <a href="../../architecture/trust-boundary/">Architecture Trust Boundary</a> for details.</p>
 </div>
+<h2 id="mandatory-invoice-types">Mandatory Invoice Types<a class="headerlink" href="#mandatory-invoice-types" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Invoice Type</th>
+<th>French Label</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sale invoice</td>
+<td>Facture de vente</td>
+<td>Everyday retail/wholesale sales; the default workflow in <code>design/docs/fiscal/invoice-lifecycle.md</code>.</td>
+</tr>
+<tr>
+<td>Advance invoice</td>
+<td>Facture d'avance</td>
+<td>Payments received before goods/services are fulfilled; still requires PREPARE → COMMIT.</td>
+</tr>
+<tr>
+<td>Credit note</td>
+<td>Note de crédit</td>
+<td>Correction for returned goods or billing adjustments; treated as a new fiscal event.</td>
+</tr>
+<tr>
+<td>Export invoice</td>
+<td>Facture d'exportation</td>
+<td>Sales destined outside the DRC; destines the invoice to TG07 (Export Zero Rate).</td>
+</tr>
+<tr>
+<td>Export credit note</td>
+<td>Note de crédit d'exportation</td>
+<td>Refund tied to an export transaction, sequenced independently like all refunds.</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>Each type is implemented by the same canonical flow documented in the <a href="../../fiscal/invoice-lifecycle/">Invoice Lifecycle</a> page: PREPARE the canonical JSON, COMMIT with the nonce, print the fiscal response, queue for sync.</p>
+</blockquote>
+<h2 id="14-dgi-tax-groups">14 DGI Tax Groups<a class="headerlink" href="#14-dgi-tax-groups" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Code</th>
+<th>Name</th>
+<th>Rate</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TG01</td>
+<td>Exempt</td>
+<td>0%</td>
+<td>Diplomats, embassies, NGOs, government transfers.</td>
+</tr>
+<tr>
+<td>TG02</td>
+<td>Standard VAT — Goods</td>
+<td>16%</td>
+<td>Default for tangible goods.</td>
+</tr>
+<tr>
+<td>TG03</td>
+<td>Standard VAT — Services</td>
+<td>16%</td>
+<td>Professional and intangible services.</td>
+</tr>
+<tr>
+<td>TG04</td>
+<td>Reduced VAT</td>
+<td>9%</td>
+<td>Essential foodstuffs and medicines flagged in catalog metadata.</td>
+</tr>
+<tr>
+<td>TG05</td>
+<td>Public Financing VAT</td>
+<td>16%</td>
+<td>Publicly funded programs; requires funding source metadata.</td>
+</tr>
+<tr>
+<td>TG06</td>
+<td>Customs VAT</td>
+<td>16%</td>
+<td>Imported goods (CIF basis) in addition to duties.</td>
+</tr>
+<tr>
+<td>TG07</td>
+<td>Export Zero Rate</td>
+<td>0%</td>
+<td>Goods/services consumed outside the DRC; requires export certificate.</td>
+</tr>
+<tr>
+<td>TG08</td>
+<td>Special Regime — Agriculture</td>
+<td>5%</td>
+<td>Agribusiness items registered under the agricultural regime.</td>
+</tr>
+<tr>
+<td>TG09</td>
+<td>Special Regime — Mining</td>
+<td>10%</td>
+<td>Mining sector goods/services with operator license metadata.</td>
+</tr>
+<tr>
+<td>TG10</td>
+<td>Specific Tax — Fuel</td>
+<td>25%</td>
+<td>Excise on gasoline, diesel, aviation fuel.</td>
+</tr>
+<tr>
+<td>TG11</td>
+<td>Specific Tax — Tobacco</td>
+<td>30%</td>
+<td>Applies to cigarettes, cigars, and tobacco preparations.</td>
+</tr>
+<tr>
+<td>TG12</td>
+<td>Specific Tax — Alcohol</td>
+<td>20%</td>
+<td>Spirits, beer, wine sold for domestic consumption.</td>
+</tr>
+<tr>
+<td>TG13</td>
+<td>Specific Tax — Telecommunications</td>
+<td>15%</td>
+<td>Mobile/data/SMS packages; include telecom operator ID.</td>
+</tr>
+<tr>
+<td>TG14</td>
+<td>Specific Tax — Digital Services</td>
+<td>12%</td>
+<td>Streaming, SaaS, online advertising delivered to DRC clients.</td>
+</tr>
+</tbody>
+</table>
+<p>These codes feed the canonical <code>tax_groups</code> manifest described in <code>spec/schema-tax-engine-1.md</code> (project root) and are enforced by the <a href="../../fiscal/tax-engine/">Tax Engine</a>. Each invoice must carry a <code>tax_summary</code> entry per group, and the device uses these to drive the Z/X/A reports.</p>
+<h2 id="required-reports">Required Reports<a class="headerlink" href="#required-reports" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Report</th>
+<th>Purpose</th>
+<th>Trigger</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Z Report</td>
+<td>Daily closure with totals per tax group, fiscal number range, and journal hash.</td>
+<td>End-of-day or manual closure; device-initiated.</td>
+</tr>
+<tr>
+<td>X Report</td>
+<td>Periodic/session snapshot with counts, totals by payment method, and device health.</td>
+<td>Configurable (hourly/shift) for operators or auditors.</td>
+</tr>
+<tr>
+<td>A Report</td>
+<td>Article-level detail, enumerating every line item with tax group, client classification, and invoice reference.</td>
+<td>On-demand for audits or DGI requests.</td>
+</tr>
+<tr>
+<td>Audit Export</td>
+<td>Full append-only journal (sales, voids, refunds, resets) sent in chunks for deep reconciliation.</td>
+<td>Scheduled (monthly/annual) or upon DGI request.</td>
+</tr>
+</tbody>
+</table>
+<p>Report design lives in <a href="../../fiscal/reports/"><code>design/docs/fiscal/reports.md</code></a>. The Z/X/A outputs also reinforce <code>design/docs/hardware/usb-device.md</code> because the device compiles them from its hash-chained journal and counters.</p>
+<h2 id="security-elements">Security Elements<a class="headerlink" href="#security-elements" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Element</th>
+<th>Generated by</th>
+<th>Where referenced</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sequential fiscal number</td>
+<td>USB Fiscal Memory device</td>
+<td>Printed on every receipt; enforced by the trusted counter in <code>design/docs/hardware/usb-device.md</code>.</td>
+</tr>
+<tr>
+<td>Device ID (DEF NID)</td>
+<td>USB Fiscal Memory device</td>
+<td>Identifies the outlet-level DEF in every response and sync payload.</td>
+</tr>
+<tr>
+<td>Authentication code</td>
+<td>DEF signature (e.g., ECDSA)</td>
+<td>The cryptographic signature stored in <code>design/docs/fiscal/security-elements.md</code>.</td>
+</tr>
+<tr>
+<td>Trusted timestamp</td>
+<td>DEF RTC</td>
+<td>Anchor for chronological integrity; the cloud sync agent uses it for ordering.</td>
+</tr>
+<tr>
+<td>QR code</td>
+<td>DEF (encoded fiscal number + auth code + timestamp)</td>
+<td>Exposed to inspectors and customers; verified by DGI and internal tools.</td>
+</tr>
+</tbody>
+</table>
+<p>Every element comes from the DEF; the POS software may only display it. See <code>[Security Elements](../fiscal/security-elements.md)</code> for per-element verification rules and <code>[USB Fiscal Memory](../hardware/usb-device.md)</code> for how the hardware produces them.</p>
+<h2 id="offline-behavior-dgi-integration">Offline Behavior &amp; DGI Integration<a class="headerlink" href="#offline-behavior-dgi-integration" title="Permanent link">&para;</a></h2>
+<p>The specification emphasizes that offline issuance is normal. Invoices must still contain security elements, and the SFE must sync with the MCF/e-MCF control modules once connectivity returns. A dedicated sync state machine ensures retries, grace periods, and conflict resolution:</p>
+<ul>
+<li><a href="../../cloud/offline-sync/"><code>design/docs/cloud/offline-sync.md</code></a> documents how invoices transition from <code>PENDING_SYNC</code> to <code>ACKNOWLEDGED</code> or <code>FAILED</code>.</li>
+<li><a href="../../cloud/dgi-integration/"><code>design/docs/cloud/dgi-integration.md</code></a> captures the known vs unknown pieces of the MCF/e-MCF API and highlights the remaining blockers for homologation.</li>
+</ul>
+<p>This layered behavior mirrors the core architecture described in this spec: canonical payloads flow through the fiscal service to the DEF, then the sealed invoice flows through KutaPay Cloud to the DGI control modules before arriving at the backend.</p>
+<h2 id="data-integrity-immutability-and-mutations">Data Integrity, Immutability, and Mutations<a class="headerlink" href="#data-integrity-immutability-and-mutations" title="Permanent link">&para;</a></h2>
+<p>The SFE must never delete invoices. Corrections are credit notes, voids are new fiscal events, and all entries remain in the device's hash-chained journal. These expectations appear in the <a href="../../fiscal/invoice-lifecycle/">Invoice Lifecycle</a> narrative and the Architecture Context Map (<code>memory-bank/context-map.md</code> in the project root). Any mutation references the original invoice and replays through the same PREPARE → COMMIT sequence, ensuring auditability.</p>
+<blockquote>
+<p>This page is part of the regulatory view of the MkDocs site. For additional context, consult the <a href="../legal-framework/">DRC Legal Framework</a> overview and the <a href="../arretes/">Arrêté Summaries</a> tabs.</p>
+</blockquote>
 
 
 

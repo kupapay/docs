@@ -1,6 +1,6 @@
 # USB Fiscal Device Protocol
 
-This page summarizes the **TXN / QRY / RPT / ADM / CFG** commands that flow between the untrusted POS/fiscal service cluster and the trusted USB Fiscal Memory device. The full machine-readable definition lives in the [protocol specification](../../../spec/protocol-usb-fiscal-device-1.md), and ADR-0001 explains why the two-phase handshake is the only compliant option ([read it here](../../../docs/adr/adr-0001-two-phase-commit-usb-protocol.md)).
+This page summarizes the **TXN / QRY / RPT / ADM / CFG** commands that flow between the untrusted POS/fiscal service cluster and the trusted USB Fiscal Memory device. The full machine-readable definition lives in the protocol specification (`spec/protocol-usb-fiscal-device-1.md` in the project root), and ADR-0001 explains why the two-phase handshake is the only compliant option ([read it here](../adr/adr-0001.md)).
 
 !!! warning "The DEF is the only fiscal authority"
     ADR-0001 mandates that no receipt may reach a customer unless the DEF has fully committed it (PREPARE → COMMIT → signed response). The POS must never print or queue a receipt before receiving the COMMIT response and verifying the `invoice_seq`, `auth_code`, and device timestamp.
@@ -15,7 +15,7 @@ This page summarizes the **TXN / QRY / RPT / ADM / CFG** commands that flow betw
 | **Configuration (CFG)** | `CFG|TIME`, `CFG|INIT` | Clock synchronization, device activation, and key provisioning. |
 
 ## Canonical payload checklist
-Every `TXN|PREPARE` payload **must** follow the order in the [protocol specification](../../../spec/protocol-usb-fiscal-device-1.md). Include:
+Every `TXN|PREPARE` payload **must** follow the order in the protocol specification (`spec/protocol-usb-fiscal-device-1.md`). Include:
 
 - Merchant metadata (`merchant_nif`, outlet/terminal/cashier IDs, invoice type).
 - ISO 8601 timestamp that matches the device RTC.
@@ -84,5 +84,5 @@ Device errors (`SCHEMA_INVALID`, `STORAGE_FULL`, `CLOCK_ROLLBACK_DETECTED`, `DEV
     If the POS loses the fiscal response (COMMIT success but crash before printing), it must recover by querying `QRY|LOG <seq>` and reprint the missing ticket. Printing without a fiscal response violates the DRC mandate and is detectable by auditors (see ADR-0001, Section 5).
 
 ## Additional resources
-* [Protocol specification](../../../spec/protocol-usb-fiscal-device-1.md)
-* [ADR-0001: Two-phase commit](../../../docs/adr/adr-0001-two-phase-commit-usb-protocol.md)
+* Protocol specification — `spec/protocol-usb-fiscal-device-1.md` (project root)
+* [ADR-0001: Two-phase commit](../adr/adr-0001.md)

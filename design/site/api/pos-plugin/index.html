@@ -70,7 +70,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#pos-plugin-api" class="md-skip">
+        <a href="#pos-plugin-api-reference" class="md-skip">
           Skip to content
         </a>
       
@@ -1587,6 +1587,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    POS Plugin API
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -1603,6 +1621,181 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#authentication-initialization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Authentication &amp; initialization
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Authentication &amp; initialization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#post-apiv1plugininit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        POST /api/v1/plugin/init
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#invoice-submission" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Invoice submission
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Invoice submission">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#canonical-payload-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Canonical payload requirements
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sample-submission" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sample submission
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#status-endpoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Status endpoint
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Status endpoint">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sample-response" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sample response
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#report-retrieval" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Report retrieval
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Report retrieval">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#error-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error handling
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implementation notes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#see-also" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        See also
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1636,6 +1829,170 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#authentication-initialization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Authentication &amp; initialization
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Authentication &amp; initialization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#post-apiv1plugininit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        POST /api/v1/plugin/init
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#invoice-submission" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Invoice submission
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Invoice submission">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#canonical-payload-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Canonical payload requirements
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sample-submission" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sample submission
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#status-endpoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Status endpoint
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Status endpoint">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sample-response" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sample response
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#report-retrieval" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Report retrieval
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Report retrieval">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#error-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error handling
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implementation notes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#see-also" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        See also
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1651,11 +2008,187 @@
 
 
 
-<h1 id="pos-plugin-api">POS Plugin API<a class="headerlink" href="#pos-plugin-api" title="Permanent link">&para;</a></h1>
-<div class="admonition note">
-<p class="admonition-title">Coming soon</p>
-<p>This document will be populated as the technical design matures.</p>
+<h1 id="pos-plugin-api-reference">POS Plugin API Reference<a class="headerlink" href="#pos-plugin-api-reference" title="Permanent link">&para;</a></h1>
+<p>The POS plugin is the untrusted client that runs inside each merchant's POS application. It exists to keep the POS software compliant with the KutaPay trust boundary and to forward canonical JSON invoices through the local fiscal service so the USB Fiscal Memory device (DEF) can do the trusted work. Use this reference when you are integrating a third-party POS or writing a KutaPay plugin adapter.</p>
+<div class="admonition warning">
+<p class="admonition-title">Trust boundary reminder</p>
+<p>The POS plugin runs entirely in the untrusted zone. Never attempt to fabricate <code>fiscal_number</code>, <code>device_id</code>, <code>auth_code</code>, <code>timestamp</code>, or <code>qr_payload</code>. Those values must originate from the DEF after a successful PREPARE → COMMIT handshake.</p>
 </div>
+<h2 id="authentication-initialization">Authentication &amp; initialization<a class="headerlink" href="#authentication-initialization" title="Permanent link">&para;</a></h2>
+<p>Every request uses <code>Authorization: Bearer &lt;token&gt;</code> where the token is scoped to the outlet/terminal pair and expires regularly (rotate it before expiry). Include headers <code>X-KUTAPAY-DEVICE-ID</code> and <code>X-KUTAPAY-NONCE</code> when submitting invoices so the fiscal service can correlate nonces with the PREPARE step.</p>
+<h3 id="post-apiv1plugininit"><code>POST /api/v1/plugin/init</code><a class="headerlink" href="#post-apiv1plugininit" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Purpose:</strong> synchronize policy/version metadata, learn the current <code>nonce_pool</code>, and confirm the DEF assigned to the outlet.</li>
+<li><strong>Payload:</strong> <code>outlet_id</code>, <code>pos_terminal_id</code>, <code>cashier_id</code>, <code>plugin_version</code>.</li>
+<li><strong>Response:</strong> Returns <code>device_id</code>, <code>policy_version</code>, list of supported tax groups, <code>nonce_pool</code>, and optional <code>max_payload_bytes</code>. Cache these values and refuse to submit invoices if <code>nonce_pool</code> is zero.</li>
+</ul>
+<h2 id="invoice-submission">Invoice submission<a class="headerlink" href="#invoice-submission" title="Permanent link">&para;</a></h2>
+<p>Endpoint: <code>POST /api/v1/plugin/invoices</code></p>
+<h3 id="canonical-payload-requirements">Canonical payload requirements<a class="headerlink" href="#canonical-payload-requirements" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Follow the field ordering in <code>spec/architecture-kutapay-system-1.md</code>: <code>merchant_nif</code>, <code>outlet_id</code>, <code>pos_terminal_id</code>, <code>cashier_id</code>, <code>invoice_type</code>, <code>timestamp</code>, <code>client</code> (with <code>classification</code>), <code>items</code>, <code>tax_groups</code>, <code>totals</code>, <code>payments</code>.</li>
+<li>Invoice types: <code>sale</code>, <code>advance</code>, <code>credit_note</code>, <code>export</code>, <code>export_credit</code>.</li>
+<li>Always include <code>outlet_id</code>, <code>pos_terminal_id</code>, and <code>cashier_id</code> so the fiscal service can enforce one DEF per outlet and maintain sequential counters.</li>
+<li>Tax groups must cover TG01…TG14 and match the schema (rate, base_amount, tax_amount).</li>
+<li>Items should carry <code>code</code>, <code>description</code>, <code>quantity</code>, <code>unit_price</code>, <code>tax_group</code>, <code>taxable_unit</code>.</li>
+</ul>
+<h3 id="sample-submission">Sample submission<a class="headerlink" href="#sample-submission" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="nf">POST</span> <span class="nn">/api/v1/plugin/invoices</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Authorization</span><span class="o">:</span> <span class="l">Bearer eyJhbGciOi...</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;merchant_nif&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;123456789&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;outlet_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;OUTLET-005&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;pos_terminal_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;POS-12&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;cashier_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;CASHIER-07&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;invoice_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sale&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-02-17T03:10:00Z&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;client&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;registration&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;987654321&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;classification&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Company&quot;</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;items&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;code&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ITEM-001&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Consulting hours&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;quantity&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;unit_price&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;500.00&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;tax_group&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;TG03&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;taxable_unit&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;hour&quot;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;tax_groups&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;code&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;TG03&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Standard VAT — Services&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;rate&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0.16&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;base_amount&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1000.00&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;tax_amount&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;160.00&quot;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;totals&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;subtotal&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1000.00&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;total_vat&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;160.00&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;total&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1160.00&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;currency&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;CDF&quot;</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;payments&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;method&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;mobile_money&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;amount&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1160.00&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;instrument_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;MOMO-123&quot;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;accepted&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;payload&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;fiscal_number&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;KUTA-2026-000145&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;device_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;KUTA-OUTLET-005&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;auth_code&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;OTS7-AB12-XY99&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-02-17T03:10:05Z&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;qr_payload&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;KUTA|145|OTS7AB12|2026-02-17T03:10:05Z&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;dgi_status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;queued&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;report_links&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;/reports/2026-02-17/z&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Print or store the <code>fiscal_number</code>, <code>auth_code</code>, and <code>qr_payload</code> exactly as returned—the device is the sole authority for those values. Do not proceed to print or re-transmit until VAT totals are confirmed by this response.</p>
+<h2 id="status-endpoint">Status endpoint<a class="headerlink" href="#status-endpoint" title="Permanent link">&para;</a></h2>
+<p><code>GET /api/v1/plugin/invoices/{fiscal_number}/status</code></p>
+<p>Checks whether the invoice has been committed locally and whether KutaPay Cloud has synced it to the DGI. Useful for POS screens or auditors.</p>
+<h3 id="sample-response">Sample response<a class="headerlink" href="#sample-response" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ok&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;payload&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;fiscal_number&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;KUTA-2026-000145&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;device_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;KUTA-OUTLET-005&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;synced&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;synced_at&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-02-17T03:15:01Z&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;last_error&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h2 id="report-retrieval">Report retrieval<a class="headerlink" href="#report-retrieval" title="Permanent link">&para;</a></h2>
+<p><code>GET /api/v1/plugin/reports?type=Z&amp;since=2026-02-17&amp;format=json</code></p>
+<p>Retrieves device-generated Z/X/A/audit reports without making the POS talk to the DGI directly. Use this for audit exports or when inspectors request proof of the ledger.</p>
+<h3 id="example">Example<a class="headerlink" href="#example" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="nf">GET</span> <span class="nn">/api/v1/plugin/reports?type=Z&amp;since=2026-02-17&amp;format=json</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Authorization</span><span class="o">:</span> <span class="l">Bearer eyJhbGci...</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ok&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;payload&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;report_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;RPT-Z-2026-02-17&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;download_url&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/reports/zip/RPT-Z-2026-02-17&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;generated_at&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-02-17T03:30:00Z&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;summary&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;sequence_start&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">120</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;sequence_end&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">156</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;invoice_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">37</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+<h2 id="error-handling">Error handling<a class="headerlink" href="#error-handling" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Code</th>
+<th>Meaning</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>INVALID_CANONICAL_PAYLOAD</code></td>
+<td>Required field missing/order wrong</td>
+<td>Show cashier the exact fields while prepping again</td>
+</tr>
+<tr>
+<td><code>DEVICE_BUSY</code></td>
+<td>DEF is processing another invoice</td>
+<td>Retry after 100–200 ms</td>
+</tr>
+<tr>
+<td><code>DEVICE_UNREGISTERED</code></td>
+<td>Fiscal service no longer sees the outlet</td>
+<td>Re-run <code>/init</code> and verify device connectivity</td>
+</tr>
+<tr>
+<td><code>RETRY_LATER</code></td>
+<td>Nonce pool empty or storage pressure</td>
+<td>Respect <code>retry_after</code> and call <code>/init</code> when needed</td>
+</tr>
+<tr>
+<td><code>AUTH_FAILED</code></td>
+<td>Token expired/invalid</td>
+<td>Rotate token before retry</td>
+</tr>
+<tr>
+<td><code>DUPLICATE_FISCAL_NUMBER</code></td>
+<td>Invoice already submitted</td>
+<td>Inspect local journal—do not re-submit</td>
+</tr>
+</tbody>
+</table>
+<p>All error responses include <code>detail</code> (free text) and optional <code>retry_after</code>.</p>
+<h2 id="implementation-notes">Implementation notes<a class="headerlink" href="#implementation-notes" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Keep a local queue for offline submissions and replay them in FIFO order so arrivals respect the device's sequential counter.</li>
+<li>Always validate canonical payloads using strict parsers or schema validators—no string-building of JSON from user input (prevents injection-like mistakes).</li>
+<li>Log and surface <code>nonce</code> TTL to avoid expired nonces; re-call <code>/init</code> when TTL is in the last 10% of its lifetime.</li>
+<li>Surface <code>report_links</code> to dashboards so auditors can download the corresponding Z/X/A dumps alongside the invoice receipt.</li>
+<li>When the plugin receives a <code>synced</code> status, mark the invoice as fully complete and allow the cashier to close the transaction.</li>
+</ul>
+<h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
+<ul>
+<li><code>spec/design-pos-plugin-api-1.md</code> — formal specification that defines every request/response field.</li>
+</ul>
 
 
 

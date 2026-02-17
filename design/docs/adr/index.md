@@ -11,8 +11,8 @@
 
 | ADR | Status | Summary | Source | Design doc |
 | --- | --- | --- | --- | --- |
-| [ADR-0001: Two-Phase Commit for USB Fiscal Device Protocol](adr-0001.md) | Accepted | Enforces the 2PC PREPARE → COMMIT handshake so fiscal numbers only exist once the trusted USB device signs and stores every invoice. | [docs/adr/adr-0001-two-phase-commit-usb-protocol.md](../../docs/adr/adr-0001-two-phase-commit-usb-protocol.md) | `adr-0001.md` |
-| ADR-0002: Signature Algorithm Selection | Proposed | Compare ECDSA P-256, Ed25519, and RSA-2048, balancing SE support, signature size, and verification performance. | Planned for [docs/adr/adr-0002-signature-algorithm.md](../../docs/adr/adr-0002-signature-algorithm.md) | `adr-0002.md` (placeholder) |
-| ADR-0003: POS Technology Stack | Proposed | Evaluate Flutter, React Native + native bridge, Electron + native Android, and other offline-ready stacks for the POS application. | Planned for [docs/adr/adr-0003-pos-technology-stack.md](../../docs/adr/adr-0003-pos-technology-stack.md) | `adr-0003.md` (placeholder) |
+| [ADR-0001: Two-Phase Commit for USB Fiscal Device Protocol](adr-0001.md) | Accepted | Enforces the 2PC PREPARE → COMMIT handshake so fiscal numbers only exist once the trusted USB device signs and stores every invoice. | See `docs/adr/` in project root | `adr-0001.md` |
+| ADR-0002: Signature Algorithm Selection | Proposed | Compare ECDSA P-256, Ed25519, and RSA-2048, balancing SE support, signature size, and verification performance. | Planned — see `docs/adr/` in project root | `adr-0002.md` (placeholder) |
+| ADR-0003: POS Technology Stack | Proposed | Evaluate Flutter, React Native + native bridge, Electron + native Android, and other offline-ready stacks for the POS application. | Planned — see `docs/adr/` in project root | `adr-0003.md` (placeholder) |
 
 Add new ADRs by copying this page, updating the table, and linking to the supporting docs. Keep the "Status" column in sync with the implementation plan so readers can trace acceptance and deployment milestones.

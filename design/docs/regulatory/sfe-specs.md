@@ -38,7 +38,7 @@ The official summary calls out the layered deployment (SFE → DEF → MCF/e-MCF
 | TG13 | Specific Tax — Telecommunications | 15% | Mobile/data/SMS packages; include telecom operator ID. |
 | TG14 | Specific Tax — Digital Services | 12% | Streaming, SaaS, online advertising delivered to DRC clients. |
 
-These codes feed the canonical `tax_groups` manifest described in [`spec/schema-tax-engine-1.md`](../../../spec/schema-tax-engine-1.md) and are enforced by the [Tax Engine](../fiscal/tax-engine.md). Each invoice must carry a `tax_summary` entry per group, and the device uses these to drive the Z/X/A reports.
+These codes feed the canonical `tax_groups` manifest described in `spec/schema-tax-engine-1.md` (project root) and are enforced by the [Tax Engine](../fiscal/tax-engine.md). Each invoice must carry a `tax_summary` entry per group, and the device uses these to drive the Z/X/A reports.
 
 ## Required Reports
 
@@ -74,6 +74,6 @@ This layered behavior mirrors the core architecture described in this spec: cano
 
 ## Data Integrity, Immutability, and Mutations
 
-The SFE must never delete invoices. Corrections are credit notes, voids are new fiscal events, and all entries remain in the device's hash-chained journal. These expectations appear in the [Invoice Lifecycle](../fiscal/invoice-lifecycle.md) narrative and the [Architecture Context Map](../../../memory-bank/context-map.md). Any mutation references the original invoice and replays through the same PREPARE → COMMIT sequence, ensuring auditability.
+The SFE must never delete invoices. Corrections are credit notes, voids are new fiscal events, and all entries remain in the device's hash-chained journal. These expectations appear in the [Invoice Lifecycle](../fiscal/invoice-lifecycle.md) narrative and the Architecture Context Map (`memory-bank/context-map.md` in the project root). Any mutation references the original invoice and replays through the same PREPARE → COMMIT sequence, ensuring auditability.
 
 > This page is part of the regulatory view of the MkDocs site. For additional context, consult the [DRC Legal Framework](./legal-framework.md) overview and the [Arrêté Summaries](./arretes.md) tabs.

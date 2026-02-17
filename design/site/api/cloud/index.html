@@ -72,7 +72,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#cloud-api" class="md-skip">
+        <a href="#cloud-api-reference" class="md-skip">
           Skip to content
         </a>
       
@@ -1561,6 +1561,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cloud API
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -1577,6 +1595,91 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#key-endpoints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Endpoints
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#example-invoice-upload" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example: Invoice Upload
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#example-report-request" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example: Report Request
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#monitoring-endpoints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitoring endpoints
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#error-handling-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error handling summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Notes
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1638,6 +1741,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#key-endpoints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Endpoints
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#example-invoice-upload" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example: Invoice Upload
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#example-report-request" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example: Report Request
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#monitoring-endpoints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitoring endpoints
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#error-handling-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error handling summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Notes
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1653,11 +1830,145 @@
 
 
 
-<h1 id="cloud-api">Cloud API<a class="headerlink" href="#cloud-api" title="Permanent link">&para;</a></h1>
-<div class="admonition note">
-<p class="admonition-title">Coming soon</p>
-<p>This document will be populated as the technical design matures.</p>
+<h1 id="cloud-api-reference">Cloud API Reference<a class="headerlink" href="#cloud-api-reference" title="Permanent link">&para;</a></h1>
+<p>This API is the cloud-facing bridge between POS terminals, the trusted USB Fiscal Memory device, and the DGI control modules. It stores uploads from <code>spec/architecture-kutapay-system-1.md</code>, replays them in arrival order, and exposes reporting and audit endpoints aligned with <code>spec/design-cloud-api-1.md</code>.</p>
+<div class="admonition caution">
+<p class="admonition-title">Security by design</p>
+<p>All endpoints require TLS 1.3+, <code>Authorization: Bearer &lt;token&gt;</code>, and the <code>X-KUTAPAY-DEVICE-ID</code> header so we can tie uploads to trusted DEF instances. Never accept invoices with missing canonical fields or unsigned nonces.</p>
 </div>
+<h2 id="key-endpoints">Key Endpoints<a class="headerlink" href="#key-endpoints" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Endpoint</th>
+<th>Purpose</th>
+<th>Response highlights</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>POST /api/v1/invoices/upload</code></td>
+<td>Accept sealed invoices from the canonical payload and queue them for DGI transmission</td>
+<td><code>dgi_status</code>, <code>queued_at</code>, retry hints</td>
+</tr>
+<tr>
+<td><code>GET /api/v1/invoices/{fiscal_number}/status</code></td>
+<td>Check whether the DGI acknowledged a fiscal number</td>
+<td><code>dgi_status</code>, <code>processed_at</code></td>
+</tr>
+<tr>
+<td><code>POST /api/v1/devices/register</code></td>
+<td>Register DEF hardware and provision prefixes</td>
+<td><code>assigned_prefix</code>, <code>activation_code</code></td>
+</tr>
+<tr>
+<td><code>GET /api/v1/devices/{device_id}/health</code></td>
+<td>Monitor DEF heartbeat, counter, and queue</td>
+<td><code>current_counter</code>, <code>queued_invoices</code></td>
+</tr>
+<tr>
+<td><code>GET /api/v1/sync/status</code></td>
+<td>Surface queue depth, state machine, and retry timing</td>
+<td><code>backlog</code>, <code>state</code>, <code>next_retry</code></td>
+</tr>
+<tr>
+<td><code>POST /api/v1/reports</code></td>
+<td>Trigger Z/X/A reports derived from the hash-chained journal</td>
+<td><code>report_id</code>, <code>download_url</code></td>
+</tr>
+<tr>
+<td><code>GET /api/v1/audit/export</code></td>
+<td>Download journal exports for inspections/audit</td>
+<td><code>journal_hash</code>, <code>entries</code>, signed downloads</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition info">
+<p class="admonition-title">Specification reference</p>
+<p>The endpoint request/response schema definitions live in <code>spec/design-cloud-api-1.md</code> (project root).</p>
+</div>
+<h2 id="example-invoice-upload">Example: Invoice Upload<a class="headerlink" href="#example-invoice-upload" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="err">POST</span><span class="w"> </span><span class="err">/api/v</span><span class="mi">1</span><span class="err">/i</span><span class="kc">n</span><span class="err">voices/upload</span>
+<span class="err">Co</span><span class="kc">ntent</span><span class="mi">-</span><span class="err">Type</span><span class="p">:</span><span class="w"> </span><span class="err">applica</span><span class="kc">t</span><span class="err">io</span><span class="kc">n</span><span class="err">/jso</span><span class="kc">n</span>
+<span class="err">Au</span><span class="kc">t</span><span class="err">horiza</span><span class="kc">t</span><span class="err">io</span><span class="kc">n</span><span class="p">:</span><span class="w"> </span><span class="err">Bearer</span><span class="w"> </span><span class="err">dgi</span><span class="mi">-</span><span class="kc">t</span><span class="err">oke</span><span class="kc">n</span>
+<span class="err">X</span><span class="mi">-</span><span class="err">KUTAPAY</span><span class="mi">-</span><span class="err">DEVICE</span><span class="mi">-</span><span class="err">ID</span><span class="p">:</span><span class="w"> </span><span class="err">DEF</span><span class="mi">-1</span><span class="err">A</span><span class="mi">2</span><span class="err">B</span><span class="mi">3</span><span class="err">C</span>
+
+<span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;fiscal_number&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;KUTA-2026-000123&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;device_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;DEF-1A2B3C&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;auth_code&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;h9fj2w8s...&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-02-17T03:00:00Z&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;qr_payload&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://secure.dgi/conformity?hash=...&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;canonical_payload&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;merchant_nif&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;123456789&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;client&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Acme Ltd&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;nif&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;987654321&quot;</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;client_classification&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Company&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;outlet_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;OUTLET-001&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;pos_terminal_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;POS-01&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;cashier_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;CASHIER-07&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;tax_groups&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;code&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;VAT_STD&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;amount&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">120.0</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;rate&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">16.0</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;items&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;sku&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;SKU-001&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Widget&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;quantity&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;unit_price&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">60.0</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;tax_group&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;VAT_STD&quot;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;totals&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;subtotal&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">120.0</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;tax&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">19.2</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;total&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">139.2</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-02-17T03:00:00Z&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Response:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ok&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;code&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;INVOICE_UPLOADED&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;payload&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;queued_at&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-02-17T03:01:00Z&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;dgi_status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;pending&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;retry_after&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-02-17T03:05:00Z&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h2 id="example-report-request">Example: Report Request<a class="headerlink" href="#example-report-request" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="err">POST</span><span class="w"> </span><span class="err">/api/v</span><span class="mi">1</span><span class="err">/repor</span><span class="kc">ts</span>
+<span class="err">Co</span><span class="kc">ntent</span><span class="mi">-</span><span class="err">Type</span><span class="p">:</span><span class="w"> </span><span class="err">applica</span><span class="kc">t</span><span class="err">io</span><span class="kc">n</span><span class="err">/jso</span><span class="kc">n</span>
+<span class="err">Au</span><span class="kc">t</span><span class="err">horiza</span><span class="kc">t</span><span class="err">io</span><span class="kc">n</span><span class="p">:</span><span class="w"> </span><span class="err">Bearer</span><span class="w"> </span><span class="err">dgi</span><span class="mi">-</span><span class="kc">t</span><span class="err">oke</span><span class="kc">n</span>
+
+<span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Z&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;period&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;date&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-02-17&quot;</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;outlet_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;OUTLET-001&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;include_journal_hash&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Response:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ok&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;code&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;REPORT_READY&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;payload&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;report_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;RPT-Z-2026-02-17&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;download_url&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/reports/zip/download/RPT-Z-2026-02-17&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;generated_at&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-02-17T03:30:00Z&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h2 id="monitoring-endpoints">Monitoring endpoints<a class="headerlink" href="#monitoring-endpoints" title="Permanent link">&para;</a></h2>
+<ul>
+<li><code>GET /api/v1/devices/{device_id}/health</code> returns the last heartbeat, queue size, and current counter so operations can alert on stalled syncs.</li>
+<li><code>GET /api/v1/sync/status</code> exposes the sync state machine (PENDING → RETRYING → ACKNOWLEDGED) and should power dashboards and alerting rules.</li>
+<li><code>GET /api/v1/audit/export</code> returns the hash-chained journal with signed <code>journal_hash</code> plus downloadable artifacts for auditors.</li>
+</ul>
+<h2 id="error-handling-summary">Error handling summary<a class="headerlink" href="#error-handling-summary" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Invalid canonical payload</strong>: respond with <code>error: INVALID_SIGNATURE</code>.</li>
+<li><strong>Retries</strong>: When <code>dgi_status</code> remains <code>pending</code>, the client should respect <code>retry_after</code> and refrain from re-submitting until the time arrives.</li>
+<li><strong>Authorization</strong>: Fail fast with <code>error: INSUFFICIENT_PERMISSIONS</code> when tokens lack the required scopes for device registration, reporting, or audit exports.</li>
+</ul>
+<h2 id="notes">Notes<a class="headerlink" href="#notes" title="Permanent link">&para;</a></h2>
+<ul>
+<li>The cloud API keeps every invoice traceable through <code>fiscal_number</code>, <code>device_id</code>, and <code>outlet_id</code> tags.</li>
+<li>Keep audit exports within the 30-day window to avoid <code>RANGE_TOO_LARGE</code>.</li>
+<li>All endpoints should emit structured logs (<code>cloud.request</code>, <code>cloud.response</code>) that include <code>device_id</code>, <code>fiscal_number</code>, and <code>dgi_status</code>.</li>
+</ul>
 
 
 

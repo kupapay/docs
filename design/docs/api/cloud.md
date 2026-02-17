@@ -18,7 +18,7 @@ This API is the cloud-facing bridge between POS terminals, the trusted USB Fisca
 | `GET /api/v1/audit/export` | Download journal exports for inspections/audit | `journal_hash`, `entries`, signed downloads |
 
 !!! info "Specification reference"
-    The endpoint request/response schema definitions live in [`spec/design-cloud-api-1.md`](../../spec/design-cloud-api-1.md).
+    The endpoint request/response schema definitions live in `spec/design-cloud-api-1.md` (project root).
 
 ## Example: Invoice Upload
 

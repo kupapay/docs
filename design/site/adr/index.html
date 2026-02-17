@@ -72,7 +72,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#adr-index" class="md-skip">
+        <a href="#architecture-decision-records" class="md-skip">
           Skip to content
         </a>
       
@@ -1201,6 +1201,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Index
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -1217,6 +1235,36 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#current-decisions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Current decisions
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1638,6 +1686,25 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#current-decisions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Current decisions
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1653,11 +1720,51 @@
 
 
 
-<h1 id="adr-index">ADR Index<a class="headerlink" href="#adr-index" title="Permanent link">&para;</a></h1>
-<div class="admonition note">
-<p class="admonition-title">Coming soon</p>
-<p>This document will be populated as the technical design matures.</p>
+<h1 id="architecture-decision-records">Architecture Decision Records<a class="headerlink" href="#architecture-decision-records" title="Permanent link">&para;</a></h1>
+<div class="admonition info">
+<p class="admonition-title">The ADR process</p>
+<p>Architectural Decision Records (ADRs) capture important design trade‑offs so the team can revisit the reasoning long after a decision is made.
+1. Draft the full record in <code>docs/adr/</code> with the canonical template (Context → Decision → Consequences → References).
+2. Mirror the narrative for readers in <code>design/docs/adr/</code> so the marketing/ops audience can navigate the approved choices.
+3. Link the ADR to the relevant design area (architecture, hardware, POS, etc.) and include status badges (<code>Accepted</code>, <code>Proposed</code>, <code>Superseded</code>).
+4. Raise a new ADR as soon as a decision affects the trust boundary, protocol, hardware, or regulatory compliance; reference the implementation plan task that triggered it.</p>
 </div>
+<h2 id="current-decisions">Current decisions<a class="headerlink" href="#current-decisions" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>ADR</th>
+<th>Status</th>
+<th>Summary</th>
+<th>Source</th>
+<th>Design doc</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="adr-0001/">ADR-0001: Two-Phase Commit for USB Fiscal Device Protocol</a></td>
+<td>Accepted</td>
+<td>Enforces the 2PC PREPARE → COMMIT handshake so fiscal numbers only exist once the trusted USB device signs and stores every invoice.</td>
+<td>See <code>docs/adr/</code> in project root</td>
+<td><code>adr-0001.md</code></td>
+</tr>
+<tr>
+<td>ADR-0002: Signature Algorithm Selection</td>
+<td>Proposed</td>
+<td>Compare ECDSA P-256, Ed25519, and RSA-2048, balancing SE support, signature size, and verification performance.</td>
+<td>Planned — see <code>docs/adr/</code> in project root</td>
+<td><code>adr-0002.md</code> (placeholder)</td>
+</tr>
+<tr>
+<td>ADR-0003: POS Technology Stack</td>
+<td>Proposed</td>
+<td>Evaluate Flutter, React Native + native bridge, Electron + native Android, and other offline-ready stacks for the POS application.</td>
+<td>Planned — see <code>docs/adr/</code> in project root</td>
+<td><code>adr-0003.md</code> (placeholder)</td>
+</tr>
+</tbody>
+</table>
+<p>Add new ADRs by copying this page, updating the table, and linking to the supporting docs. Keep the "Status" column in sync with the implementation plan so readers can trace acceptance and deployment milestones.</p>
 
 
 

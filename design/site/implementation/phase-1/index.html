@@ -1395,6 +1395,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Phase 1 - B2B Pilot
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -1411,6 +1429,47 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#pilot-targets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pilot targets
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#epics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Epics
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1638,6 +1697,36 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#pilot-targets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pilot targets
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#epics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Epics
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1653,11 +1742,83 @@
 
 
 
-<h1 id="phase-1-b2b-pilot">Phase 1 - B2B Pilot<a class="headerlink" href="#phase-1-b2b-pilot" title="Permanent link">&para;</a></h1>
-<div class="admonition note">
-<p class="admonition-title">Coming soon</p>
-<p>This document will be populated as the technical design matures.</p>
-</div>
+<h1 id="phase-1-b2b-pilot">Phase 1 — B2B Pilot<a class="headerlink" href="#phase-1-b2b-pilot" title="Permanent link">&para;</a></h1>
+<p>The B2B pilot proves that the architecture described in <code>spec/architecture-kutapay-system-1.md</code> can deliver sealed invoices, security elements, and regulatory reports without changing existing POS workflows. This 3‑month sprint targets 10 pilot clients (service companies, wholesalers, schools) using a single-terminal POS/fiscal-service combo with manual DGI submissions while the USB Fiscal Memory device executes the canonical PREPARE → COMMIT handshake.</p>
+<h2 id="pilot-targets">Pilot targets<a class="headerlink" href="#pilot-targets" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Duration:</strong> 3 months (March through May 2026) to align with the roadmap’s Phase 1 Gantt lane.</li>
+<li><strong>Clients:</strong> 10 pilot partners representing service businesses, wholesalers, and schools who need invoice sealing, trust-boundary enforcement, and offline resilience.</li>
+<li><strong>Scope:</strong> Single-terminal POS + fiscal service + USB device per outlet, manual DGI upload (CSV/audit export) while the cloud queue matures, and foundational reporting (Z, X, A).</li>
+</ul>
+<h2 id="epics">Epics<a class="headerlink" href="#epics" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>USB Firmware MVP (PREPARE / COMMIT + immutable journal + Z report)</strong></li>
+<li><strong>Description:</strong> Ship USB Fiscal Memory firmware that validates the canonical JSON payload (deterministic field order, tax groups, client classification) on PREPARE/COMMIT, atomically increments the monotonic counter, signs the record, and stores it in the hash-chained journal described in <code>spec/protocol-usb-fiscal-device-1.md</code>.</li>
+<li><strong>Acceptance criteria:</strong><ul>
+<li>PREPARE validates schema, taxonomy, and replay status, returning a nonce while leaving counters untouched.</li>
+<li>COMMIT increments the fiscal number, produces the device ID/auth code/timestamp/QR, appends to the hash chain, and surfaces those security elements back to the POS.</li>
+<li>Firmware can generate a Z report that contains sequence ranges, per-tax-group totals, and journal hashes per <code>spec/process-fiscal-reports-1.md</code>.</li>
+</ul>
+</li>
+<li><strong>Estimated effort:</strong> 4 weeks of firmware development plus 1 week of hardware-in-the-loop testing.</li>
+<li>
+<p><strong>Dependencies:</strong> <code>spec/architecture-kutapay-system-1.md</code>, <code>spec/protocol-usb-fiscal-device-1.md</code>, <code>design/docs/hardware/usb-device.md</code>, <code>design/docs/fiscal/reports.md</code>.</p>
+</li>
+<li>
+<p><strong>Fiscal Service Library (canonical serializer + device proxy + tax engine)</strong></p>
+</li>
+<li><strong>Description:</strong> Build the untrusted fiscal service that mediates between the POS and the USB device, serializes canonical invoices, enforces the 14 DGI tax groups in <code>spec/schema-tax-engine-1.md</code>, and brokers multi-terminal access to the device.</li>
+<li><strong>Acceptance criteria:</strong><ul>
+<li>Canonical invoices include outlet/terminal/cashier IDs, client classification, tax_groups[], totals, and payment instruments in deterministic order before issuing TXN|PREPARE.</li>
+<li>Tax engine calculates TG01–TG14 amounts, applies client classification rules (individual, company, commercial individual, professional, embassy), and records rounding deltas per <code>spec/schema-tax-engine-1.md</code>.</li>
+<li>Fiscal service serializes responses from QRY/TXN commands, logs nonce lifetimes, retries failed PREPAREs/COMMITs, and surfaces device health (QRY|STATUS) to the POS UI.</li>
+</ul>
+</li>
+<li><strong>Estimated effort:</strong> 3 weeks for canonical service + 1 week for tax engine integration.</li>
+<li>
+<p><strong>Dependencies:</strong> <code>spec/architecture-kutapay-system-1.md</code>, <code>spec/schema-tax-engine-1.md</code>, <code>spec/protocol-usb-fiscal-device-1.md</code>, <code>design/docs/architecture/trust-boundary.md</code>, <code>design/docs/pos/multi-terminal.md</code>.</p>
+</li>
+<li>
+<p><strong>POS MVP (sale entry, receipt generation, tax-aware catalog)</strong></p>
+</li>
+<li><strong>Description:</strong> Deliver a single-terminal POS workflow that lets cashiers prepare invoices, prints receipts with the device-provided security elements, and shows offline/nonce status per <code>.github/copilot-instructions.md</code> UX guidance.</li>
+<li><strong>Acceptance criteria:</strong><ul>
+<li>Sale flow (add items, select tax groups, choose payment method) completes fiscalization in under 5 seconds and prints receipt only after COMMIT returns fiscal number, auth code, timestamp, and QR.</li>
+<li>Receipt includes fiscal number, device ID, signature/auth code, trusted timestamp, QR, and references to the canonical payload (items, tax breakdown) so auditors can reconcile.</li>
+<li>UI exposes offline indicators, device-disconnect recovery, and nonce exhaustion warnings, keeping cashiers informed while the device enforces the trust boundary.</li>
+</ul>
+</li>
+<li><strong>Estimated effort:</strong> 3 weeks to build sale entry + 1 week to polish receipt/UX messaging.</li>
+<li>
+<p><strong>Dependencies:</strong> <code>spec/architecture-kutapay-system-1.md</code>, <code>design/docs/fiscal/security-elements.md</code>, <code>docs/odoo-pos-lessons-for-kutapay.md</code>, <code>design/docs/pos/ui-ux.md</code>.</p>
+</li>
+<li>
+<p><strong>Manual compliance tooling (CSV export + audit dump)</strong></p>
+</li>
+<li><strong>Description:</strong> Provide the compliance belt that lets pilot clients deliver mandated outputs to the DGI before automated cloud uploads arrive: CSV exports for sealed invoices, Z/X/A reports, and audit dumps derived from the hash-chained journal.</li>
+<li><strong>Acceptance criteria:</strong><ul>
+<li>Generate a DGI-ready CSV containing the canonical invoice metadata, fiscal number, auth code, totals, and per-tax-group amounts.</li>
+<li>Produce Z/X/A reports plus an audit export (streamed chunk) as described in <code>spec/process-fiscal-reports-1.md</code>, with counters, journal hashes, and security elements intact.</li>
+<li>Surface explicit instructions for manual upload to the DGI control module (via email or portal) and track evidence of submission in the pilot logs.</li>
+</ul>
+</li>
+<li><strong>Estimated effort:</strong> 2 weeks to implement exports + 1 week for documentation/guidance.</li>
+<li>
+<p><strong>Dependencies:</strong> <code>spec/process-fiscal-reports-1.md</code>, <code>spec/protocol-usb-fiscal-device-1.md</code>, <code>docs/sfe-specifications-v1-summary.md</code>, <code>design/docs/cloud/dgi-integration.md</code> (for future automation notes).</p>
+</li>
+<li>
+<p><strong>Testing &amp; homologation prep (pilot onboarding + risk mitigation)</strong></p>
+</li>
+<li><strong>Description:</strong> Validate the pilot with 10 clients, automate regression scripts for offline resilience, and prepare evidence for homologation reviews (DGI, auditors).</li>
+<li><strong>Acceptance criteria:</strong><ul>
+<li>Onboard at least 10 service/wholesale/school partners, run fiscalization in offline (48–72 h queue) and synchronous scenarios, and collect logs demonstrating canonical payload integrity, nonce handling, and retries.</li>
+<li>Document failure modes (power loss during COMMIT, cable disconnects, nonce expiration) and verify the firmware/service recovers without incrementing counters or producing duplicates.</li>
+<li>Demonstrate DGI compliance by submitting the CSV/Z/X/A/audit exports, logging reviewer feedback, and flagging open questions (e.g., unknown MCF endpoint or signature algorithm) with <code>???</code> admonitions in the compliance notebook.</li>
+</ul>
+</li>
+<li><strong>Estimated effort:</strong> 4 weeks of field testing combined with 1 week for homologation paperwork.</li>
+<li><strong>Dependencies:</strong> <code>spec/infrastructure-dgi-integration-1.md</code>, <code>design/docs/cloud/offline-sync.md</code>, <code>design/docs/implementation/roadmap.md</code>, <code>memory-bank/context-map.md</code>.</li>
+</ol>
 
 
 

@@ -1451,6 +1451,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Phase 3 - Enterprise
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -1467,6 +1485,47 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#objectives" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objectives
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#epics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Epics
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1638,6 +1697,36 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#objectives" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objectives
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#epics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Epics
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1653,11 +1742,84 @@
 
 
 
-<h1 id="phase-3-enterprise">Phase 3 - Enterprise<a class="headerlink" href="#phase-3-enterprise" title="Permanent link">&para;</a></h1>
-<div class="admonition note">
-<p class="admonition-title">Coming soon</p>
-<p>This document will be populated as the technical design matures.</p>
-</div>
+<h1 id="phase-3-enterprise">Phase 3 — Enterprise<a class="headerlink" href="#phase-3-enterprise" title="Permanent link">&para;</a></h1>
+<p>Phase 3 expands the KutaPay platform beyond the pilot and retail deployments by preparing for a <strong>6‑month enterprise launch</strong> where <strong>1,000+ outlets</strong> (multi-branch retailers, logistics fleets, franchise networks) rely on our fiscal stack for compliance, analytics, and interoperability. The work inherits everything from Phases 1 and 2 (PREPARE → COMMIT trust boundary, multi-terminal orchestration, offline sync, cloud automation, and compliance tooling) and adds enterprise-grade integration, fleet/dashboards, and analytics so large customers can connect ERPs, consume webhooks, and manage thousands of devices without violating the trust boundary.</p>
+<h2 id="objectives">Objectives<a class="headerlink" href="#objectives" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Scope:</strong> Extend Phase 1+2 deliverables to support distributed enterprise fleets with ERP connectors, webhook API, fleet management controls, multi-branch dashboards, and advanced analytics.</li>
+<li><strong>Target:</strong> 1,000+ merchant locations spread across multiple branches or regions, synchronized via the cloud sync agent and dashboard, where every invoice still carries the hardware-generated fiscal number, security hashes, and report outputs.</li>
+<li><strong>Duration:</strong> 6 months (September 2026 through February 2027) with monthly milestones for integrations, fleet roll‑outs, analytics, compliance automation, and resilience/observability improvements.</li>
+<li><strong>Reference artifacts:</strong> <code>spec/architecture-kutapay-system-1.md</code>, <code>spec/design-cloud-api-1.md</code>, <code>spec/design-pos-plugin-api-1.md</code>, <code>spec/process-fiscal-reports-1.md</code>, <code>spec/schema-tax-engine-1.md</code>, <code>spec/protocol-usb-fiscal-device-1.md</code>, <code>design/docs/cloud/architecture.md</code>, <code>design/docs/cloud/offline-sync.md</code>, <code>design/docs/pos/integrations.md</code>, <code>design/docs/fiscal/reports.md</code>, <code>design/docs/pos/multi-terminal.md</code>.</li>
+</ul>
+<h2 id="epics">Epics<a class="headerlink" href="#epics" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>Enterprise integration fabric (ERP connectors + webhook API)</strong></li>
+<li><strong>Description:</strong> Build a catalog of ERP connectors and a webhook-based API layer so enterprise finance teams can automatically pull sealed invoices, reconcile fiscal reports, and integrate with core ERP workflows while honoring the trust boundary.</li>
+<li><strong>Acceptance criteria:</strong><ul>
+<li>ERP connectors for at least two platforms (e.g., SAP S/4HANA and Odoo) that ingest sealed invoices, map TG01–TG14 tax groups, and push acknowledgement receipts back to the fiscal service.</li>
+<li>A webhook API that streams fiscal events (invoice sealed, report generated, sync failure) to customer endpoints using signed payloads that mirror <code>spec/design-cloud-api-1.md</code>.</li>
+<li>Connectors and webhooks expose canonical metadata (fiscal number, device ID, branch ID, reporting hashes) so CFOs can reconcile with their ERP-ledgers.</li>
+</ul>
+</li>
+<li><strong>Dependencies:</strong> <code>design/docs/pos/integrations.md</code>, <code>spec/design-pos-plugin-api-1.md</code>, <code>spec/design-cloud-api-1.md</code>, <code>kutapay_technical_design.md</code> integration priorities, <code>.github/copilot-instructions.md</code> (security/integration guidance).</li>
+<li>
+<p><strong>Estimated effort:</strong> 5 weeks to build connectors + 2 weeks to instrument webhook delivery, retries, and documentation.</p>
+</li>
+<li>
+<p><strong>Multi-branch fleet management &amp; dashboard</strong></p>
+</li>
+<li><strong>Description:</strong> Enable KutaPay Cloud to operate and monitor thousands of outlets: device registration, fleet-wide health, configuration drift alerts, and short/long-lived dashboard views (per-branch + consolidated).</li>
+<li><strong>Acceptance criteria:</strong><ul>
+<li>Dashboard surfaces device health (from <code>/devices/{device_id}/health</code>), queue depth, pending DGI uploads, and branch-level sync status with drilldowns to multi-terminal POS IDs.</li>
+<li>Fleet management workflow for onboarding/replacing a DEF per outlet, including revoke/regenerate flows tied to <code>spec/protocol-usb-fiscal-device-1.md</code> and <code>spec/design-cloud-api-1.md</code>.</li>
+<li>Integration with the offline sync state machine (<code>design/docs/cloud/offline-sync.md</code>) so operators know when uploads are pending and can trigger retries per branch.</li>
+</ul>
+</li>
+<li><strong>Dependencies:</strong> <code>design/docs/cloud/architecture.md</code>, <code>design/docs/cloud/offline-sync.md</code>, <code>spec/design-cloud-api-1.md</code>, <code>spec/infrastructure-dgi-integration-1.md</code>, <code>design/docs/implementation/roadmap.md</code>, <code>memory-bank/context-map.md</code>.</li>
+<li>
+<p><strong>Estimated effort:</strong> 4 weeks to implement dashboard/front-end + 2 weeks for fleet automation and playbooks.</p>
+</li>
+<li>
+<p><strong>Advanced analytics &amp; compliance reporting at scale</strong></p>
+</li>
+<li><strong>Description:</strong> Offer advanced analytics (branch trends, tax-group heatmaps, anomaly detection) built on the immutable journal plus automation for Z/X/A/audit exports so auditors can trust the data without manual requests.</li>
+<li><strong>Acceptance criteria:</strong><ul>
+<li>Analytics feeds derived from <code>spec/process-fiscal-reports-1.md</code> that highlight branch-level totals per TG01–TG14, differences between manual and automated exports, and queue aging.</li>
+<li>Automated report publication hooks that push Z/X/A exports and audit chunks to DGI channels with notification webhooks and retention policies.</li>
+<li>Tax engine validation (per <code>spec/schema-tax-engine-1.md</code>) ensures analytics respect client classification rules, rounding, and manifest versions.</li>
+</ul>
+</li>
+<li><strong>Dependencies:</strong> <code>spec/process-fiscal-reports-1.md</code>, <code>design/docs/fiscal/reports.md</code>, <code>spec/schema-tax-engine-1.md</code>, <code>design/docs/cloud/dgi-integration.md</code>.</li>
+<li>
+<p><strong>Estimated effort:</strong> 3 weeks for analytics pipelines + 2 weeks for report automation and audit exports.</p>
+</li>
+<li>
+<p><strong>Enterprise-grade resiliency &amp; trust boundary compliance</strong></p>
+</li>
+<li><strong>Description:</strong> Harden the firmware/service stack and guidance so the expanded fleet never loosens the trust boundary (no new paths for the POS to write fiscal numbers or tamper with journals) while delivering enterprise SLAs.</li>
+<li><strong>Acceptance criteria:</strong><ul>
+<li>Firmware/service automation that enforces PREPARE/COMMIT (per <code>spec/protocol-usb-fiscal-device-1.md</code>) even under network partitions or rollback scenarios, plus documented recovery instructions.</li>
+<li>Enterprise incident runbooks covering power/fiber outages, nonce exhaustion, and multi-terminal collisions, referencing <code>design/docs/hardware/secure-element.md</code> and <code>design/docs/architecture/trust-boundary.md</code>.</li>
+<li>Monitoring &amp; alerts for audit log integrity (hash chains, sequential counters) with auto-remediation if anomalies appear.</li>
+</ul>
+</li>
+<li><strong>Dependencies:</strong> <code>design/docs/hardware/secure-element.md</code>, <code>design/docs/architecture/trust-boundary.md</code>, <code>spec/protocol-usb-fiscal-device-1.md</code>, <code>docs/adr/adr-0002-signature-algorithm.md</code> (once written), <code>design/docs/pos/multi-terminal.md</code>.</li>
+<li>
+<p><strong>Estimated effort:</strong> 4 weeks of hardening plus 2 weeks of documentation/testing.</p>
+</li>
+<li>
+<p><strong>Operational excellence &amp; change control</strong></p>
+</li>
+<li><strong>Description:</strong> Institutionalize change control, scalability, and support practices so enterprise customers can roll out new branches, update tax rules, and respond to DGI changes without breaking existing invoices.</li>
+<li><strong>Acceptance criteria:</strong><ul>
+<li>Branch onboarding/outage playbooks tied to <code>design/docs/cloud/architecture.md</code> and <code>design/docs/implementation/phase-2.md</code>, covering device provisioning, ERP connector configuration, and compliance checklists.</li>
+<li>Change control process for tax manifest updates, firmware releases, and webhook API changes with regression testing against <code>spec/schema-tax-engine-1.md</code> and <code>spec/process-fiscal-reports-1.md</code>.</li>
+<li>Enterprise support KPIs (MTTR for device replacement, SLA for DGI upload, audit readiness) documented and tracked via the dashboard.</li>
+</ul>
+</li>
+<li><strong>Dependencies:</strong> <code>design/docs/implementation/roadmap.md</code>, <code>memory-bank/context-map.md</code>, <code>design/docs/cloud/architecture.md</code>, <code>spec/schema-tax-engine-1.md</code>, <code>design/docs/pos/ui-ux.md</code>.</li>
+<li><strong>Estimated effort:</strong> 4 weeks for playbooks + 2 weeks for automation and KPI reporting.</li>
+</ol>
 
 
 
