@@ -1,0 +1,6 @@
+#!/bin/sh
+# Deploys to Vercel production after every commit.
+# Installed via: git config core.hooksPath .githooks
+
+echo "🚀  Deploying to Vercel..."
+vercel deploy --prod --yes 2>&1
