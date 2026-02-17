@@ -98,10 +98,10 @@ python .github/cookbook/copilot-sdk/python/recipe/ralph_loop.py build 50
 
 | Phase | Tasks | Done | Status |
 |-------|-------|------|--------|
-| 0 — Restructure & Archive | 3 | 0 | READY |
-| 1 — Foundation Updates | 4 | 0 | BLOCKED by Phase 0 |
-| 2 — Architecture (Software-First) | 4 | 0 | BLOCKED by Phase 1 |
-| 3 — Invoicing Platform (New) | 4 | 0 | BLOCKED by Phase 1 |
+| 0 — Restructure & Archive | 3 | 3 | DONE |
+| 1 — Foundation Updates | 4 | 4 | DONE |
+| 2 — Architecture (Software-First) | 4 | 0 | READY |
+| 3 — Invoicing Platform (New) | 4 | 0 | READY |
 | 4 — Fiscal Engine (Rewrite) | 4 | 0 | BLOCKED by Phase 2 |
 | 5 — Cloud (Rewrite) | 3 | 0 | BLOCKED by Phase 2 |
 | 6 — Integrations (Rewrite POS→Platform) | 3 | 0 | BLOCKED by Phase 2 |
@@ -110,7 +110,7 @@ python .github/cookbook/copilot-sdk/python/recipe/ralph_loop.py build 50
 | 9 — Implementation Roadmap (Rewrite) | 4 | 0 | BLOCKED by Phase 2-6 |
 | 10 — ADRs (New + Rewrite) | 4 | 0 | BLOCKED by Phase 2 |
 | 11 — Validation & Final Assembly | 3 | 0 | BLOCKED by Phase 7-10 |
-| **Total** | **41** | **0** | |
+| **Total** | **41** | **7** | |
 
 ---
 
@@ -348,7 +348,8 @@ Rewrite the EARS-notation architecture specification for software-first:
 
 ### TASK-007: Rewrite remaining specs
 ```
-Status:     READY (after TASK-006)
+Status:     DONE
+Completed:  2026-02-17
 Depends:    TASK-006
 Agent:      manual
 Sources:    spec/ (all files), .github/copilot-instructions.md (updated)
