@@ -1,10 +1,14 @@
 ---
 title: "USB Fiscal Device Protocol Specification v1"
 version: 1.0
-author: "KutaPay Architecture Team"
+author: "Bono Pay Architecture Team"
 ---
 
 # USB Fiscal Device Protocol Specification v1
+
+## Phase 3: USB Hardware Protocol
+
+This specification applies when the USB Fiscal Memory device is deployed. Phase 1 and Phase 2 clients rely on the cloud fiscal ledger, but the USB device resumes the trusted signing role for DEF-certified outlets while still syncing back to Bono Pay Cloud.
 
 ## Scope
 This document defines the USB CDC protocol that mediates every fiscal operation between the **untrusted POS/fiscal service** cluster and the **trusted USB Fiscal Memory device (DEF)**. All commands use deterministic framing, canonical JSON payloads, nonce-based two-phase commit, and the immutable journal described in [ADR-0001](../../docs/adr/adr-0001-two-phase-commit-usb-protocol.md).
@@ -79,12 +83,12 @@ Errors are returned as JSON with `{"status":"ERR","code":"<CODE>","detail":"..."
 * **Response**:
   ```json
   {
-    "status": "OK",
-    "invoice_seq": 105,
-    "auth_code": "ABCD1234EFGH5678",
-    "device_id": "KUTA001",
-    "timestamp": "2026-02-04T10:15:30",
-    "qr_payload": "KUTA001|105|ABCD1234..."
+  "status": "OK",
+  "invoice_seq": 105,
+  "auth_code": "ABCD1234EFGH5678",
+  "device_id": "BONO-USB-001",
+  "timestamp": "2026-02-04T10:15:30",
+  "qr_payload": "BONO-USB-001|105|ABCD1234..."
   }
   ```
 * **Errors**: `INVALID_NONCE`, `NONCE_EXPIRED`, `DEVICE_BUSY`, `DEVICE_REVOKED`, `STORAGE_FULL`, `CLOCK_ROLLBACK_DETECTED`.
@@ -98,7 +102,7 @@ Errors are returned as JSON with `{"status":"ERR","code":"<CODE>","detail":"..."
   {
     "status": "OK",
     "firmware_version": "2026.02.17",
-    "device_id": "KUTA001",
+    "device_id": "BONO-USB-001",
     "next_invoice_seq": 106,
     "free_memory_bytes": 655360,
     "last_sync_timestamp": "2026-02-04T10:15:30",
@@ -190,7 +194,7 @@ Errors are returned as JSON with `{"status":"ERR","code":"<CODE>","detail":"..."
   {
     "status": "OK",
     "message": "Counters reset to zero",
-    "device_id": "KUTA001"
+    "device_id": "BONO-USB-001"
   }
   ```
 * **Security**: Only a DGI-signed token opens this command; otherwise return `UNAUTHORIZED`.
@@ -209,7 +213,7 @@ Errors are returned as JSON with `{"status":"ERR","code":"<CODE>","detail":"..."
 * **Purpose**: Provision a new device with cryptographic identity and register it with DGI.
 * **Response**:
   ```json
-  { "status": "OK", "device_id": "KUTA001", "fiscal_number_prefix": "KUTA" }
+  { "status": "OK", "device_id": "BONO-USB-001", "fiscal_number_prefix": "BONO" }
   ```
 
 ## Examples and Sequence

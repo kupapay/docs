@@ -2,249 +2,202 @@
 
 ## Overview
 
-The KutaPay Cloud API is the authenticated bridge between the POS/fiscal service stack and the DGI control modules (MCF/e-MCF). It receives sealed invoices from the USB Fiscal Memory device, keeps them queued during offline periods, mirrors the DEF security elements, and forwards audit-grade data to the tax authority. Every endpoint enforces HTTPS transport, strongly typed payloads, and alignment with the canonical invoice structure described in `spec/architecture-kutapay-system-1.md`.
+Bono Pay Cloud presents the primary fiscal interface in Phase 1. Instead of relaying sealed invoices from a USB device, the Cloud API now accepts canonical invoices (from dashboards, API consumers, SDKs, or future POS integrations), applies the tax engine, and routes each payload through the Cloud Signing Service (HSM-backed) so that the fiscal number, authentication code, timestamp, and QR payload originate inside the trusted boundary. Every sealed response is persisted in the hash-chained Fiscal Ledger before the Sync Agent ships it to the DGI (MCF/e-MCF).
 
-## Security & Transport
+Clients receive a developer-friendly REST surface that mirrors the canonical payload defined in `spec/architecture-kutapay-system-1.md` and the 14 DGI tax groups.
 
-- **HTTPS only**: All requests must use TLS 1.3 or higher.
-- **Authentication**: `Authorization: Bearer <token>` represents a DGI-issued or KutaPay-managed API key bound to the outlet. The same credential is used to register devices, upload invoices, and request reports.
-- **Device identity**: Requests that originate from the local fiscal service carry `X-KUTAPAY-DEVICE-ID` and `X-KUTAPAY-NONCE` headers so the cloud can tie uploads to the DEF instance that generated the canonical payload.
-- **Replay protection**: The cloud validates the nonce from the PREPARE step before forwarding the payload to the DGI. Retries still require valid nonces, and duplicate fiscal numbers are rejected.
-- **Field ordering**: The invoice upload payload must include the canonical JSON fields (`merchant_nif`, `client`, `client_classification`, `items[]`, `tax_groups[]`, `totals`, `timestamp`, `outlet_id`, `pos_terminal_id`, `cashier_id`) in deterministic order to preserve signature integrity.
+## Authentication & Transport
 
-## Common Response Envelope
+- **HTTPS only**: All endpoints require TLS 1.3+.
+- **API keys**: Merchants, outlets, and users operate with scoped API keys. Each request must send `Authorization: Bearer <token>` and include `X-BonoPay-Merchant-ID` and `X-BonoPay-Outlet-ID` when applicable so the Cloud can enforce per-tenant quotas and scoping.
+- **Rate limiting**: The platform enforces short-term rate limits per outlet (e.g., 60 requests/min) and per API key token. Clients should honor `Retry-After` headers on `429` responses.
+- **Traceability headers**: Optional `X-BonoPay-User-ID` or `X-BonoPay-Source` help auditors trace which user, SDK, or POS terminal originated an invoice.
 
-```json
-{
-  "status": "ok",
-  "code": "MCF_ACK",
-  "message": "Invoice accepted for upload",
-  "payload": { ... }
-}
-```
+## Canonical Invoice Payload
 
-All endpoints wrap their primary response inside this envelope. Errors replace `status` with `error`, set `code` to a short identifier, and include `details` for debugging.
+Invoices must use deterministic ordering to keep signatures reproducible. The JSON payload flowing into `POST /api/v1/invoices` must include:
+
+1. `merchant_id` — Bono Pay merchant identifier (uuid or slug).
+2. `outlet_id` — Outlet within the merchant namespace.
+3. `pos_terminal_id` — Identifier of the terminal, SDK, or service creating the invoice.
+4. `cashier_id` — Optional cashier/waiter identifier or session token.
+5. `invoice_type` — Enum (`sale`, `advance`, `credit_note`, `export`, `export_credit`).
+6. `timestamp` — ISO 8601 UTC string when the invoice was authored.
+7. `client` — Object with `name`, `nif` (tax ID), `classification` (`Individual`, `Company`, `CommercialIndividual`, `Professional`, `Embassy`).
+8. `items` — Array of items in the exact same field order every time (`code`, `description`, `quantity`, `unit_price`, `tax_group`, `taxable_unit`).
+9. `tax_groups` — Array describing each of the 14 DGI tax groups present, including `code`, `name`, `rate`, `base_amount`, and `tax_amount`.
+10. `totals` — Object with `subtotal`, `total_vat`, `total`, `currency`.
+11. `payments` — Array of payment instruments with `method`, `amount`, `instrument_id`, `currency`.
+
+All decimal values should be strings (fixed point) and follow the rounding rules documented in `spec/schema-tax-engine-1.md`. The Cloud API recalculates the tax summary server-side to guard against tampering and rejects invoices whose totals do not match the canonical breakdown.
 
 ## Endpoints
 
-### Invoice upload — `POST /api/v1/invoices/upload`
+### Create & Fiscalize — `POST /api/v1/invoices`
 
-**Purpose:** Receive sealed invoices after the DEF returns fiscal numbers so the cloud can queue them for DGI transmission and auditing.
+**Purpose:** Fiscalize a new invoice and return the sealed response (fiscal number, signature, timestamp, QR payload) produced by the Cloud Signing Service.
 
-**Request:** `application/json`
-
-```json
-{
-  "fiscal_number": "KUTA-2026-000123",
-  "device_id": "DEF-1A2B3C",
-  "auth_code": "h9fj2w8s...",
-  "timestamp": "2026-02-17T03:00:00Z",
-  "qr_payload": "https://...",
-  "canonical_payload": {
-    "merchant_nif": "123456789",
-    "client": { "name": "Acme Ltd", "nif": "987654321" },
-    "client_classification": "Company",
-    "outlet_id": "OUTLET-001",
-    "pos_terminal_id": "POS-01",
-    "cashier_id": "CASHIER-07",
-    "tax_groups": [
-      { "code": "VAT_STD", "amount": 120.00, "rate": 16.0 }
-    ],
-    "items": [
-      { "sku": "SKU-001", "description": "Widget", "quantity": 2, "unit_price": 60.00, "tax_group": "VAT_STD" }
-    ],
-    "totals": { "subtotal": 120.00, "tax": 19.20, "total": 139.20 },
-    "timestamp": "2026-02-17T03:00:00Z"
-  }
-}
-```
-
-**Response:**
+**Request example:**
 
 ```json
 {
-  "status": "ok",
-  "code": "INVOICE_UPLOADED",
-  "payload": {
-    "queued_at": "2026-02-17T03:01:00Z",
-    "dgi_status": "pending",
-    "retry_after": "2026-02-17T03:05:00Z"
-  }
+  "merchant_id": "bonopay-ks-1",
+  "outlet_id": "outlet-kin001",
+  "pos_terminal_id": "sdk-js-01",
+  "cashier_id": "cashier-13",
+  "invoice_type": "sale",
+  "timestamp": "2026-02-17T04:00:00Z",
+  "client": {
+    "name": "Acme Ltd",
+    "nif": "123456789",
+    "classification": "Company"
+  },
+  "items": [
+    {
+      "code": "CONS-001",
+      "description": "Consulting hours",
+      "quantity": 2,
+      "unit_price": "500.00",
+      "tax_group": "TG03",
+      "taxable_unit": "hour"
+    }
+  ],
+  "tax_groups": [
+    {
+      "code": "TG03",
+      "name": "Standard VAT — Services",
+      "rate": "0.16",
+      "base_amount": "1000.00",
+      "tax_amount": "160.00"
+    }
+  ],
+  "totals": {
+    "subtotal": "1000.00",
+    "total_vat": "160.00",
+    "total": "1160.00",
+    "currency": "CDF"
+  },
+  "payments": [
+    {
+      "method": "mobile_money",
+      "amount": "1160.00",
+      "instrument_id": "MOMO-123",
+      "currency": "CDF"
+    }
+  ]
 }
 ```
 
-**Errors:**
-
-- `error: INVALID_SIGNATURE` if the canonical payload order does not match the DEF signature.
-- `error: DUPLICATE_FISCAL_NUMBER` if the fiscal number already exists in the queue.
-- `error: DEVICE_NOT_REGISTERED` if the `device_id` is unknown or offline.
-
-### Invoice status — `GET /api/v1/invoices/{fiscal_number}/status`
-
-**Purpose:** Let POS or auditors query whether the DGI has acknowledged an uploaded invoice.
-
-**Response:**
-
-```json
-{
-  "status": "ok",
-  "code": "INVOICE_STATUS",
-  "payload": {
-    "fiscal_number": "KUTA-2026-000123",
-    "dgi_status": "accepted",
-    "processed_at": "2026-02-17T03:08:12Z",
-    "report_links": ["/reports/2026-02-17/z"]
-  }
-}
-```
-
-**Errors:**
-
-- `error: NOT_FOUND` when the fiscal number is unknown.
-- `error: NOT_YET_PROCESSED` when still in the upload queue.
-
-### Device registration — `POST /api/v1/devices/register`
-
-**Purpose:** Register a new DEF instance so the cloud can assign fiscal prefixes and track activation.
-
-**Request:**
-
-```json
-{
-  "device_id": "DEF-1A2B3C",
-  "serial_number": "SN-987654",
-  "public_key": "mF6hLgq2...",
-  "outlet_id": "OUTLET-001",
-  "requested_prefix": "KUTA-2026-"
-}
-```
-
-**Response:**
+**Response example:**
 
 ```json
 {
   "status": "ok",
-  "code": "DEVICE_REGISTERED",
+  "code": "INVOICE_FISCALIZED",
   "payload": {
-    "assigned_prefix": "KUTA-2026-",
-    "activation_code": "ACT-1234",
-    "dgi_registration_token": "token-abc"
+    "fiscal_number": "BONO-2026-000458",
+    "auth_code": "H8F2-A9D3-9001",
+    "timestamp": "2026-02-17T04:00:02Z",
+    "qr_payload": "https://bonopay.cdx/verify?fiscal_number=BONO-2026-000458",
+    "fiscal_authority_id": "cloud-signer-west-1",
+    "dgi_status": "queued",
+    "ledger_hash": "e3b0c44298fc1c149afbf4c8996fb924"
   }
 }
 ```
 
-**Errors:**
+`dgi_status` tracks whether the Sync Agent has uploaded the invoice to the DGI (`queued`, `synced`, `failed`). The Cloud Signing Service is responsible for the five security elements (fiscal number, fiscal authority ID, authentication code, trusted timestamp, QR payload).
 
-- `error: SERIAL_USED` if the serial number is already registered.
-- `error: INVALID_PUBLIC_KEY` when the SE key fails verification.
+### Retrieve — `GET /api/v1/invoices/{fiscal_number}`
 
-### Device health — `GET /api/v1/devices/{device_id}/health`
+**Purpose:** Return the sealed invoice plus delivery metadata.
 
-**Purpose:** Surface heartbeat, counters, and connectivity to sync agents for monitoring.
-
-**Response:**
+**Response example:**
 
 ```json
 {
   "status": "ok",
-  "code": "DEVICE_HEALTH",
+  "code": "INVOICE_RETRIEVED",
   "payload": {
-    "last_seen": "2026-02-17T03:15:00Z",
-    "current_counter": 3124,
-    "queued_invoices": 5,
-    "battery": "n/a",
-    "errors": []
+    "fiscal_number": "BONO-2026-000458",
+    "merchant_id": "bonopay-ks-1",
+    "outlet_id": "outlet-kin001",
+    "client": { "name": "Acme Ltd", "nif": "123456789" },
+    "items": [ ... ],
+    "tax_groups": [ ... ],
+    "security_elements": {
+      "auth_code": "H8F2-A9D3-9001",
+      "timestamp": "2026-02-17T04:00:02Z",
+      "qr_payload": "https://bonopay.cdx/verify?fiscal_number=BONO-2026-000458",
+      "fiscal_authority_id": "cloud-signer-west-1"
+    },
+    "dgi_status": "synced",
+    "ledger_hash": "e3b0c44298fc1c149afbf4c8996fb924"
   }
 }
 ```
 
-**Errors:** `error: NOT_FOUND` if the device has never registered.
+### List — `GET /api/v1/invoices`
 
-### Sync status — `GET /api/v1/sync/status`
+**Purpose:** Enumerate invoices with filters (`merchant_id`, `outlet_id`, date range, `client.nif`, `status`, `fiscal_number`). Supports pagination (`page`, `per_page`) and sorting by `timestamp` or `fiscal_number`.
 
-**Purpose:** Reveal the state machine for deferred uploads and let dashboards show queue depth, backlog, and earliest pending invoice.
+### Void — `POST /api/v1/invoices/{fiscal_number}/void`
 
-**Response:**
+**Purpose:** Create a credit note fiscal event that references the original invoice.
+
+**Request example:**
 
 ```json
 {
-  "status": "ok",
-  "code": "SYNC_STATUS",
-  "payload": {
-    "backlog": 12,
-    "oldest_queued": "2026-02-16T22:11:03Z",
-    "next_retry": "2026-02-17T03:25:00Z",
-    "state": "retrying",
-    "last_successful_upload": "2026-02-17T02:58:00Z"
-  }
+  "reason": "Customer returned goods",
+  "items": [
+    {
+      "code": "CONS-001",
+      "quantity": 1,
+      "tax_group": "TG03",
+      "unit_price": "500.00"
+    }
+  ]
 }
 ```
 
-### Report generation — `POST /api/v1/reports`
+**Response:** same envelope as the creation endpoint but `code: INVOICE_VOIDED`. The Cloud Signing Service generates a new fiscal number and security elements for the credit note.
 
-**Purpose:** Request Z, X, or A reports generated from the DEF journal and optionally send them to the DGI if required.
+### Refund — `POST /api/v1/invoices/{fiscal_number}/refund`
 
-**Request:**
+**Purpose:** Issue a refund fiscal event that credits the payor while preserving audit trails.
+
+**Request fields:** `amount`, `currency`, `payment_reference`, optional `reason`, and references to the original receipt.
+
+### Reports — `POST /api/v1/reports`
+
+**Purpose:** Generate Z/X/A/audit reports from the cloud fiscal ledger.
+
+**Request example:**
 
 ```json
 {
   "type": "Z",
-  "period": {
-    "date": "2026-02-17"
-  },
-  "outlet_id": "OUTLET-001",
-  "include_journal_hash": true
+  "outlet_id": "outlet-kin001",
+  "date": "2026-02-17"
 }
 ```
 
-**Response:**
+**Response:** Envelope contains `download_url`, `generated_at`, `report_id`, and `digest` of the included `ledger_hash`.
 
-```json
-{
-  "status": "ok",
-  "code": "REPORT_READY",
-  "payload": {
-    "report_id": "RPT-Z-2026-02-17",
-    "download_url": "/reports/zip/download/RPT-Z-2026-02-17",
-    "generated_at": "2026-02-17T03:30:00Z"
-  }
-}
-```
+### Tax Groups — `GET /api/v1/tax-groups`
 
-**Errors:**
+**Purpose:** Return the current manifest of the 14 DGI tax groups, their rates, and `effective_from` timestamps. Clients cache this manifest to calculate totals client-side before submission.
 
-- `error: INVALID_PERIOD` when the requested date range is unsupported.
-- `error: INSUFFICIENT_PERMISSIONS` when the caller lacks reporting privileges.
+## Error handling
 
-### Audit export — `GET /api/v1/audit/export`
-
-**Purpose:** Deliver an immutable export of the DEF journal (hash-chained entries) for inspections or DGI uploads.
-
-**Query parameters:** `outlet_id`, `since`, `until`, `format` (`json` or `csv`)
-
-**Response:**
-
-```json
-{
-  "status": "ok",
-  "code": "AUDIT_EXPORT",
-  "payload": {
-    "journal_hash": "e3b0c44298fc1c149afbf4c8996fb924",
-    "entries": [
-      { "fiscal_number": "KUTA-2026-000100", "hash": "abc", "timestamp": "2026-02-16T23:00:00Z" }
-    ],
-    "download_url": "/reports/audit/export/2026-02"
-  }
-}
-```
-
-**Errors:**
-
-- `error: RANGE_TOO_LARGE` when the time window exceeds 30 days.
-- `error: FORMAT_UNSUPPORTED` when requesting a non-json/csv export.
+- `400 Bad Request` with `code: INVALID_CANONICAL_PAYLOAD` when required fields are missing or ordering deviates.
+- `401 Unauthorized` when tokens are invalid or missing.
+- `403 Forbidden` when the API key lacks scope for the requested outlet.
+- `422 Unprocessable Entity` when tax sums do not match, when the Cloud Signing Service rejects the invoice, or when `invoice_type` is unsupported.
+- `429 Too Many Requests` when rate limits are hit (observe `Retry-After`).
+- `500 Internal Server Error` when the Cloud Signing Service or Sync Agent hits a transient failure; clients should retry with exponential backoff.
 
 ## Observability
 
-- Each request logs the `device_id`, `outlet_id`, and `Authorization` subject.
-- Retry loops push metrics to `cloud.sync.queue` and `cloud.reports.requests`.
-- Audit exports store checksums and `journal_hash` signed by the DEF for tamper evidence.
+Every request logs `merchant_id`, `outlet_id`, `fiscal_number` (when available), and `X-BonoPay-Source`. The platform emits metrics for `cloud.invoice.create`, `cloud.invoice.retry`, `cloud.report.request`, and `cloud.sync.queue` so SRE can trace the Cloud Signing Service throughput versus the Fiscal Ledger ingestion rate.

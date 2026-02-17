@@ -1,232 +1,80 @@
 ---
-title: "POS Plugin API Specification v1"
+title: "Invoicing SDK Specification v1"
 version: 1.0
-author: "KutaPay Architecture Team"
+author: "Bono Pay Architecture Team"
 ---
 
-# POS Plugin API Specification v1
+# Invoicing SDK Specification v1
 
 ## Overview
 
-The POS plugin is the untrusted gateway that runs inside each merchant application (web, tablet, or desktop) and mediates every fiscal operation on behalf of the cashier. It speaks HTTPS to the local KutaPay fiscal service, hands off canonical JSON invoices, and lets the trusted USB Fiscal Memory device (DEF) produce fiscal numbers, authentication codes, timestamps, and QR payloads. This specification defines the RESTful surface that third-party POS vendors implement so they can:
+In Phase 1 the Bono Pay Invoicing SDK (available for JavaScript, Python, PHP, and future languages) connects directly to the Cloud API. It removes the need for a local POS plugin or fiscal service, serializes canonical invoices, handles offline queues, and surfaces the sealed responses (fiscal number, auth code, timestamp, QR payload, fiscal_authority_id) returned by the Cloud Signing Service (HSM-backed).
 
-1. Initialize the plugin with outlet-, terminal-, and cashier-specific metadata.
-2. Submit canonical invoices that honor the 14 DGI tax groups, five invoice types, and deterministic field ordering defined in `spec/architecture-kutapay-system-1.md`.
-3. Monitor invoice status until the cloud syncs the sealed data.
-4. Retrieve Z/X/A/audit reports for audit or reconciliation requests.
+The SDK abstracts:
+
+1. Authentication with `Authorization: Bearer <token>` scoped per merchant/outlet.
+2. Canonical payload ordering (merchant_id, outlet_id, pos_terminal_id, cashier_id, client, items, tax_groups, totals, payments).
+3. Offline queue handling (IndexedDB in browsers, SQLite on native runtimes).
+4. Webhook verification (`X-BonoPay-Signature`).
+5. Resilient retries and error surfaces for invalid payloads or rate limits.
 
 ## Trust boundary & canonical payload
 
-- The POS plugin lives in the **untrusted zone** described in `spec/architecture-kutapay-system-1.md`. The plugin **never manufactures** a fiscal number, device ID, timestamp, or QR payload—the DEF does.
-- Every invoice payload sent via `POST /api/v1/plugin/invoices` must follow the canonical ordering: `merchant_nif`, `outlet_id`, `pos_terminal_id`, `cashier_id`, `invoice_type`, `timestamp`, `client` (with `classification`), `items[]`, `tax_groups[]`, `totals`, and `payments`.
-- Invoice types are restricted to `sale`, `advance`, `credit_note`, `export`, `export_credit`. Tax groups span TG01…TG14, and client classifications are `Individual`, `Company`, `CommercialIndividual`, `Professional`, or `Embassy`.
-- The plugin must include outlet/terminal identifiers so the local fiscal service can enforce a single DEF per outlet and monotonic ordering across terminals.
+The SDK lives in the untrusted zone. It drafts invoices offline but never fabricates fiscal numbers, timestamps, or QR codes. It must:
 
-## Authentication & handshake
+- Respect deterministic field ordering per `spec/architecture-kutapay-system-1.md`.
+- Include `merchant_id`, `outlet_id`, and `pos_terminal_id` so the Cloud API can scope the request.
+- Tag each invoice with `client.classification` (Individual, Company, CommercialIndividual, Professional, Embassy) and supply DGI tax groups (TG01–TG14) with `tax_amount` and `tax_rate`.
+- Keep payment data (method, amount, currency, instrument_id) in the same sequence to preserve hashing.
 
-All endpoints require HTTPS/TLS 1.3 and an `Authorization: Bearer <plugin-token>` header provisioned during enrollment with the fiscal service. Each token is scoped to an outlet/terminal combination and must be rotated automatically (e.g., every 30 minutes). The plugin also tags every request with `X-KUTAPAY-DEVICE-ID` (the DEF identifier) and `X-KUTAPAY-NONCE` when performing invoice submissions so the service can correlate to the PREPARE/COMMIT lifecycle.
+When the Cloud API responds, the SDK surfaces the seal (`fiscal_number`, `auth_code`, `timestamp`, `qr_payload`, `fiscal_authority_id`) and lets callers deliver or print receipts. The SDK also stores ledger metadata (`ledger_hash`, `dgi_status`) for audit logs.
 
-### POST /api/v1/plugin/init
+## SDK Methods
 
-**Purpose:** Align the plugin version with the fiscal service, surface `nonce_pool` status, and synchronize policy metadata before any invoice is issued.
+- `client.invoices.create(payload)` — sends the canonical invoice to the Cloud API, validates the server response, and returns the sealed invoice plus security elements.
+- `client.invoices.get(fiscal_number)` — retrieves a sealed invoice with ledger hash, client info, and tax group breakdown. Useful for reprints or auditor requests.
+- `client.invoices.list(filters)` — paginated, filterable list by date range, `client.nif`, `status`, or `outlet_id`.
+- `client.invoices.void(fiscal_number, reason, adjustments)` — issues a credit note that references the original invoice and describes the returned items.
+- `client.invoices.refund(fiscal_number, amount, payment_reference)` — creates a fiscal event representing a refund; the Cloud Signing Service returns a new fiscal number for the credit note.
+- `client.reports.generate(options)` — calls `POST /api/v1/reports` to fetch Z/X/A/audit exports and exposes download URLs plus ledger hashes.
+- `client.taxGroups.list()` — caches the 14 tax groups (code, rate, effective_from) and refreshes them periodically.
+- `client.webhooks.verify(payload, signature)` — validates webhook payloads signed with `X-BonoPay-Signature` using the shared secret provided per outlet.
 
-**Request:**
+## Offline Queue & Retry
 
-```json
-{
-  "outlet_id": "OUTLET-005",
-  "pos_terminal_id": "POS-12",
-  "cashier_id": "CASHIER-07",
-  "plugin_version": "1.2.0",
-  "supported_invoice_types": ["sale", "credit_note"]
-}
-```
+- **Storage:** Browser builds use IndexedDB, newlines store each draft invoice with `status` (`draft`, `queued`, `fiscalized`, `error`). Native builds may use SQLite or file-backed JSON.
+- **Queue loop:** When connectivity returns, the SDK flushes invoices FIFO. Each retry fetches a fresh canonical payload (recomputing totals if the catalog changed) and resubmits to `POST /api/v1/invoices`.
+- **Retry policy:** Exponential backoff (100ms → 5s → 20s, max 3 retries) with a final alert when the queue is blocked. The SDK exposes hooks (`onQueued`, `onFiscalized`, `onError`) so UI layers can show green/yellow/red indicators like the dashboard does.
+- **Data integrity:** The SDK keeps the original `timestamp` and `nonce` (if provided by the Cloud) so the Cloud Signing Service can detect duplicates and assign the correct fiscal number.
 
-**Response:**
+## Configuration
 
-```json
-{
-  "status": "ok",
-  "payload": {
-    "device_id": "KUTA-OUTLET-005",
-    "policy_version": "2026-02-17",
-    "nonce_pool": 3,
-    "max_payload_bytes": 65536,
-    "supported_tax_groups": ["TG01", "TG02", "...", "TG14"],
-    "next_nonce_refresh": "2026-02-17T04:00:00Z"
-  }
-}
-```
+- `apiKey`: Mandatory per merchant/outlet.
+- `baseUrl`: Defaults to `https://api.bonopay.cd`.
+- `timeout`: Request timeout (default 10s), with a longer timeout for offline queue flushes.
+- `retry`: Strategy for transient errors.
+- `offlineStorage`: Driver (`indexeddb`, `sqlite`, or custom) that implements `save`, `list`, `delete`, `mark`.
+- `webhookSecret`: Per-outlet secret used by `client.webhooks.verify`.
 
-**Details:**
+## Error handling
 
-- The fiscal service validates that the outlet/terminal pair is registered and that the plugin version is compatible.
-- The plugin caches `nonce_pool` and refuses to submit invoices when the pool is exhausted; it may auto-refresh by re-calling `POST /init`.
+Errors adopt the Cloud API envelope (`status`, `code`, `detail`, optional `retry_after`):
 
-## Invoice submission
+- `INVALID_CANONICAL_PAYLOAD`: Field missing, order wrong, or tax summary mismatch. The SDK must surface the error with guidance to re-author.
+- `UNAUTHORIZED`: Tokens expired or missing.
+- `FORBIDDEN`: API key lacks access to the requested outlet.
+- `RATE_LIMIT_EXCEEDED`: Backoff and retry with `Retry-After`.
+- `FISCALIZATION_FAILED`: Cloud Signing Service rejected the invoice (tighten totals, check tax groups).
+- `OFFLINE_QUEUE_CORRUPT`: Local storage returned invalid data (SDK should reset the queue after exporting logs).
 
-### POST /api/v1/plugin/invoices
+The SDK logs each error with `merchant_id`, `outlet_id`, and `source` so support teams can reproduce issues without touching the untrusted client layers.
 
-**Purpose:** Deliver the canonical payload that the DEF will fiscalize via the PREPARE → COMMIT handshake.
+## Webhook handling
 
-**Request:** The body hosts the canonical invoice JSON described above plus optional metadata. Example:
-
-```json
-{
-  "merchant_nif": "123456789",
-  "outlet_id": "OUTLET-005",
-  "pos_terminal_id": "POS-12",
-  "cashier_id": "CASHIER-07",
-  "invoice_type": "sale",
-  "timestamp": "2026-02-17T03:10:00Z",
-  "client": {
-    "registration": "987654321",
-    "classification": "Company"
-  },
-  "items": [
-    {
-      "code": "ITEM-001",
-      "description": "Consulting hours",
-      "quantity": 2,
-      "unit_price": "500.00",
-      "tax_group": "TG03",
-      "taxable_unit": "hour"
-    }
-  ],
-  "tax_groups": [
-    {
-      "code": "TG03",
-      "name": "Standard VAT — Services",
-      "rate": "0.16",
-      "base_amount": "1000.00",
-      "tax_amount": "160.00"
-    }
-  ],
-  "totals": {
-    "subtotal": "1000.00",
-    "total_vat": "160.00",
-    "total": "1160.00",
-    "currency": "CDF"
-  },
-  "payments": [
-    { "method": "mobile_money", "amount": "1160.00", "instrument_id": "MOMO-123" }
-  ]
-}
-```
-
-**Response:**
-
-```json
-{
-  "status": "accepted",
-  "payload": {
-    "fiscal_number": "KUTA-2026-000145",
-    "device_id": "KUTA-OUTLET-005",
-    "auth_code": "OTS7-AB12-XY99",
-    "timestamp": "2026-02-17T03:10:05Z",
-    "qr_payload": "KUTA|145|OTS7AB12|2026-02-17T03:10:05Z",
-    "dgi_status": "queued",
-    "report_links": ["/reports/2026-02-17/z"],
-    "nonce": "A7F2D1",
-    "nonce_ttl_seconds": 7
-  }
-}
-```
-
-**Details:**
-
-- The `fiscal_number`, `device_id`, `auth_code`, `timestamp`, and `qr_payload` must come from the DEF. The plugin must never try to invent or mutate them.
-- `dgi_status` tracks whether the cloud has uploaded the sealed invoice (`synced`) or is still queuing (`queued`).
-- If the DEF rejects a payload, the service returns `status: "rejected"` plus an error code (see below). The plugin should surface the error and retry after the recommended backoff.
-- The plugin must await the fiscal response before printing, logging, or uploading—`status: "accepted"` implies the DEF successfully signed the journal entry.
-
-## Invoice status query
-
-### GET /api/v1/plugin/invoices/{fiscal_number}/status
-
-**Purpose:** Confirm whether the invoice is committed, queued, or synced with the DGI.
-
-**Response:**
-
-```json
-{
-  "status": "ok",
-  "payload": {
-    "fiscal_number": "KUTA-2026-000145",
-    "device_id": "KUTA-OUTLET-005",
-    "status": "synced",
-    "synced_at": "2026-02-17T03:15:01Z",
-    "last_error": null,
-    "report_links": [
-      { "type": "Z", "href": "/reports/2026-02-17/z" }
-    ]
-  }
-}
-```
-
-## Report retrieval
-
-### GET /api/v1/plugin/reports
-
-**Purpose:** Fetch Z/X/A or audit exports for audit, inspection, or customer requests without touching the DGI directly.
-
-**Query parameters:** `type` (`Z`, `X`, `A`, `AUDIT`), `since`, `until`, `format` (`json`, `csv`), `outlet_id`.
-
-**Response:**
-
-```json
-{
-  "status": "ok",
-  "payload": [
-    {
-      "report_id": "RPT-Z-2026-02-17",
-      "report_type": "Z",
-      "download_url": "/reports/zip/RPT-Z-2026-02-17",
-      "generated_at": "2026-02-17T03:30:00Z",
-      "summary": {
-        "sequence_start": 120,
-        "sequence_end": 156,
-        "invoice_count": 37
-      }
-    }
-  ]
-}
-```
-
-## Error codes
-
-| Code | Meaning | Action |
-| --- | --- | --- |
-| `INVALID_CANONICAL_PAYLOAD` | Required field missing or order violated | Prompt cashier to re-enter and resend |
-| `DEVICE_BUSY` | DEF processing another request | Wait 100–200 ms and retry |
-| `DEVICE_UNREGISTERED` | Outlet/terminal not bound to a DEF | Re-run `/init` and re-attach the device |
-| `DUPLICATE_FISCAL_NUMBER` | Fiscal number already exists on the device | Verify POS did not re-submit an already fiscalized invoice |
-| `RETRY_LATER` | Temporary resource constraint (storage, nonce) | Respect `retry_after` header |
-| `AUTH_FAILED` | Plugin token expired or invalid | Trigger token rotation and re-authenticate |
-
-Errors include a `retry_after` timestamp when applicable and a `detail` string with human-readable guidance. All responses share the envelope:
-
-```json
-{
-  "status": "error",
-  "code": "...",
-  "detail": "...",
-  "retry_after": "2026-02-17T03:12:30Z"
-}
-```
-
-## Offline behavior & retries
-
-- The plugin is responsible for queueing invoices locally when the fiscal service or device is unreachable. It must attach the original `timestamp` so the DEF can order entries correctly once connectivity returns.
-- The plugin should replay queued submissions in FIFO order, refreshing the `nonce` before each attempt. If the `nonce_pool` is zero, call `POST /init` to negotiate new nonces.
-- Report requests should only be retried when the fiscal service signals `RETRY_LATER`; they should not flood the device.
-
-## Security & trust
-
-- The plugin runs in the untrusted zone and must treat every response from the fiscal service as authoritative. It should log but never overwrite the approved `fiscal_number`, `auth_code`, `device_id`, `timestamp`, or `qr_payload`.
-- Authentication tokens must be stored in encrypted storage and rotated prior to expiry (e.g., using refresh tokens issued by the fiscal service). Loss or compromise of a plugin token should lead to immediate invalidation of that token.
-- All payloads must be validated before submission; no command-line templates or string concatenation should be used when constructing JSON. Use parameterized JSON builders in your language of choice.
+The Cloud emits `X-BonoPay-Signature` (HMAC-SHA256 over the payload). The SDK must verify the signature before honoring status updates (`fiscalized`, `synced`, `dgi_rejected`). Webhook payloads include `fiscal_number`, `dgi_status`, and `ledger_hash`.
 
 ## References
 
-- `spec/architecture-kutapay-system-1.md` — trust boundary, canonical payload ordering, invoice lifecycle, two-phase commit, tax groups, invoice types, reports, security elements.
+- `spec/architecture-kutapay-system-1.md` — canonical payload ordering, trust boundary, sequence diagrams.
+- `spec/design-cloud-api-1.md` — REST endpoints that the SDK targets.
+- `.github/copilot-instructions.md` — offline behavior, security elements, and trust boundary assurance.

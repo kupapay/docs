@@ -1,7 +1,7 @@
 ---
 title: "DGI Integration Spike"
 version: 1.0
-author: "KutaPay Research Team"
+author: "Bono Pay Research Team"
 ---
 
 # DGI MCF/e-MCF Integration Spike
@@ -16,11 +16,11 @@ author: "KutaPay Research Team"
 
 ## Known
 
-1. The DGI enforces a layered architecture: the enterprise billing system (SFE) → the trusted fiscal device (DEF) → the MCF/e-MCF control modules → the DGI backend. The SFE cannot issue invoices without the security elements produced by the control modules.
-2. The MCF/e-MCF modules are the government’s real-time control layer: they verify invoice data received from the DEF/SFE, generate the fiscal number/auth code/timestamp/QR, and relay sealed invoices to the central DGI systems. KutaPay Cloud must act as the bridge between the POS stack and these control modules.
-3. Arrêté 033 doubles down on the requirement with two parallel enforcement paths (physical DEF + MCF or e-UF + e-MCF) and mandates fallback hardware, continuous transmission to the tax authority, and immediate reporting of failures. Offline issuance is allowed but must be followed by an eventual sync with the control modules.
-4. Every transaction must be traceable, immutable, and tied to device identifiers; the control modules enforce this by requiring SEC-signed security elements on each invoice before the invoice can be deemed valid.
-5. The MCF/e-MCF integration is the gating factor for homologation—the platform must queue and upload invoices when connectivity returns, keep replacement hardware available, and surface DGI-issued security metadata to inspectors/customers.
+1. The DGI enforces a layered architecture: the enterprise billing system (Bono Pay Cloud SFE) → the Cloud Signing Service (HSM) → the MCF/e-MCF control modules → the DGI backend. The SFE cannot issue invoices without the security elements produced by those trusted services.
+2. The MCF/e-MCF modules are the government’s real-time control layer: they validate sealed invoices that carry the fiscal number/auth code/timestamp/QR emitted by the Cloud Signing Service and relay them to the central DGI systems. Bono Pay Cloud must act as the bridge between dashboards, SDKs, POS vendors, and these control modules.
+3. Arrêté 033 doubles down on the requirement with two parallel enforcement paths (software SFE + MCF or DEF + MCF) and mandates fallback options, continuous transmission to the tax authority, and immediate reporting of failures. Offline issuance is allowed but must be followed by an eventual sync with the control modules.
+4. Every transaction must be traceable, immutable, and tied to identifiers that the Cloud Signing Service publishes (`merchant_id`, `outlet_id`, `pos_terminal_id`, `fiscal_authority_id`). The control modules enforce this by requiring SEC-equivalent signatures and ledger hashes on each invoice before it is deemed valid.
+5. The MCF/e-MCF integration is the gating factor for homologation—the platform must queue and upload invoices when connectivity returns, keep retries observable via dashboards/webhooks, and surface DGI-issued security metadata to inspectors/customers.
 
 ## Unknown
 
@@ -35,4 +35,4 @@ author: "KutaPay Research Team"
 
 1. Engage with the DGI (or approved integrator) to obtain the precise MCF/e-MCF API documentation. Emphasize endpoint URLs, authentication method, schema, and allowed offline behavior.
 2. Review any future arrêtés or regulatory addenda to capture the error codes and required logging/audit behavior that the control modules expect.
-3. Design the KutaPay Cloud sync agent to treat this spike as a living document: update `design/docs/cloud/dgi-integration.md` when the API details arrive and keep the unknown section flagged with `???` admonitions.
+3. Design the Bono Pay Cloud sync agent to treat this spike as a living document: update `design/docs/cloud/dgi-integration.md` when the API details arrive and keep the unknown section flagged with `???` admonitions.
