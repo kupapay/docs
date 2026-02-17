@@ -881,7 +881,8 @@ Step 2:
 
 ### TASK-030: Roadmap overview
 ```
-Status:     READY (after Phase 1-5 complete)
+Status:     DONE (after Phase 1-5 complete)
+Completed:  2026-02-17
 Depends:    TASK-004 through TASK-023
 Agent:      @planner (from project-planning plugin)
 Sources:    spec/*.md (all specs), kutapay_technical_design.md section 11
