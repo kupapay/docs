@@ -486,7 +486,8 @@ Create the product overview page for the invoicing platform:
 
 ### TASK-013: Create invoicing API page
 ```
-Status:     READY (after TASK-012)
+Status:     DONE
+Completed:  2026-02-17
 Depends:    TASK-012
 Agent:      manual
 Sources:    design/docs/api/cloud.md (current — has endpoint examples),
