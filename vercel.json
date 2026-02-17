@@ -1,0 +1,5 @@
+{
+  "buildCommand": "pip install -r design/requirements.txt && cd design && mkdocs build",
+  "outputDirectory": "design/site",
+  "framework": null
+}
