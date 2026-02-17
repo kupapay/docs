@@ -556,7 +556,8 @@ Include a mock receipt diagram showing element placement.
 
 ### TASK-017: Reports (Z/X/A) specification
 ```
-Status:     READY (after TASK-004)
+Status:     DONE
+Completed:  2026-02-17
 Depends:    TASK-004
 Agent:      @specification + @gem-documentation-writer
 Sources:    docs/sfe-specifications-v1-summary.md,
