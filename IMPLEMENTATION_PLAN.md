@@ -930,7 +930,8 @@ Each epic: description, acceptance criteria, estimated effort, dependencies.
 
 ### TASK-032: Phase 2 (Retail) epic breakdown
 ```
-Status:     READY (after TASK-031)
+Status:     DONE
+Completed:  2026-02-17
 Depends:    TASK-031
 Agent:      /breakdown-epic-arch prompt
 Sources:    spec/*.md, design/docs/implementation/phase-1.md
