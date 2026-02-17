@@ -749,7 +749,8 @@ For each: target users, data format, authentication, example payload.
 
 ### TASK-024: DRC legal framework overview
 ```
-Status:     READY
+Status:     DONE
+Completed:  2026-02-17
 Agent:      @gem-documentation-writer
 Sources:    docs/arrete-032-summary.md, docs/arrete-033-summary.md,
             docs/arrete-034-summary.md, docs/arrete-016-2025-summary.md,
