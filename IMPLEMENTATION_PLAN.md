@@ -398,7 +398,8 @@ Heavy rewrite of architecture overview for software-first invoicing platform:
 
 ### TASK-009: Rewrite trust boundary
 ```
-Status:     READY (after TASK-008)
+Status:     DONE
+Completed:  2026-02-17
 Depends:    TASK-008
 Agent:      manual
 Sources:    design/docs/architecture/trust-boundary.md (current), spec/architecture-kutapay-system-1.md (updated)
