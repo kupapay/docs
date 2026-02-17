@@ -361,7 +361,8 @@ Cover:
 
 ### TASK-011: USB 2PC protocol specification
 ```
-Status:     READY (after TASK-004)
+Status:     DONE (after TASK-004)
+Completed:  2026-02-17
 Depends:    TASK-004
 Agent:      @specification
 Sources:    docs/adr/adr-0001-two-phase-commit-usb-protocol.md,
