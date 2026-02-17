@@ -58,9 +58,9 @@ After the Cloud Signing Service replies, the UI shows a success toast with the f
 
 ```mermaid
 flowchart LR
-    "Dashboard" --> "Create Invoice"
-    "Create Invoice" --> "Add Items + Tax"
-    "Add Items + Tax" --> "Submit to Bono Pay Cloud"
-    "Submit to Bono Pay Cloud" --> "Cloud Signing Service (HSM)"
-    "Cloud Signing Service (HSM)" --> "Receipt Delivery (email/WhatsApp/PDF/print)"
+    A["Dashboard"] --> B["Create Invoice"]
+    B --> C["Add Items + Tax"]
+    C --> D["Submit to Bono Pay Cloud"]
+    D --> E["Cloud Signing Service HSM"]
+    E --> F["Receipt Delivery\nemail / WhatsApp / PDF / print"]
 ```

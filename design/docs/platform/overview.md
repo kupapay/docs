@@ -13,11 +13,11 @@ Bono Pay is fiscal invoicing infrastructure for the DRC—think Stripe Invoices 
 ## Platform Flow
 ```mermaid
 flowchart LR
-  "API / Dashboard" --> "Bono Pay Cloud (Invoicing API + Cloud Signing Service (HSM))"
-  "SDKs & Integrations" --> "Bono Pay Cloud (Invoicing API + Cloud Signing Service (HSM))"
-  "Bono Pay Cloud (Invoicing API + Cloud Signing Service (HSM))" --> "Sealed Invoice (Fiscal Ledger & Report Generator)"
-  "Sealed Invoice (Fiscal Ledger & Report Generator)" --> "Email / WhatsApp / PDF / Print"
-  "Sealed Invoice (Fiscal Ledger & Report Generator)" --> "Sync Agent (MCF/e-MCF)"
+  A["API / Dashboard"] --> C["Bono Pay Cloud\nInvoicing API + Cloud Signing Service HSM"]
+  B["SDKs & Integrations"] --> C
+  C --> D["Sealed Invoice\nFiscal Ledger & Report Generator"]
+  D --> E["Email / WhatsApp / PDF / Print"]
+  D --> F["Sync Agent — MCF/e-MCF"]
 ```
 
 ## Design principles
