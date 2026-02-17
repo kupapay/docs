@@ -335,7 +335,8 @@ Save the map to memory-bank/context-map.md.
 
 ### TASK-010: USB Fiscal Memory device page
 ```
-Status:     READY (after TASK-004)
+Status:     DONE (after TASK-004)
+Completed:  2026-02-17
 Depends:    TASK-004
 Agent:      @gem-documentation-writer
 Sources:    DISCUSSION.md lines 6960-7020 (hardware overview),
