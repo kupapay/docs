@@ -1,6 +1,6 @@
 # USB Fiscal Memory Device
 
-KutaPay's USB Fiscal Memory device is the trusted anchor of the fiscal compliance stack. It sits inside the trust boundary, listens to canonical payloads from the untrusted POS, and emits sealed fiscal responses that the POS prints and the cloud eventually uploads to the DGI. Every fiscalized invoice flows through this hardware so it alone controls counters, timestamps, signatures, and the immutable journal.
+Bono Pay's USB Fiscal Memory device is the trusted anchor of the fiscal compliance stack. It sits inside the trust boundary, listens to canonical payloads from the untrusted POS, and emits sealed fiscal responses that the POS prints and the cloud eventually uploads to the DGI. Every fiscalized invoice flows through this hardware so it alone controls counters, timestamps, signatures, and the immutable journal.
 
 !!! warning "Trusted boundary"
     Only the USB Fiscal Memory device may increment counters, sign journals, or emit authentication codes. The POS and cloud may prepare payloads and relay responses, but they must never forge or cache these sensitive elements.
@@ -69,4 +69,4 @@ Target COGS stays within the $10–15 range by relying on commodity yet certifie
 
 ## Comparative Positioning
 
-Compared to Italian fiscal memories and other African Electronic Fiscal Devices (EFDs), the KutaPay DEF matches the same sequential counters, Z/X/A reports, and tamper-proof journal but adds a detachable USB-C cable that suits modern tablets and mobile cashiers. Against crypto-focused hardware wallets, it borrows their secure element model (isolating private keys, enforcing monotonic counters) while extending it with a dedicated invoice journal, RTC, and DGI-friendly reporting. These similarities keep certification straightforward while differentiating KutaPay through its tight integration with the offline-first POS, local fiscal service mediator, and DGI sync pipeline.
+Compared to Italian fiscal memories and other African Electronic Fiscal Devices (EFDs), the Bono Pay DEF matches the same sequential counters, Z/X/A reports, and tamper-proof journal but adds a detachable USB-C cable that suits modern tablets and mobile cashiers. Against crypto-focused hardware wallets, it borrows their secure element model (isolating private keys, enforcing monotonic counters) while extending it with a dedicated invoice journal, RTC, and DGI-friendly reporting. These similarities keep certification straightforward while differentiating Bono Pay through its tight integration with the offline-first POS, local fiscal service mediator, and DGI sync pipeline.

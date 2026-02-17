@@ -1,6 +1,6 @@
 # SFE Specifications (v1)
 
-This page distills the DGI Système de Facturation d'Entreprise (SFE) requirements so the KutaPay design team can trace every regulatory demand to our architecture, fiscal flows, and hardware guarantees.
+This page distills the DGI Système de Facturation d'Entreprise (SFE) requirements so the Bono Pay design team can trace every regulatory demand to our architecture, fiscal flows, and hardware guarantees.
 
 The official summary calls out the layered deployment (SFE → DEF → MCF/e-MCF → DGI), mandates five invoice types, demands all 14 tax groups, requires Z/X/A/audit reporting, and insists security elements come from the trusted fiscal layer—not the POS. These constraints steer the content on the fiscal engine, hardware, and reports pages.
 
@@ -70,7 +70,7 @@ The specification emphasizes that offline issuance is normal. Invoices must stil
 - [`design/docs/cloud/offline-sync.md`](../cloud/offline-sync.md) documents how invoices transition from `PENDING_SYNC` to `ACKNOWLEDGED` or `FAILED`.
 - [`design/docs/cloud/dgi-integration.md`](../cloud/dgi-integration.md) captures the known vs unknown pieces of the MCF/e-MCF API and highlights the remaining blockers for homologation.
 
-This layered behavior mirrors the core architecture described in this spec: canonical payloads flow through the fiscal service to the DEF, then the sealed invoice flows through KutaPay Cloud to the DGI control modules before arriving at the backend.
+This layered behavior mirrors the core architecture described in this spec: canonical payloads flow through the fiscal service to the DEF, then the sealed invoice flows through Bono Pay Cloud to the DGI control modules before arriving at the backend.
 
 ## Data Integrity, Immutability, and Mutations
 

@@ -1,6 +1,6 @@
-# KutaPay Technical Design Documentation
+# Bono Pay Technical Design Documentation
 
-KutaPay is fiscal compliance infrastructure for the DRC's Facture Normalisée regime. These documents describe how untrusted POS front-ends, a trusted USB Fiscal Memory device, offline-first workflows, and cloud syncing collaborate to turn every commercial sale into a legally auditable tax event.
+Bono Pay is fiscal compliance infrastructure for the DRC's Facture Normalisée regime. These documents describe how untrusted POS front-ends, a trusted USB Fiscal Memory device, offline-first workflows, and cloud syncing collaborate to turn every commercial sale into a legally auditable tax event.
 
 The site collects architecture, hardware, fiscal engine, cloud, POS, regulatory, ADR, implementation, and API reference layers so the team can build aligned, compliant systems.
 

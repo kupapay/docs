@@ -22,7 +22,7 @@ This page captures the hardware cost structure for the USB Fiscal Memory device 
 
 ## Total COGS & pricing approach
 
-KutaPay targets a $10–15 COGS for the fiscal device, which enables a retail/wholesale price in the $50–100 range (per the regulatory appendix) while accounting for logistics, certification, and support. The markup funds:
+Bono Pay targets a $10–15 COGS for the fiscal device, which enables a retail/wholesale price in the $50–100 range (per the regulatory appendix) while accounting for logistics, certification, and support. The markup funds:
 
 - Merchant onboarding and activation tooling.
 - Device registration with DGI and firmware validation.

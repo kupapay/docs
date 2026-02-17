@@ -1,12 +1,12 @@
-# DRC fiscal arrêtés that govern KutaPay
+# DRC fiscal arrêtés that govern Bono Pay
 
-KutaPay lives inside the tightly regulated world of the Facture Normalisée mandate. Four ministerial orders work together:
+Bono Pay lives inside the tightly regulated world of the Facture Normalisée mandate. Four ministerial orders work together:
 - **Arrêté 032/2023** defines the governance and committee that approves architecture, vendors, and timelines.
 - **Arrêté 033/2023** lays down the operational requirements for every invoice and device, enforcing the trust boundary that the governance committee supervises.
 - **Arrêté 034/2023** regulates who may commercialize devices and software, so the governance committee can evaluate those suppliers.
 - **Arrêté 016/2025** patches the commercialization regime defined in 034 while keeping the operational and governance foundations intact.
 
-Each tab below distills one arrêté with the latest implications for KutaPay. Cross-links point to related orders so reviewers see how governance, operational rules, commercialization, and amendments intersect.
+Each tab below distills one arrêté with the latest implications for Bono Pay. Cross-links point to related orders so reviewers see how governance, operational rules, commercialization, and amendments intersect.
 
 === "Arrêté 032 — Governance"
 
@@ -16,11 +16,11 @@ Arrêté 032 does not touch invoices directly; it creates the **Comité de Suivi
 
 **Key responsibilities**
 - Validate the project charter, architecture, and vendor selections.
-- House the Technical Committee that drafts specifications, including the KutaPay architecture.
+- House the Technical Committee that drafts specifications, including the Bono Pay architecture.
 - Command the Technical Secretariat to document all decisions and preserve institutional memory.
 - Manage political relationships with the DGI, DGDA, and other ministries so that operational changes (e.g., new invoices, reports, or compliance hooks) can roll out in harmony with the enforcement path defined in [Arrêté 033](#arrete-033).
 
-**KutaPay implications**
+**Bono Pay implications**
 - Every new architecture document (specs, ADRs, APIs) must be up for review by this committee, so keep changelogs and summaries ready.
 - Vendor certification requests and pricing disclosures ultimately flow to the same governance body that owns the rules in [Arrêté 034](#arrete-034).
 - The Technical Committee can change specs without new legislation; the documentation process must stay flexible to respond to rapid directives.
@@ -43,7 +43,7 @@ This is the core operational law. It forces every VAT-registered merchant to iss
 - The supplier certification pipeline in [Arrêté 034](#arrete-034) makes sure only homologated technology appears in this mandate.
 - Arrêté 016/2025 (see [below](#arrete-016-2025)) softens supplier scarcity but leaves the obligation to fiscalize every sale unchanged.
 
-**KutaPay implications**
+**Bono Pay implications**
 - Device behavior (PREPARE/COMMIT, reports, offline sync) must map 1:1 to the operational flows mandated here.
 - Offline-first issuance is a legal requirement—not a convenience—so documentation must highlight queueing, retries, and fallback indicators.
 - Device registration, deactivation, and failure reporting need automation so DGI inspectors see the same data the law demands.
@@ -60,9 +60,9 @@ Arrêté 034 regulates who can sell DEF hardware and SFE software. It institutes
 - The tax authority monitors stock, spare parts, pricing, and reporting; any deviation can trigger withdrawal.
 - SFE providers must guarantee immutability, security, and archival retention, aligning with the reporting expectations from [Arrêté 033](#arrete-033).
 
-**KutaPay implications**
+**Bono Pay implications**
 - Homologation planning is critical: almost any firmware or configuration change needs declaration or re-certification.
-- Distributor relationships matter; KutaPay needs trusted partners to cover installation, training, and maintenance.
+- Distributor relationships matter; Bono Pay needs trusted partners to cover installation, training, and maintenance.
 - Pricing changes are visible to DGI, so every offer must include a pre-approved price list.
 - The governance body in [Arrêté 032](#arrete-032) uses these commercialization metrics to approve vendors, so keep documentation ready.
 
@@ -74,12 +74,12 @@ This amendment keeps the commercialization controls of Arrêté 034 but fixes ke
 
 **What changed**
 - Unlimited suppliers (while retaining technical, financial, and coverage thresholds) so the market can scale without artificial scarcity.
-- Supplier approvals now expire after two years, introducing planned renewal activities for KutaPay.
+- Supplier approvals now expire after two years, introducing planned renewal activities for Bono Pay.
 - Minor software changes can be declared instead of undergoing full re-homologation, reducing friction for SFE iterations noted in [Arrêté 033](#arrete-033).
 - Distributor obligations now explicitly cover user onboarding, training, and fair territorial coverage with price discipline still enforced.
 - Enterprises may seek conditional exemptions, acknowledging complex ERP/SFE deployments while keeping governance oversight from [Arrêté 032](#arrete-032).
 
-**KutaPay implications**
+**Bono Pay implications**
 - The path to certification is more realistic, but the two-year cadence demands an approval lifecycle plan.
 - Minor updates no longer require major re-certification, so the documentation strategy should categorize changes as "minor" vs. "material" and declare them appropriately.
 - Pricing discipline and distributor accountability remain high-priority constraints, so contractual language must reference this order alongside Arrêté 034.

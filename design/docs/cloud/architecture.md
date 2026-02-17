@@ -1,6 +1,6 @@
 # Cloud Architecture
 
-The KutaPay Cloud sits on the **trusted side** of the architecture that is described in `spec/architecture-kutapay-system-1.md`. It never touches raw invoice payloads until they are sealed, and it is responsible for every step after the USB Fiscal Memory device emits the fiscal response. The cloud orchestrates sync, backup, DGI uploads, device provisioning, and operational insight while keeping the trust boundary intact and honoring the offline-first guarantees described in `DISCUSSION.md` (see the deployment, offline, and resilience commentary around lines 7030‑7060).
+The Bono Pay Cloud sits on the **trusted side** of the architecture that is described in `spec/architecture-kutapay-system-1.md`. It never touches raw invoice payloads until they are sealed, and it is responsible for every step after the USB Fiscal Memory device emits the fiscal response. The cloud orchestrates sync, backup, DGI uploads, device provisioning, and operational insight while keeping the trust boundary intact and honoring the offline-first guarantees described in `DISCUSSION.md` (see the deployment, offline, and resilience commentary around lines 7030‑7060).
 
 ## Responsibilities
 
@@ -39,7 +39,7 @@ The following Mermaid diagram shows the key deployment elements, how POS/fiscal 
 
 ```mermaid
 graph LR
-    subgraph EDF["KutaPay Cloud (DRC deployment)"]
+    subgraph EDF["Bono Pay Cloud (DRC deployment)"]
         API["API Gateway"]
         Sync["Sync & Upload Service"]
         Registry["Device Registry"]

@@ -1,16 +1,16 @@
 # DRC Fiscal Compliance Legal Framework
 
-The Democratic Republic of Congo layers multiple ministerial orders and technical specifications to move every transaction through a **trusted fiscal control stack**. KutaPay must navigate that stack: the governance machine that approves strategy, the operational rules that ban deleted invoices, the commercialization controls that limit who may sell hardware, the amendments easing scaling, and the SFE technical specification that defines what every compliant billing system must emit.
+The Democratic Republic of Congo layers multiple ministerial orders and technical specifications to move every transaction through a **trusted fiscal control stack**. Bono Pay must navigate that stack: the governance machine that approves strategy, the operational rules that ban deleted invoices, the commercialization controls that limit who may sell hardware, the amendments easing scaling, and the SFE technical specification that defines what every compliant billing system must emit.
 
 ## Regulatory hierarchy
 
 ```mermaid
 flowchart TB
-    A[Arrêté 032/2023<br/>Governance Committee]
-    B[Arrêté 033/2023<br/>Standardized Invoice & DEF Rules]
-    C[Arrêté 034/2023<br/>Commercialization & Licensing]
-    D[Arrêté 016/2025<br/>Scaling Discipline & Updates]
-    E[SFE Specifications v1.0<br/>Technical Billing Requirements]
+    A["Arrêté 032/2023<br/>Governance Committee"]
+    B["Arrêté 033/2023<br/>Standardized Invoice & DEF Rules"]
+    C["Arrêté 034/2023<br/>Commercialization & Licensing"]
+    D["Arrêté 016/2025<br/>Scaling Discipline & Updates"]
+    E["SFE Specifications v1.0<br/>Technical Billing Requirements"]
     A --> B
     A --> C
     B --> E
@@ -22,10 +22,10 @@ flowchart TB
 
 ## Document summaries
 
-| Document | Scope | KutaPay impact |
+| Document | Scope | Bono Pay impact |
 | --- | --- | --- |
-| **Arrêté 032/2023** | Creates the Comité de Suivi with Steering Committee, Technical Committee, and Secretariat that own governance, procurement, and documentation for the standardized invoicing reform. | Stay aligned with the committees, treat governance decisions as authoritative, keep documentation up to date, and position KutaPay as a staffed technical partner rather than a pure vendor. |
-| **Arrêté 033/2023** | Defines the mandatory issuance of standardized invoices, the dual (physical DEF + e-DEF) enforcement paths, device/fallback requirements, and the operational discipline every VAT-registered merchant must maintain. | Design KutaPay so every sale is a fiscal event, support offline-first issuance with trusted security elements, include fallback hardware (USB device per outlet), and make error reporting realtime; expect inspectors everywhere. |
+| **Arrêté 032/2023** | Creates the Comité de Suivi with Steering Committee, Technical Committee, and Secretariat that own governance, procurement, and documentation for the standardized invoicing reform. | Stay aligned with the committees, treat governance decisions as authoritative, keep documentation up to date, and position Bono Pay as a staffed technical partner rather than a pure vendor. |
+| **Arrêté 033/2023** | Defines the mandatory issuance of standardized invoices, the dual (physical DEF + e-DEF) enforcement paths, device/fallback requirements, and the operational discipline every VAT-registered merchant must maintain. | Design Bono Pay so every sale is a fiscal event, support offline-first issuance with trusted security elements, include fallback hardware (USB device per outlet), and make error reporting realtime; expect inspectors everywhere. |
 | **Arrêté 034/2023** | Regulates who may commercialize DEF and SFE products through pre-qualification, homologation, and distribution pipelines, with certified suppliers, distributors, and price transparency obligations. | Plan for a regulated sales channel: seek homologation, partner with distributors for installation/support, disclose pricing, and maintain spare parts / stock for at least three years. |
 | **Arrêté 016/2025** | Adjusts commercialization rules by removing supply caps, adding two-year approval windows, clarifying which updates require re-homologation, and reinforcing distributor accountability. | Treat regulatory approvals as renewable (every two years), declare minor IMS updates instead of full re-cert, honor consistent pricing, and ensure distributors can cover training/support/territory responsibilities. |
 | **SFE Specifications v1.0** | DGI technical requirements for certified enterprise billing systems: layered SFE → DEF → MCF → DGI architecture plus 14 tax groups, five invoice types, mandatory security elements, reports, offline behavior, and immutable storage. | Embed all five invoice types, implement every tax group/client classification, enforce security element generation in the hardware layer, produce Z/X/A/audit outputs, and respect immutability/offline expectations before any cloud sync. |
@@ -40,14 +40,14 @@ flowchart TB
 
 ## Key compliance deadlines & expectations
 
-- **Rapid compliance window (Arrêté 033):** VAT-registered merchants had three months (plus two-month extension) to transition to approved invoicing systems. KutaPay’s rollout must be fast because regulators expect no gaps.
+- **Rapid compliance window (Arrêté 033):** VAT-registered merchants had three months (plus two-month extension) to transition to approved invoicing systems. Bono Pay’s rollout must be fast because regulators expect no gaps.
 - **Approval cadence (Arrêté 034 & 016/2025):** Pre-qualification and homologation reviews each take up to 30 working days; major modifications trigger re-homologation, while minor updates require declarations. Plan firmware/system changes with these gating periods in mind.
 - **Renewal rhythm (Arrêté 016/2025):** Every homologated DEF/SFE approval lasts two years, so renewal processes must be resourced and scheduled before expiry.
 - **Distribution commitments (Arrêté 034 & 016/2025):** Maintain 60-day replenishment pledges, three-year spare-part guarantees, consistent pricing disclosures, and accountable distributors covering onboarding and after-sales.
 - **Technical observability (SFE spec):** Archives must retain invoices for at least one year, report outputs (Z/X/A/audit) must be generated locally, and every invoice must carry sequential fiscal number, device ID, signature, timestamp, and QR code before syncing; offline issuance remains normal operation.
 - **Fallback & resilience (Arrêté 033):** Hardware failure is not an excuse—fallback systems must stay powered; replacement devices and offline queues must be ready immediately whenever connectivity or device issues occur.
 
-## Implications for KutaPay
+## Implications for Bono Pay
 
 1. **Governance alignment**: Treat the Steering and Technical Committees as the ultimate arbiters—submit architecture and compliance reports, engage politically, and log every decision for the Secretariat.
 2. **Operational discipline**: The POS / USB device / cloud stack must enforce the layered mandate (SFE → DEF → MCF → DGI) with immutable journals, security elements, and multi-terminal per-outlet rules.

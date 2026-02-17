@@ -1,6 +1,6 @@
 # Trust Boundary
 
-KutaPay enforces a **deny-by-default** trust boundary where every POS client, cloud sync agent, and auditor-facing UI lives in the *untrusted zone*, and the USB Fiscal Memory device (DEF) is the sole **trusted** authority that validates a canonical payload, signs it, increments the monotonic counters, and produces the fiscal response. The architectural rationale and the two-phase commit protocol are spelled out in `spec/architecture-kutapay-system-1.md` and `docs/adr/adr-0001-two-phase-commit-usb-protocol.md`.
+Bono Pay enforces a **deny-by-default** trust boundary where every POS client, cloud sync agent, and auditor-facing UI lives in the *untrusted zone*, and the USB Fiscal Memory device (DEF) is the sole **trusted** authority that validates a canonical payload, signs it, increments the monotonic counters, and produces the fiscal response. The architectural rationale and the two-phase commit protocol are spelled out in `spec/architecture-kutapay-system-1.md` and `docs/adr/adr-0001-two-phase-commit-usb-protocol.md`.
 
 !!! warning "Trust boundary enforcement"
     No data that can compromise fiscal integrity ever travels from the trusted zone back into the untrusted hosts. The DEF never releases private keys, raw counters, or hash-chain materials; hosts receive only the sealed fiscal response after a successful COMMIT.
@@ -27,17 +27,17 @@ KutaPay enforces a **deny-by-default** trust boundary where every POS client, cl
 ```mermaid
 flowchart LR
     subgraph Untrusted POS Zone
-        POS[POS Clients<br/>Sale entry, Tax UI, Receipt Printer]
-        FS[Local Fiscal Service<br/>Serializes PREPARE/COMMIT + mediates multi-terminal access]
+        POS["POS Clients<br/>Sale entry, Tax UI, Receipt Printer"]
+        FS["Local Fiscal Service<br/>Serializes PREPARE/COMMIT + mediates multi-terminal access"]
     end
     subgraph Trusted USB Zone
-        DEF[USB Fiscal Memory Device (DEF)<br/>Schema validator, Monotonic counter, Signer, Journal]
+        DEF["USB Fiscal Memory Device (DEF)<br/>Schema validator, Monotonic counter, Signer, Journal"]
     end
-    subgraph KutaPay Cloud
+    subgraph Bono Pay Cloud
         Cloud[Cloud Sync + Registry]
     end
     subgraph DGI
-        DGI[DGI (MCF/e-MCF)]
+        DGI["DGI (MCF/e-MCF)"]
     end
     POS -->|canonical JSON payload| FS
     FS -->|PREPARE / COMMIT over USB CDC| DEF

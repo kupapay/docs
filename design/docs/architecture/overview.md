@@ -4,25 +4,25 @@ title: Architecture Overview
 
 # Architecture Overview
 
-This page gives new developers a grounding in the KutaPay system: the POS clients that operate in untrusted spaces, the trusted USB Fiscal Memory device that enforces compliance, and the cloud services that consolidate audit data and relay sealed invoices to the DGI. The text below draws directly from the architecture specification, the technical design brief, and the Copilot instructions so that everyone touching the docs stays aligned with the trust boundary, offline-first, and security-element requirements.
+This page gives new developers a grounding in the Bono Pay system: the POS clients that operate in untrusted spaces, the trusted USB Fiscal Memory device that enforces compliance, and the cloud services that consolidate audit data and relay sealed invoices to the DGI. The text below draws directly from the architecture specification, the technical design brief, and the Copilot instructions so that everyone touching the docs stays aligned with the trust boundary, offline-first, and security-element requirements.
 
 ## System Context (C4)
 
-Developers joining the project must know who depends on KutaPay and what the platform communicates outward. Cashiers, outlet owners, and auditors interact with the platform directly, while sealed invoices leave the platform only once they are ready for the DGI or payment providers. This C4 context diagram keeps that actor-level view front and center.
+Developers joining the project must know who depends on Bono Pay and what the platform communicates outward. Cashiers, outlet owners, and auditors interact with the platform directly, while sealed invoices leave the platform only once they are ready for the DGI or payment providers. This C4 context diagram keeps that actor-level view front and center.
 
 ```mermaid
 flowchart LR
     Cashier["Cashier / Teller"]
     Owner["Outlet Owner"]
     Auditor["Auditor / Regulator"]
-    KutaPay["KutaPay Platform\n(POS + Fiscal Service + Cloud)"]
+    Bono Pay["Bono Pay Platform\n(POS + Fiscal Service + Cloud)"]
     DGI["DGI MCF / e-MCF"]
     PaymentProviders["Payment Providers"]
-    Cashier -->|Issues fiscal invoice| KutaPay
-    Owner -->|Monitors compliance| KutaPay
-    Auditor -->|Requests reports & audits| KutaPay
-    KutaPay -->|Sealed invoice upload| DGI
-    KutaPay -->|Payment events + status| PaymentProviders
+    Cashier -->|Issues fiscal invoice| Bono Pay
+    Owner -->|Monitors compliance| Bono Pay
+    Auditor -->|Requests reports & audits| Bono Pay
+    Bono Pay -->|Sealed invoice upload| DGI
+    Bono Pay -->|Payment events + status| PaymentProviders
 ```
 
 ## Trust Boundary
@@ -38,7 +38,7 @@ The USB Fiscal Memory device is the only trusted execution point: it validates c
 flowchart LR
     subgraph Untrusted Zone
         POSApp[POS App + Sync Queue]
-        FiscalService[Local Fiscal Service\n(tokenizes PREPARE/COMMIT)]
+        FiscalService["Local Fiscal Service<br/>tokenizes PREPARE/COMMIT"]
     end
     subgraph Trusted Zone
         USBDevice[USB Fiscal Memory Device]
@@ -73,8 +73,8 @@ graph LR
         MonotonicCounter[Monotonic Counter]
         Signer[ECDSA Signer]
         HashJournal[Hash-Chained Journal]
-        RTC[RTC / Trusted Timestamp]
-        ReportGen[Report Generator (Z/X/A, audit)]
+        RTC["RTC / Trusted Timestamp"]
+        ReportGen["Report Generator: Z/X/A + audit"]
     end
     subgraph Cloud Layer
         CloudAPI[Cloud API & Device Registry]

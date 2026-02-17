@@ -1,6 +1,6 @@
 # Phase 3 — Enterprise
 
-Phase 3 expands the KutaPay platform beyond the pilot and retail deployments by preparing for a **6‑month enterprise launch** where **1,000+ outlets** (multi-branch retailers, logistics fleets, franchise networks) rely on our fiscal stack for compliance, analytics, and interoperability. The work inherits everything from Phases 1 and 2 (PREPARE → COMMIT trust boundary, multi-terminal orchestration, offline sync, cloud automation, and compliance tooling) and adds enterprise-grade integration, fleet/dashboards, and analytics so large customers can connect ERPs, consume webhooks, and manage thousands of devices without violating the trust boundary.
+Phase 3 expands the Bono Pay platform beyond the pilot and retail deployments by preparing for a **6‑month enterprise launch** where **1,000+ outlets** (multi-branch retailers, logistics fleets, franchise networks) rely on our fiscal stack for compliance, analytics, and interoperability. The work inherits everything from Phases 1 and 2 (PREPARE → COMMIT trust boundary, multi-terminal orchestration, offline sync, cloud automation, and compliance tooling) and adds enterprise-grade integration, fleet/dashboards, and analytics so large customers can connect ERPs, consume webhooks, and manage thousands of devices without violating the trust boundary.
 
 ## Objectives
 
@@ -21,7 +21,7 @@ Phase 3 expands the KutaPay platform beyond the pilot and retail deployments by 
    - **Estimated effort:** 5 weeks to build connectors + 2 weeks to instrument webhook delivery, retries, and documentation.
 
 2. **Multi-branch fleet management & dashboard**
-   - **Description:** Enable KutaPay Cloud to operate and monitor thousands of outlets: device registration, fleet-wide health, configuration drift alerts, and short/long-lived dashboard views (per-branch + consolidated).
+   - **Description:** Enable Bono Pay Cloud to operate and monitor thousands of outlets: device registration, fleet-wide health, configuration drift alerts, and short/long-lived dashboard views (per-branch + consolidated).
    - **Acceptance criteria:**
      - Dashboard surfaces device health (from `/devices/{device_id}/health`), queue depth, pending DGI uploads, and branch-level sync status with drilldowns to multi-terminal POS IDs.
      - Fleet management workflow for onboarding/replacing a DEF per outlet, including revoke/regenerate flows tied to `spec/protocol-usb-fiscal-device-1.md` and `spec/design-cloud-api-1.md`.

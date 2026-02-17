@@ -1,6 +1,6 @@
 # Reports (Z / X / A and Audit Export)
 
-KutaPay delivers the **mandatory Z, X, and A reports plus an audit export** directly from the fiscal journal that the USB device and cloud sync maintain. These reports are produced from the same canonical data that powers invoices, include the device-generated security elements (`device_id`, `fiscal_number`, `auth_code`, `trusted_timestamp`, `qr_payload`), and can be generated offline or on demand for auditors and the DGI.
+Bono Pay delivers the **mandatory Z, X, and A reports plus an audit export** directly from the fiscal journal that the USB device and cloud sync maintain. These reports are produced from the same canonical data that powers invoices, include the device-generated security elements (`device_id`, `fiscal_number`, `auth_code`, `trusted_timestamp`, `qr_payload`), and can be generated offline or on demand for auditors and the DGI.
 
 ## Report catalog
 

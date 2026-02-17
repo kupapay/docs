@@ -1,6 +1,6 @@
 # Multi-terminal orchestration
 
-KutaPay keeps **one trusted USB Fiscal Memory device per outlet**, so when multiple POS terminals share the same retail counter or restaurant floor, a local fiscal service mediates every interaction. This page explains how that mediator keeps the trust boundary intact while coordinating concurrent terminals, starving the device only one canonical PREPARE/COMMIT stream at a time, and delivering auditable invoices with the required metadata.
+Bono Pay keeps **one trusted USB Fiscal Memory device per outlet**, so when multiple POS terminals share the same retail counter or restaurant floor, a local fiscal service mediates every interaction. This page explains how that mediator keeps the trust boundary intact while coordinating concurrent terminals, starving the device only one canonical PREPARE/COMMIT stream at a time, and delivering auditable invoices with the required metadata.
 
 ## Core principles
 
@@ -50,7 +50,7 @@ graph LR
     POS["POS terminal (single lane)"]
     FISCAL["Local fiscal service (embedded)"]
     USB["USB Fiscal Memory device"]
-    CLOUD["KutaPay Cloud / Sync Agent"]
+    CLOUD["Bono Pay Cloud / Sync Agent"]
     DGI["DGI / MCF endpoint"]
 
     POS -->|canonical payload| FISCAL
@@ -74,7 +74,7 @@ graph TD
     end
     FISCAL["Local fiscal service (retail mediator)"]
     USB["USB Fiscal Memory device"]
-    CLOUD["KutaPay Cloud"]
+    CLOUD["Bono Pay Cloud"]
     DGI["DGI / MCF"]
 
     POS1 -->|canonical payload| FISCAL
@@ -97,7 +97,7 @@ graph LR
     Waiter3["Waiter Tablet N"]
     HUB["Local fiscal service hub"]
     USB["USB Fiscal Memory device"]
-    CLOUD["KutaPay Cloud"]
+    CLOUD["Bono Pay Cloud"]
     DGI["DGI / MCF"]
 
     Waiter1 -->|canonical payload| HUB

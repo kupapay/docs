@@ -1,6 +1,6 @@
 # POS UX & UI Direction
 
-This page captures the UX and interface rules that help the KutaPay POS feel as fluid as Odoo while obeying the DRC fiscal trust boundary. The POS remains the untrusted data-entry surface; every sale, void, refund, and report must be gated by the USB Fiscal Memory device before any receipt, journal entry, or Z-report is considered valid.
+This page captures the UX and interface rules that help the Bono Pay POS feel as fluid as Odoo while obeying the DRC fiscal trust boundary. The POS remains the untrusted data-entry surface; every sale, void, refund, and report must be gated by the USB Fiscal Memory device before any receipt, journal entry, or Z-report is considered valid.
 
 !!! warning "Trust & fiscalization gate"
     The POS **never** assigns fiscal numbers, signs invoices, or finalizes a sale until the USB Fiscal Memory device confirms PREPARE → COMMIT success. No receipt, no saved invoice, no queue promotion happens without that handshake. Nothing is ever deleted—voids and refunds are new fiscal events with their own signatures.
@@ -16,7 +16,7 @@ This page captures the UX and interface rules that help the KutaPay POS feel as 
 7. **Visibility of sync state.** Show a queue indicator (“5 invoices pending cloud sync”) separate from fiscal status. The offline queue widget highlights when uploads are overdue and links to retry actions.
 
 !!! note "Lessons from Odoo"
-    Odoo’s offline resilience, IndexedDB caching, and single-screen sales workflow remain the baseline. KutaPay adopts those patterns but adds the fiscal device overlays, dual-currency handling, and queued sync indicators described above.
+    Odoo’s offline resilience, IndexedDB caching, and single-screen sales workflow remain the baseline. Bono Pay adopts those patterns but adds the fiscal device overlays, dual-currency handling, and queued sync indicators described above.
 
 ## User Journeys
 

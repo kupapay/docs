@@ -2,7 +2,7 @@
 
 ## Regulatory mandate
 
-The DGI SFE specification and the KutaPay discussion notes are unambiguous: **the tax engine must handle all 14 DGI-defined tax groups, client classifications that drive tax selection, and precise rounding before an invoice is handed to the USB Fiscal Memory device.** The `spec/schema-tax-engine-1.md` document controls the canonical schema, while this page focuses on implementation guidance and examples.
+The DGI SFE specification and the Bono Pay discussion notes are unambiguous: **the tax engine must handle all 14 DGI-defined tax groups, client classifications that drive tax selection, and precise rounding before an invoice is handed to the USB Fiscal Memory device.** The `spec/schema-tax-engine-1.md` document controls the canonical schema, while this page focuses on implementation guidance and examples.
 
 !!! warning "Regulatory constraint"
     The tax engine cannot shortcut the 14-group requirement. If the documentable tax group manifest does not list a TG## code, the invoice must fail validation before it reaches the device.

@@ -1,14 +1,14 @@
 # Implementation Roadmap
 
 ## Overview
-This document lays out the phased rollout for KutaPay’s fiscal compliance platform, beginning with a tightly scoped B2B pilot, scaling through retail and restaurant multi-terminal deployments, and culminating in an enterprise-grade offering with ERP/webhook integrations and analytics. Each phase has a fixed duration (Phase 1 & Phase 2 are three months each, Phase 3 spans six months) and builds on the architecture, hardware, and fiscal-engine work captured earlier in the technical design docs.
+This document lays out the phased rollout for Bono Pay’s fiscal compliance platform, beginning with a tightly scoped B2B pilot, scaling through retail and restaurant multi-terminal deployments, and culminating in an enterprise-grade offering with ERP/webhook integrations and analytics. Each phase has a fixed duration (Phase 1 & Phase 2 are three months each, Phase 3 spans six months) and builds on the architecture, hardware, and fiscal-engine work captured earlier in the technical design docs.
 
 ## Timeline
 The Gantt chart below visualizes the overlapping deliverables, dependencies, and validation checkpoints that keep the rollout on schedule.
 
 ```mermaid
 gantt
-    title KutaPay Implementation Roadmap
+    title Bono Pay Implementation Roadmap
     dateFormat  YYYY-MM-DD
     axisFormat  %b %d
 

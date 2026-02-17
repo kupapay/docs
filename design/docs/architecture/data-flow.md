@@ -117,7 +117,7 @@ flowchart LR
         POS2["POS Terminal 2"]
         Proxy["Local Fiscal Service"]
     end
-    Cloud["KutaPay Cloud"]
+    Cloud["Bono Pay Cloud"]
     DGI["DRC DGI"]
     DEF["USB Fiscal Memory Device"]
 

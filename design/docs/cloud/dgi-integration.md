@@ -1,10 +1,10 @@
 # DGI Integration
 
-This page captures how the KutaPay Cloud interfaces with the DGI control modules (MCF / e-MCF) and documents the known obligations versus the remaining unknowns uncovered during the integration spike (`spec/infrastructure-dgi-integration-1.md`).
+This page captures how the Bono Pay Cloud interfaces with the DGI control modules (MCF / e-MCF) and documents the known obligations versus the remaining unknowns uncovered during the integration spike (`spec/infrastructure-dgi-integration-1.md`).
 
 ## Overview
 
-The DGI enforces a layered chain: the POS/SFE prepares invoices, the trusted DEF secures them, and the control modules (MCF / e-MCF) verify and relay fiscalized data to the DGI backend. KutaPay Cloud is the synchronization agent: it queues sealed invoices when offline, uploads them to the MCF/e-MCF endpoint when connectivity returns, and stores the fiscal numbers, auth codes, and timestamps produced by those control modules. The infrastructure must be always-on, support fallback hardware, and present audit-ready logs at all times.
+The DGI enforces a layered chain: the POS/SFE prepares invoices, the trusted DEF secures them, and the control modules (MCF / e-MCF) verify and relay fiscalized data to the DGI backend. Bono Pay Cloud is the synchronization agent: it queues sealed invoices when offline, uploads them to the MCF/e-MCF endpoint when connectivity returns, and stores the fiscal numbers, auth codes, and timestamps produced by those control modules. The infrastructure must be always-on, support fallback hardware, and present audit-ready logs at all times.
 
 ## Known constraints and responsibilities
 
@@ -12,15 +12,15 @@ The DGI enforces a layered chain: the POS/SFE prepares invoices, the trusted DEF
 - Every submission to the control modules must include the canonical payload plus device identifiers (DEF NID, outlet ID, cashier ID) so that the DGI can link the invoice to its originating outlet.
 - Offline issuance is permitted, but the Cloud must replay queued invoices to the control modules as soon as connectivity is restored; regulators view uptime as mandatory and require replacement hardware ready if the primary link fails.
 - The control modules enforce immutability, continuous compliance, and real-time VAT surveillance (per Arrêté 033), meaning the Cloud must log every retry, failure, and acknowledgement.
-- KutaPay Cloud is also responsible for device registry tasks such as storing activation codes, monitoring device health, and surfacing failure alerts to operators.
+- Bono Pay Cloud is also responsible for device registry tasks such as storing activation codes, monitoring device health, and surfacing failure alerts to operators.
 
 ## Integration architecture
 
-The following flow captures the responsibilities we control and the trust boundary between KutaPay Cloud and DGI:
+The following flow captures the responsibilities we control and the trust boundary between Bono Pay Cloud and DGI:
 
 ```mermaid
 flowchart LR
-  POS["POS / SFE"] -->|canonical payload| Cloud["KutaPay Cloud\n(sync queue + registry)"]
+  POS["POS / SFE"] -->|canonical payload| Cloud["Bono Pay Cloud\n(sync queue + registry)"]
   Cloud -->|sealed invoice + metadata| MCF["DGI MCF / e-MCF control modules"]
   MCF -->|security elements (fiscal number, auth code, timestamp)| Cloud
   MCF -->|delivery stream| DGI["DGI Backend\n(central tax authority)"]

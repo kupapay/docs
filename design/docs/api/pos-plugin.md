@@ -1,6 +1,6 @@
 # POS Plugin API Reference
 
-The POS plugin is the untrusted client that runs inside each merchant's POS application. It exists to keep the POS software compliant with the KutaPay trust boundary and to forward canonical JSON invoices through the local fiscal service so the USB Fiscal Memory device (DEF) can do the trusted work. Use this reference when you are integrating a third-party POS or writing a KutaPay plugin adapter.
+The POS plugin is the untrusted client that runs inside each merchant's POS application. It exists to keep the POS software compliant with the Bono Pay trust boundary and to forward canonical JSON invoices through the local fiscal service so the USB Fiscal Memory device (DEF) can do the trusted work. Use this reference when you are integrating a third-party POS or writing a Bono Pay plugin adapter.
 
 !!! warning "Trust boundary reminder"
     The POS plugin runs entirely in the untrusted zone. Never attempt to fabricate `fiscal_number`, `device_id`, `auth_code`, `timestamp`, or `qr_payload`. Those values must originate from the DEF after a successful PREPARE → COMMIT handshake.
@@ -101,7 +101,7 @@ Print or store the `fiscal_number`, `auth_code`, and `qr_payload` exactly as ret
 
 `GET /api/v1/plugin/invoices/{fiscal_number}/status`
 
-Checks whether the invoice has been committed locally and whether KutaPay Cloud has synced it to the DGI. Useful for POS screens or auditors.
+Checks whether the invoice has been committed locally and whether Bono Pay Cloud has synced it to the DGI. Useful for POS screens or auditors.
 
 ### Sample response
 

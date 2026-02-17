@@ -1,6 +1,6 @@
 # Component Map
 
-This page captures the actors and services that hold KutaPay together. The goal is to make every dependency and input/output explicit so new engineers can see how the untrusted POS, the trusted USB Fiscal Memory device, and the cloud sync terrain collaborate to satisfy the EARS requirements in `spec/architecture-kutapay-system-1.md`.
+This page captures the actors and services that hold Bono Pay together. The goal is to make every dependency and input/output explicit so new engineers can see how the untrusted POS, the trusted USB Fiscal Memory device, and the cloud sync terrain collaborate to satisfy the EARS requirements in `spec/architecture-kutapay-system-1.md`.
 
 !!! warning "Trust boundary reminder"
     The USB Fiscal Memory device is the only component that grades, signs, numbers, and timestamps invoices. Everything else runs in the untrusted zone and must treat device responses as the single source of truth.
