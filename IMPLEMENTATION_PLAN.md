@@ -1022,7 +1022,8 @@ Save to docs/adr/adr-0002-signature-algorithm.md
 
 ### TASK-036: ADR-0003 POS Technology Stack
 ```
-Status:     READY (after TASK-022)
+Status:     DONE (after TASK-022)
+Completed:  2026-02-17
 Depends:    TASK-022
 Agent:      @adr-generator
 Sources:    design/docs/pos/ui-ux.md

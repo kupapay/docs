@@ -1,5 +1,3 @@
-# ADR-0003: POS Technology Stack
-
 ### Decision - 2026-02-17
 **Decision**: Adopt a Progressive Web App (PWA) front-end paired with a dedicated local fiscal daemon to run the KutaPay POS across Android, desktop, and low-end hardware while respecting the trust boundary and USB fiscalization requirements.
 
