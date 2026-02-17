@@ -788,7 +788,8 @@ Add cross-references between them where they interact.
 
 ### TASK-026: SFE specifications page
 ```
-Status:     READY
+Status:     DONE
+Completed:  2026-02-17
 Agent:      manual (compile from existing summary)
 Sources:    docs/sfe-specifications-v1-summary.md
 Target:     design/docs/regulatory/sfe-specs.md
