@@ -23,7 +23,7 @@
     
     
       
-        <title>Phase 3 - Enterprise - KutaPay Technical Design</title>
+        <title>Phase 3 - Enterprise - Bono Pay Technical Design</title>
       
     
     
@@ -63,7 +63,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="deep-purple">
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="#3FFF00" data-md-color-accent="#3FFF00">
   
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
@@ -88,7 +88,7 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../.." title="KutaPay Technical Design" class="md-header__button md-logo" aria-label="KutaPay Technical Design" data-md-component="logo">
+    <a href="../.." title="Bono Pay Technical Design" class="md-header__button md-logo" aria-label="Bono Pay Technical Design" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -102,7 +102,7 @@
       <div class="md-header__ellipsis">
         <div class="md-header__topic">
           <span class="md-ellipsis">
-            KutaPay Technical Design
+            Bono Pay Technical Design
           </span>
         </div>
         <div class="md-header__topic" data-md-component="header-topic">
@@ -186,13 +186,13 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="KutaPay Technical Design" class="md-nav__button md-logo" aria-label="KutaPay Technical Design" data-md-component="logo">
+    <a href="../.." title="Bono Pay Technical Design" class="md-nav__button md-logo" aria-label="Bono Pay Technical Design" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
 
     </a>
-    KutaPay Technical Design
+    Bono Pay Technical Design
   </label>
   
   <ul class="md-nav__list" data-md-scrollfix>
@@ -1743,7 +1743,7 @@
 
 
 <h1 id="phase-3-enterprise">Phase 3 — Enterprise<a class="headerlink" href="#phase-3-enterprise" title="Permanent link">&para;</a></h1>
-<p>Phase 3 expands the KutaPay platform beyond the pilot and retail deployments by preparing for a <strong>6‑month enterprise launch</strong> where <strong>1,000+ outlets</strong> (multi-branch retailers, logistics fleets, franchise networks) rely on our fiscal stack for compliance, analytics, and interoperability. The work inherits everything from Phases 1 and 2 (PREPARE → COMMIT trust boundary, multi-terminal orchestration, offline sync, cloud automation, and compliance tooling) and adds enterprise-grade integration, fleet/dashboards, and analytics so large customers can connect ERPs, consume webhooks, and manage thousands of devices without violating the trust boundary.</p>
+<p>Phase 3 expands the Bono Pay platform beyond the pilot and retail deployments by preparing for a <strong>6‑month enterprise launch</strong> where <strong>1,000+ outlets</strong> (multi-branch retailers, logistics fleets, franchise networks) rely on our fiscal stack for compliance, analytics, and interoperability. The work inherits everything from Phases 1 and 2 (PREPARE → COMMIT trust boundary, multi-terminal orchestration, offline sync, cloud automation, and compliance tooling) and adds enterprise-grade integration, fleet/dashboards, and analytics so large customers can connect ERPs, consume webhooks, and manage thousands of devices without violating the trust boundary.</p>
 <h2 id="objectives">Objectives<a class="headerlink" href="#objectives" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Scope:</strong> Extend Phase 1+2 deliverables to support distributed enterprise fleets with ERP connectors, webhook API, fleet management controls, multi-branch dashboards, and advanced analytics.</li>
@@ -1768,7 +1768,7 @@
 <li>
 <p><strong>Multi-branch fleet management &amp; dashboard</strong></p>
 </li>
-<li><strong>Description:</strong> Enable KutaPay Cloud to operate and monitor thousands of outlets: device registration, fleet-wide health, configuration drift alerts, and short/long-lived dashboard views (per-branch + consolidated).</li>
+<li><strong>Description:</strong> Enable Bono Pay Cloud to operate and monitor thousands of outlets: device registration, fleet-wide health, configuration drift alerts, and short/long-lived dashboard views (per-branch + consolidated).</li>
 <li><strong>Acceptance criteria:</strong><ul>
 <li>Dashboard surfaces device health (from <code>/devices/{device_id}/health</code>), queue depth, pending DGI uploads, and branch-level sync status with drilldowns to multi-terminal POS IDs.</li>
 <li>Fleet management workflow for onboarding/replacing a DEF per outlet, including revoke/regenerate flows tied to <code>spec/protocol-usb-fiscal-device-1.md</code> and <code>spec/design-cloud-api-1.md</code>.</li>

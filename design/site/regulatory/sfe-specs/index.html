@@ -23,7 +23,7 @@
     
     
       
-        <title>SFE Specifications - KutaPay Technical Design</title>
+        <title>SFE Specifications - Bono Pay Technical Design</title>
       
     
     
@@ -63,7 +63,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="deep-purple">
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="#3FFF00" data-md-color-accent="#3FFF00">
   
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
@@ -88,7 +88,7 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../.." title="KutaPay Technical Design" class="md-header__button md-logo" aria-label="KutaPay Technical Design" data-md-component="logo">
+    <a href="../.." title="Bono Pay Technical Design" class="md-header__button md-logo" aria-label="Bono Pay Technical Design" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -102,7 +102,7 @@
       <div class="md-header__ellipsis">
         <div class="md-header__topic">
           <span class="md-ellipsis">
-            KutaPay Technical Design
+            Bono Pay Technical Design
           </span>
         </div>
         <div class="md-header__topic" data-md-component="header-topic">
@@ -186,13 +186,13 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="KutaPay Technical Design" class="md-nav__button md-logo" aria-label="KutaPay Technical Design" data-md-component="logo">
+    <a href="../.." title="Bono Pay Technical Design" class="md-nav__button md-logo" aria-label="Bono Pay Technical Design" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
 
     </a>
-    KutaPay Technical Design
+    Bono Pay Technical Design
   </label>
   
   <ul class="md-nav__list" data-md-scrollfix>
@@ -1831,7 +1831,7 @@
 
 
 <h1 id="sfe-specifications-v1">SFE Specifications (v1)<a class="headerlink" href="#sfe-specifications-v1" title="Permanent link">&para;</a></h1>
-<p>This page distills the DGI Système de Facturation d'Entreprise (SFE) requirements so the KutaPay design team can trace every regulatory demand to our architecture, fiscal flows, and hardware guarantees.</p>
+<p>This page distills the DGI Système de Facturation d'Entreprise (SFE) requirements so the Bono Pay design team can trace every regulatory demand to our architecture, fiscal flows, and hardware guarantees.</p>
 <p>The official summary calls out the layered deployment (SFE → DEF → MCF/e-MCF → DGI), mandates five invoice types, demands all 14 tax groups, requires Z/X/A/audit reporting, and insists security elements come from the trusted fiscal layer—not the POS. These constraints steer the content on the fiscal engine, hardware, and reports pages.</p>
 <div class="admonition warning">
 <p class="admonition-title">Trust boundary reminder</p>
@@ -2052,7 +2052,7 @@
 <li><a href="../../cloud/offline-sync/"><code>design/docs/cloud/offline-sync.md</code></a> documents how invoices transition from <code>PENDING_SYNC</code> to <code>ACKNOWLEDGED</code> or <code>FAILED</code>.</li>
 <li><a href="../../cloud/dgi-integration/"><code>design/docs/cloud/dgi-integration.md</code></a> captures the known vs unknown pieces of the MCF/e-MCF API and highlights the remaining blockers for homologation.</li>
 </ul>
-<p>This layered behavior mirrors the core architecture described in this spec: canonical payloads flow through the fiscal service to the DEF, then the sealed invoice flows through KutaPay Cloud to the DGI control modules before arriving at the backend.</p>
+<p>This layered behavior mirrors the core architecture described in this spec: canonical payloads flow through the fiscal service to the DEF, then the sealed invoice flows through Bono Pay Cloud to the DGI control modules before arriving at the backend.</p>
 <h2 id="data-integrity-immutability-and-mutations">Data Integrity, Immutability, and Mutations<a class="headerlink" href="#data-integrity-immutability-and-mutations" title="Permanent link">&para;</a></h2>
 <p>The SFE must never delete invoices. Corrections are credit notes, voids are new fiscal events, and all entries remain in the device's hash-chained journal. These expectations appear in the <a href="../../fiscal/invoice-lifecycle/">Invoice Lifecycle</a> narrative and the Architecture Context Map (<code>memory-bank/context-map.md</code> in the project root). Any mutation references the original invoice and replays through the same PREPARE → COMMIT sequence, ensuring auditability.</p>
 <blockquote>

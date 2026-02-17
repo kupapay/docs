@@ -68,4 +68,3 @@ The diagram captures the in-device hash-and-sign cycle: the MCU hashes the canon
 
 !!! danger "Key backup policy"
     Backing up the Secure Element private key is disallowed.  Attempting to clone, dump, or export the key will cause the SE to lock and refuse new URIs until reinitialized via `CFG|INIT`.
-

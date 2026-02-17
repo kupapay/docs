@@ -21,7 +21,7 @@
     
     
       
-        <title>POS Plugin API - KutaPay Technical Design</title>
+        <title>POS Plugin API - Bono Pay Technical Design</title>
       
     
     
@@ -61,7 +61,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="deep-purple">
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="#3FFF00" data-md-color-accent="#3FFF00">
   
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
@@ -86,7 +86,7 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../.." title="KutaPay Technical Design" class="md-header__button md-logo" aria-label="KutaPay Technical Design" data-md-component="logo">
+    <a href="../.." title="Bono Pay Technical Design" class="md-header__button md-logo" aria-label="Bono Pay Technical Design" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -100,7 +100,7 @@
       <div class="md-header__ellipsis">
         <div class="md-header__topic">
           <span class="md-ellipsis">
-            KutaPay Technical Design
+            Bono Pay Technical Design
           </span>
         </div>
         <div class="md-header__topic" data-md-component="header-topic">
@@ -184,13 +184,13 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="KutaPay Technical Design" class="md-nav__button md-logo" aria-label="KutaPay Technical Design" data-md-component="logo">
+    <a href="../.." title="Bono Pay Technical Design" class="md-nav__button md-logo" aria-label="Bono Pay Technical Design" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
 
     </a>
-    KutaPay Technical Design
+    Bono Pay Technical Design
   </label>
   
   <ul class="md-nav__list" data-md-scrollfix>
@@ -2009,7 +2009,7 @@
 
 
 <h1 id="pos-plugin-api-reference">POS Plugin API Reference<a class="headerlink" href="#pos-plugin-api-reference" title="Permanent link">&para;</a></h1>
-<p>The POS plugin is the untrusted client that runs inside each merchant's POS application. It exists to keep the POS software compliant with the KutaPay trust boundary and to forward canonical JSON invoices through the local fiscal service so the USB Fiscal Memory device (DEF) can do the trusted work. Use this reference when you are integrating a third-party POS or writing a KutaPay plugin adapter.</p>
+<p>The POS plugin is the untrusted client that runs inside each merchant's POS application. It exists to keep the POS software compliant with the Bono Pay trust boundary and to forward canonical JSON invoices through the local fiscal service so the USB Fiscal Memory device (DEF) can do the trusted work. Use this reference when you are integrating a third-party POS or writing a Bono Pay plugin adapter.</p>
 <div class="admonition warning">
 <p class="admonition-title">Trust boundary reminder</p>
 <p>The POS plugin runs entirely in the untrusted zone. Never attempt to fabricate <code>fiscal_number</code>, <code>device_id</code>, <code>auth_code</code>, <code>timestamp</code>, or <code>qr_payload</code>. Those values must originate from the DEF after a successful PREPARE → COMMIT handshake.</p>
@@ -2098,7 +2098,7 @@
 <p>Print or store the <code>fiscal_number</code>, <code>auth_code</code>, and <code>qr_payload</code> exactly as returned—the device is the sole authority for those values. Do not proceed to print or re-transmit until VAT totals are confirmed by this response.</p>
 <h2 id="status-endpoint">Status endpoint<a class="headerlink" href="#status-endpoint" title="Permanent link">&para;</a></h2>
 <p><code>GET /api/v1/plugin/invoices/{fiscal_number}/status</code></p>
-<p>Checks whether the invoice has been committed locally and whether KutaPay Cloud has synced it to the DGI. Useful for POS screens or auditors.</p>
+<p>Checks whether the invoice has been committed locally and whether Bono Pay Cloud has synced it to the DGI. Useful for POS screens or auditors.</p>
 <h3 id="sample-response">Sample response<a class="headerlink" href="#sample-response" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ok&quot;</span><span class="p">,</span>

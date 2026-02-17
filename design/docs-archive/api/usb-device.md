@@ -104,6 +104,7 @@ ETX
 **Errors:** `SCHEMA_INVALID`, `DEVICE_REVOKED`, `STORAGE_FULL`, `CLOCK_ROLLBACK_DETECTED`, `REPLAY_DETECTED`, `DEVICE_BUSY`
 
 **Notes**
+
 - Timeout: ≤5 seconds. Retry `TXN|PREPARE` if the nonce expires or recoverable error occurs.
 - Do **not** send any data other than the canonical invoice.
 - Use `expires_in` to start a timer—POS must send `TXN|COMMIT` before the nonce expires.
@@ -138,6 +139,7 @@ ETX
 **Errors:** `INVALID_NONCE`, `NONCE_EXPIRED`, `DEVICE_BUSY`, `DEVICE_REVOKED`, `STORAGE_FULL`, `CLOCK_ROLLBACK_DETECTED`
 
 **Notes**
+
 - Timeout: ≤5 seconds. The device either completes the invoice or leaves state unchanged; query `QRY|STATUS`/`QRY|LOG` if power loss occurs mid-commit.
 - The response provides every mandatory security element for the receipt (fiscal number, auth code, device ID, timestamp, QR data).
 - Do not send a new `PREPARE` until `TXN|COMMIT` succeeds or returns an error that has been resolved.
@@ -171,6 +173,7 @@ STX QRY|STATUS ETX
 **Errors:** `DEVICE_REVOKED`, `DEVICE_BUSY`, `STORAGE_FULL`
 
 **Notes**
+
 - Poll every 30 seconds in low-volume setups to keep UI responsive.
 - `nonce_pool` shows how many PREPARE operations can be outstanding before the device refuses new requests.
 - Use before issuing `TXN|PREPARE` to ensure counters align with the POS state.
@@ -209,6 +212,7 @@ STX QRY|LOG 105 ETX
 **Errors:** `DEVICE_BUSY`, `LOG_NOT_FOUND`, `DEVICE_REVOKED`
 
 **Notes**
+
 - Entries include `prev_hash` to form the immutable hash chain; verifying the chain is the audit path.
 - Use this command after ambiguous commits to confirm whether the invoice was written.
 - The device may throttle repeated `QRY|LOG` requests—space out retries if `DEVICE_BUSY` is returned.
@@ -242,6 +246,7 @@ STX RPT|Z {"date":"2026-02-04"} ETX
 **Errors:** `DEVICE_BUSY`, `UNAUTHORIZED`, `STORAGE_FULL`
 
 **Notes**
+
 - Typically executed at end of business day; device ensures sequence continuity.
 - Include this report in the daily closure package for DGI compliance.
 - The payload echoes totals per tax group; ensure the host stores a local copy.
@@ -272,6 +277,7 @@ STX RPT|X {"period":"session"} ETX
 **Errors:** `DEVICE_BUSY`, `UNAUTHORIZED`, `STORAGE_FULL`
 
 **Notes**
+
 - Use this report to reconcile mid-shift activity or troubleshoot high-volume lanes.
 - The device may limit how frequently X reports are generated to avoid overloading flash.
 - `transaction_count` helps detect missed invoices.
@@ -308,6 +314,7 @@ STX RPT|A {"since":"2026-02-01","until":"2026-02-04"} ETX
 **Errors:** `DEVICE_BUSY`, `UNAUTHORIZED`, `STORAGE_FULL`
 
 **Notes**
+
 - Supports auditors who need per-article breakdowns.
 - The `since/until` window must be within the journal retention window.
 - The device streams data if the article list is long; acknowledge each chunk before requesting another.
@@ -331,6 +338,7 @@ STX ADM|DUMPLOG {"format":"json"} ETX
 **Errors:** `UNAUTHORIZED`, `STORAGE_FULL`, `DEVICE_BUSY`
 
 **Notes**
+
 - Use only under audit or support scenarios due to the volume of data.
 - Respect the chunk handshake; failing to ack halts the stream.
 - Consider encrypting the exported dump when transmitting outside the local network.
@@ -360,6 +368,7 @@ STX ADM|RESET {"dgi_authorization":"<signed token>"} ETX
 **Errors:** `UNAUTHORIZED`, `DEVICE_REVOKED`, `STORAGE_FULL`
 
 **Notes**
+
 - Requires a DGI-signed activation token. Do not expose this command to general POS operators.
 - The device keeps the same `device_id` so downstream systems can re-sync after the reset.
 - After reset, re-run `CFG|INIT` if a new registration process is needed.
@@ -385,6 +394,7 @@ STX CFG|TIME {"timestamp":"2026-02-04T10:00:00","signature":"<SE signature>"} ET
 **Errors:** `CLOCK_ROLLBACK_DETECTED`, `UNAUTHORIZED`
 
 **Notes**
+
 - The signature binds the timestamp to the secure element to guard against rollback.
 - Only authorized administrators or the official time sync service should invoke this command.
 - The device rejects timestamps earlier than the current RTC value.
@@ -410,6 +420,7 @@ STX CFG|INIT {"activation_code":"<DGI issued code>","public_key":"<PEM>"} ETX
 **Errors:** `UNAUTHORIZED`, `DEVICE_REVOKED`
 
 **Notes**
+
 - Typically executed once per outlet during deployment.
 - Record the `fiscal_number_prefix` so POS systems can format invoice numbers consistently.
 - The `public_key` lets DGI verify future signed payloads; store it securely in the cloud registry.

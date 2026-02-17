@@ -23,7 +23,7 @@
     
     
       
-        <title>0003 - POS Technology Stack - KutaPay Technical Design</title>
+        <title>0003 - POS Technology Stack - Bono Pay Technical Design</title>
       
     
     
@@ -63,7 +63,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="deep-purple">
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="#3FFF00" data-md-color-accent="#3FFF00">
   
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
@@ -88,7 +88,7 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../.." title="KutaPay Technical Design" class="md-header__button md-logo" aria-label="KutaPay Technical Design" data-md-component="logo">
+    <a href="../.." title="Bono Pay Technical Design" class="md-header__button md-logo" aria-label="Bono Pay Technical Design" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -102,7 +102,7 @@
       <div class="md-header__ellipsis">
         <div class="md-header__topic">
           <span class="md-ellipsis">
-            KutaPay Technical Design
+            Bono Pay Technical Design
           </span>
         </div>
         <div class="md-header__topic" data-md-component="header-topic">
@@ -186,13 +186,13 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="KutaPay Technical Design" class="md-nav__button md-logo" aria-label="KutaPay Technical Design" data-md-component="logo">
+    <a href="../.." title="Bono Pay Technical Design" class="md-nav__button md-logo" aria-label="Bono Pay Technical Design" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
 
     </a>
-    KutaPay Technical Design
+    Bono Pay Technical Design
   </label>
   
   <ul class="md-nav__list" data-md-scrollfix>
@@ -1722,7 +1722,7 @@
 
 <h1 id="adr-0003-pos-technology-stack">ADR-0003: POS Technology Stack<a class="headerlink" href="#adr-0003-pos-technology-stack" title="Permanent link">&para;</a></h1>
 <h3 id="decision-2026-02-17">Decision - 2026-02-17<a class="headerlink" href="#decision-2026-02-17" title="Permanent link">&para;</a></h3>
-<p><strong>Decision</strong>: Adopt a Progressive Web App (PWA) front-end paired with a dedicated local fiscal daemon to run the KutaPay POS across Android, desktop, and low-end hardware while respecting the trust boundary and USB fiscalization requirements.</p>
+<p><strong>Decision</strong>: Adopt a Progressive Web App (PWA) front-end paired with a dedicated local fiscal daemon to run the Bono Pay POS across Android, desktop, and low-end hardware while respecting the trust boundary and USB fiscalization requirements.</p>
 <p><strong>Context</strong>:
 - The POS UI must run on Android tablets/phones, laptops, and eventually desktops while keeping the experience as fluid as the Odoo baseline described in <code>design/docs/pos/ui-ux.md</code>.
 - The interface must stay offline-first (Service Worker + IndexedDB caching), show fiscal status in real time, and never print or persist a sale until the USB Fiscal Memory device completes PREPARE → COMMIT.

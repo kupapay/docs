@@ -23,7 +23,7 @@
     
     
       
-        <title>UI/UX - KutaPay Technical Design</title>
+        <title>UI/UX - Bono Pay Technical Design</title>
       
     
     
@@ -63,7 +63,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="deep-purple">
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="#3FFF00" data-md-color-accent="#3FFF00">
   
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
@@ -88,7 +88,7 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../.." title="KutaPay Technical Design" class="md-header__button md-logo" aria-label="KutaPay Technical Design" data-md-component="logo">
+    <a href="../.." title="Bono Pay Technical Design" class="md-header__button md-logo" aria-label="Bono Pay Technical Design" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -102,7 +102,7 @@
       <div class="md-header__ellipsis">
         <div class="md-header__topic">
           <span class="md-ellipsis">
-            KutaPay Technical Design
+            Bono Pay Technical Design
           </span>
         </div>
         <div class="md-header__topic" data-md-component="header-topic">
@@ -186,13 +186,13 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="KutaPay Technical Design" class="md-nav__button md-logo" aria-label="KutaPay Technical Design" data-md-component="logo">
+    <a href="../.." title="Bono Pay Technical Design" class="md-nav__button md-logo" aria-label="Bono Pay Technical Design" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
 
     </a>
-    KutaPay Technical Design
+    Bono Pay Technical Design
   </label>
   
   <ul class="md-nav__list" data-md-scrollfix>
@@ -2009,7 +2009,7 @@
 
 
 <h1 id="pos-ux-ui-direction">POS UX &amp; UI Direction<a class="headerlink" href="#pos-ux-ui-direction" title="Permanent link">&para;</a></h1>
-<p>This page captures the UX and interface rules that help the KutaPay POS feel as fluid as Odoo while obeying the DRC fiscal trust boundary. The POS remains the untrusted data-entry surface; every sale, void, refund, and report must be gated by the USB Fiscal Memory device before any receipt, journal entry, or Z-report is considered valid.</p>
+<p>This page captures the UX and interface rules that help the Bono Pay POS feel as fluid as Odoo while obeying the DRC fiscal trust boundary. The POS remains the untrusted data-entry surface; every sale, void, refund, and report must be gated by the USB Fiscal Memory device before any receipt, journal entry, or Z-report is considered valid.</p>
 <div class="admonition warning">
 <p class="admonition-title">Trust &amp; fiscalization gate</p>
 <p>The POS <strong>never</strong> assigns fiscal numbers, signs invoices, or finalizes a sale until the USB Fiscal Memory device confirms PREPARE → COMMIT success. No receipt, no saved invoice, no queue promotion happens without that handshake. Nothing is ever deleted—voids and refunds are new fiscal events with their own signatures.</p>
@@ -2026,7 +2026,7 @@
 </ol>
 <div class="admonition note">
 <p class="admonition-title">Lessons from Odoo</p>
-<p>Odoo’s offline resilience, IndexedDB caching, and single-screen sales workflow remain the baseline. KutaPay adopts those patterns but adds the fiscal device overlays, dual-currency handling, and queued sync indicators described above.</p>
+<p>Odoo’s offline resilience, IndexedDB caching, and single-screen sales workflow remain the baseline. Bono Pay adopts those patterns but adds the fiscal device overlays, dual-currency handling, and queued sync indicators described above.</p>
 </div>
 <h2 id="user-journeys">User Journeys<a class="headerlink" href="#user-journeys" title="Permanent link">&para;</a></h2>
 <h3 id="fiscalized-sale">Fiscalized sale<a class="headerlink" href="#fiscalized-sale" title="Permanent link">&para;</a></h3>

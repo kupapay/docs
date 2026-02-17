@@ -41,7 +41,7 @@ Use these scenarios when negotiating with contract manufacturers and to decide w
 Adhering to the trust boundary and regulator expectations requires more than parts pricing:
 
 1. **Quality assurance:** Each device must pass counter increment tests, signature verification, and memory dump checks before shipment. Maintain traceability records in the production log to satisfy audits.
-2. **Tamper protection:** The enclosure should favor tamper‑evident screws, potting, or seals so any physical intrusion invalidates the device; log this observation in the QA report.
+2. **Tamper protection:** The enclosure should favor tamper-evident screws, potting, or seals so any physical intrusion invalidates the device; log this observation in the QA report.
 3. **Firmware control:** Firmware updates occur rarely; deliver signed firmware image packages and enforce signature checks, keeping older versions for rollback if DGI rules change unexpectedly.
 4. **Device activation:** Devices remain inert until associated with a merchant and registered with DGI. Activation includes key provisioning (either pre‑loaded keys or DGI certificate exchange) and printing the device ID on the casing for audit.
 5. **Logistics:** Batch shipments to DRC must consider customs clearance for cryptographic hardware. Keep track of serial numbers, firmware versions, and DGI registration status to expedite homologation.

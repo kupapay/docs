@@ -1,7 +1,55 @@
-# KutaPay Technical Design Documentation — Implementation Plan
+# Bono Pay — Strategic Pivot Implementation Plan
 
 > **Pattern:** [Ralph Loop](https://ghuntley.com/ralph/) — autonomous iteration with fresh context per cycle.
 > **State lives on disk, not in the model's context.** Each iteration reads this file, picks one task, executes it, updates the status, commits, and exits.
+
+## Strategic Context
+
+**Bono Pay is a fiscal invoicing platform for the DRC** — like Stripe Invoices, but built for the Facture Normalisée mandate. It is NOT a POS system. The POS is a future integration target, not the core product.
+
+### Product Vision
+
+```
+┌────────────────────────────────────────────────────────────────────┐
+│  Phase 1 — Software Invoicing Platform (THIS PIVOT)               │
+│  API-first invoicing + web dashboard + cloud fiscal signing (HSM) │
+│  Tax engine · DGI integration · B2B pilot                         │
+├────────────────────────────────────────────────────────────────────┤
+│  Phase 2 — POS & Retail Integrations                              │
+│  POS SDK · multi-terminal · mobile money · restaurant features    │
+├────────────────────────────────────────────────────────────────────┤
+│  Phase 3 — USB Hardware (DEF Homologation)                        │
+│  USB Fiscal Memory device · firmware · 2PC protocol · secure elem │
+├────────────────────────────────────────────────────────────────────┤
+│  Phase 4 — Enterprise & Scale                                     │
+│  ERP connectors · fleet management · analytics · multi-country    │
+└────────────────────────────────────────────────────────────────────┘
+```
+
+### Trust Boundary (Phase 1 — Software-Only)
+
+```
+Client Apps (untrusted)  ──invoice request──►  Bono Pay Cloud (trusted)
+  Web Dashboard                                   │
+  REST API consumers                              ├── Cloud Signing Service (HSM)
+  SDK integrators                                 ├── Fiscal Ledger (append-only)
+  Future: POS terminals                           ├── Monotonic Counter
+                                                  ├── Tax Engine (14 DGI groups)
+                                                  ├── Report Generator (Z/X/A)
+                                                  └── DGI Sync Agent
+```
+
+In Phase 1 the **Cloud Signing Service** is the trusted fiscal authority. It assigns fiscal numbers, signs invoices with HSM-managed keys, maintains the hash-chained ledger, and generates reports. In Phase 3, the USB Fiscal Memory device can replace or augment the cloud signer for merchants who need full DEF homologation.
+
+### What This Plan Does
+
+This plan rewrites all documentation to reflect the pivot. It:
+1. Archives hardware docs (USB device, protocol, secure element, BOM) out of the main site
+2. Restructures the MkDocs nav from POS-centric to invoicing-platform-centric
+3. Rewrites architecture, fiscal, cloud, and implementation docs for software-first
+4. Creates new invoicing platform pages (API, dashboard, SDK, multi-user)
+5. Updates memory bank, copilot instructions, and specs
+6. Creates new ADRs documenting the pivot decisions
 
 ## How This Works
 
@@ -14,9 +62,9 @@
 │    │  Fresh Copilot session (clean context)                   │  │
 │    │                                                          │  │
 │    │  1. Read IMPLEMENTATION_PLAN.md (this file)              │  │
-│    │  2. Read source docs (DISCUSSION.md, specs, ADRs)        │  │
-│    │  3. Find first task with status: READY                   │  │
-│    │  4. Invoke the specified agent/prompt/skill               │  │
+│    │  2. Read source docs listed in the task                  │  │
+│    │  3. Find first task with Status: READY                   │  │
+│    │  4. Execute the instructions                             │  │
 │    │  5. Write output to the specified target file             │  │
 │    │  6. Run the specified validation step                     │  │
 │    │  7. Update this file: READY → DONE                       │  │
@@ -29,29 +77,20 @@
 ### Rules for Each Iteration
 
 1. **Pick the first READY task** — do not skip ahead or cherry-pick.
-2. **Read only the source files listed** in that task's `Sources` field — do not read the entire DISCUSSION.md (12K lines) unless the task says to.
-3. **Invoke the agent/prompt specified** — use exactly the `@agent` or `/prompt` listed. If the task says "manual," write it yourself.
-4. **Write to the exact target path** — create directories as needed.
-5. **Validate** — run the check described in `Validate`. If it fails, fix before committing.
-6. **Update status in this file** — change `Status: READY` → `Status: DONE` and add `Completed: YYYY-MM-DD`.
-7. **Commit** — `git add -A && git commit -m "docs: [task-id] [short description]"`.
-8. **Exit** — do not start the next task. The loop will spawn a fresh session.
+2. **Read only the source files listed** in that task's `Sources` field.
+3. **Write complete content** — no placeholders, stubs, or "Coming soon" blocks.
+4. **Include Mermaid diagrams** where specified. Always quote node labels containing parentheses, slashes, or commas.
+5. **Use "Bono Pay"** as the product name everywhere. Never "KutaPay".
+6. **Validate** — run the check described in `Validate`. Fix before committing.
+7. **Update status** — change `Status: READY` → `Status: DONE` and add `Completed: YYYY-MM-DD`.
+8. **Commit** — `git add -A && git commit -m "docs: [TASK-ID] [short description]"`.
+9. **Exit** — do not start the next task.
 
 ### How to Run
 
-**Manual (in VS Code Copilot Chat):**
-Paste this prompt each iteration:
-```
-Read IMPLEMENTATION_PLAN.md. Find the first task with Status: READY.
-Execute it following the rules in that file. Update the status when done.
-Commit with message "docs: [TASK-ID] [description]".
-```
-
-**Automated (Copilot SDK):**
 ```bash
-python .github/cookbook/copilot-sdk/python/recipe/ralph_loop.py build 30
+python .github/cookbook/copilot-sdk/python/recipe/ralph_loop.py build 50
 ```
-Requires `PROMPT_build.md` (see Appendix A).
 
 ---
 
@@ -59,1184 +98,66 @@ Requires `PROMPT_build.md` (see Appendix A).
 
 | Phase | Tasks | Done | Status |
 |-------|-------|------|--------|
-| 0 — Scaffolding | 3 | 1 | IN PROGRESS |
-| 1 — Architecture | 6 | 0 | BLOCKED by Phase 0 |
-| 2 — Hardware | 4 | 0 | BLOCKED by Phase 1 |
-| 3 — Fiscal Engine | 4 | 0 | BLOCKED by Phase 1 |
-| 4 — Cloud & Sync | 3 | 0 | BLOCKED by Phase 1 |
-| 5 — POS Application | 3 | 3 | DONE |
-| 6 — Regulatory | 3 | 0 | READY (independent) |
-| 7 — API Reference | 3 | 0 | BLOCKED by Phase 2+3 |
-| 8 — Implementation Roadmap | 4 | 0 | BLOCKED by Phase 1-5 |
-| 9 — ADRs | 3 | 0 | BLOCKED by Phase 1 |
-| 10 — Validation & Review | 4 | 0 | BLOCKED by Phase 1-9 |
-| 11 — Final Assembly | 2 | 0 | BLOCKED by Phase 10 |
-| **Total** | **42** | **1** | |
+| 0 — Restructure & Archive | 3 | 0 | READY |
+| 1 — Foundation Updates | 4 | 0 | BLOCKED by Phase 0 |
+| 2 — Architecture (Software-First) | 4 | 0 | BLOCKED by Phase 1 |
+| 3 — Invoicing Platform (New) | 4 | 0 | BLOCKED by Phase 1 |
+| 4 — Fiscal Engine (Rewrite) | 4 | 0 | BLOCKED by Phase 2 |
+| 5 — Cloud (Rewrite) | 3 | 0 | BLOCKED by Phase 2 |
+| 6 — Integrations (Rewrite POS→Platform) | 3 | 0 | BLOCKED by Phase 2 |
+| 7 — Regulatory (Minor Updates) | 3 | 0 | READY (independent) |
+| 8 — API Reference (Rewrite) | 2 | 0 | BLOCKED by Phase 3+4 |
+| 9 — Implementation Roadmap (Rewrite) | 4 | 0 | BLOCKED by Phase 2-6 |
+| 10 — ADRs (New + Rewrite) | 4 | 0 | BLOCKED by Phase 2 |
+| 11 — Validation & Final Assembly | 3 | 0 | BLOCKED by Phase 7-10 |
+| **Total** | **41** | **0** | |
 
 ---
 
-## Phase 0 — Scaffolding
+## Phase 0 — Restructure & Archive
 
-### TASK-001: Initialize MkDocs project
+### TASK-001: Archive hardware docs out of main site
 ```
 Status:     DONE
-Completed:  2026-02-16
-Agent:      manual (create files directly)
-Sources:    (none — project setup)
-Target:     design/mkdocs.yml, design/docs/index.md
-Validate:   cd design && mkdocs build --strict 2>&1 | head -20
+Completed: 2026-02-17
+Agent:      manual
+Sources:    design/docs/hardware/, design/docs/api/usb-device.md
+Target:     design/docs-archive/hardware/, design/docs-archive/api/
+Validate:   ls design/docs-archive/hardware/*.md | wc -l  (expect 4)
+            ls design/docs-archive/api/usb-device.md  (exists)
+            ! ls design/docs/hardware/  (directory removed)
 ```
 **Instructions:**
-1. Run `pip install mkdocs mkdocs-material mkdocs-mermaid2-plugin` if not installed.
-2. Create `design/` directory at project root.
-3. Create `design/mkdocs.yml` with:
-   - `site_name: KutaPay Technical Design`
-   - `theme: material` with slate scheme, deep purple primary
-   - Plugins: search, mermaid2
-   - Extensions: pymdownx.superfences (with mermaid fence), admonition, pymdownx.details, pymdownx.tabbed, attr_list, def_list, tables, toc with permalink
-   - Full `nav:` tree (see Appendix B for the complete nav structure)
-4. Create `design/docs/index.md` with a landing page:
-   - Project title, one-paragraph summary
-   - Links to major sections
-   - "How to use this documentation" section
-5. Create empty placeholder `.md` files for every page in the nav tree (just `# Title` + `!!! note "Coming soon"`)
+1. Create `design/docs-archive/hardware/` directory.
+2. Move these files from `design/docs/hardware/` to `design/docs-archive/hardware/`:
+   - `usb-device.md`, `protocol.md`, `secure-element.md`, `bom.md`
+3. Create `design/docs-archive/api/` directory.
+4. Move `design/docs/api/usb-device.md` to `design/docs-archive/api/usb-device.md`.
+5. Remove `design/docs/hardware/` directory (now empty).
+6. Add a `design/docs-archive/README.md` with:
+   ```
+   # Archived Documentation
+   These docs describe the USB Fiscal Memory hardware planned for Phase 3.
+   They are preserved here as the specification for future hardware integration.
+   They are NOT part of the current MkDocs site.
+   ```
 
 ---
 
-### TASK-002: Initialize memory bank
+### TASK-002: Restructure mkdocs.yml nav for invoicing platform
 ```
-Status:     DONE
-Completed:  2026-02-16
-Agent:      manual (create files directly)
-Sources:    kutapay_technical_design.md, .github/copilot-instructions.md
-Target:     memory-bank/projectbrief.md, memory-bank/techContext.md,
-            memory-bank/activeContext.md, memory-bank/productContext.md,
-            memory-bank/systemPatterns.md, memory-bank/progress.md
-Validate:   ls memory-bank/*.md | wc -l  (expect 6)
-```
-**Instructions:**
-Create the 6 core memory-bank files per the memory-bank instruction pattern.
-- `projectbrief.md` — KutaPay mission, core problem, solution, success criteria, key constraints
-- `techContext.md` — Stack decisions (hardware + software), BOM target, open questions, decided items (2PC protocol)
-- `activeContext.md` — Current phase: pre-implementation / technical design documentation
-- `productContext.md` — Why KutaPay exists, problems it solves, target users, UX goals
-- `systemPatterns.md` — Trust boundary pattern, per-outlet model, offline-first, 2PC protocol, hash-chained journal
-- `progress.md` — What exists (design docs, regulatory summaries, ADR-0001), what's left (everything else)
-
----
-
-### TASK-003: Create spec directory with architecture spec
-```
-Status:     DONE
-Completed:  2026-02-16
-Agent:      @specification
-Sources:    kutapay_technical_design.md, docs/sfe-specifications-v1-summary.md,
-            docs/adr/adr-0001-two-phase-commit-usb-protocol.md,
-            .github/copilot-instructions.md
-Target:     spec/architecture-kutapay-system-1.md
-Validate:   File exists and contains EARS-notation requirements (grep "SHALL" spec/architecture-kutapay-system-1.md)
-```
-**Instructions:**
-```
-@specification Generate a system architecture specification for KutaPay.
-
-Read these files:
-- kutapay_technical_design.md
-- docs/sfe-specifications-v1-summary.md
-- docs/adr/adr-0001-two-phase-commit-usb-protocol.md
-- .github/copilot-instructions.md
-
-Generate EARS-notation requirements covering:
-1. Trust boundary (POS untrusted, USB device trusted)
-2. Invoice lifecycle (6 mandatory steps)
-3. Offline-first design (local fiscalization, deferred upload)
-4. Multi-terminal per-outlet model
-5. Security elements (fiscal number, device ID, signature, timestamp, QR)
-6. Tax engine (14 DGI tax groups)
-7. Invoice types (sale, advance, credit note, export, export credit note)
-8. Reports (Z, X, A, audit export)
-9. Void/refund as new fiscal events
-10. USB protocol (2PC: PREPARE → COMMIT)
-
-Save to /spec/architecture-kutapay-system-1.md
-```
-
----
-
-## Phase 1 — Architecture Section
-
-### TASK-004: Architecture overview page with diagrams
-```
-Status:     DONE (after TASK-001)
-Completed:  2026-02-16
-Depends:    TASK-001, TASK-003
-Agent:      @gem-documentation-writer
-Sources:    spec/architecture-kutapay-system-1.md, kutapay_technical_design.md,
-            .github/copilot-instructions.md
-Target:     design/docs/architecture/overview.md
-Validate:   grep -c "mermaid" design/docs/architecture/overview.md  (expect ≥ 3)
-```
-**Instructions:**
-```
-@gem-documentation-writer Write the architecture overview page for KutaPay's MkDocs site.
-
-Read: spec/architecture-kutapay-system-1.md, kutapay_technical_design.md
-
-Include these Mermaid diagrams:
-1. C4 Context diagram (cashier, owner, auditor → KutaPay → DGI, payment providers)
-2. Trust boundary diagram (untrusted POS zone vs trusted USB device zone)
-3. Component map (POS layer → fiscal service → USB device → cloud layer)
-
-Use MkDocs Material admonitions for warnings about the trust boundary rule.
-Write for developers joining the project. Output valid Markdown with mermaid fences.
-Save to design/docs/architecture/overview.md
-```
-
----
-
-### TASK-005: Trust boundary deep-dive
-```
-Status:     DONE (after TASK-001)
-Completed:  2026-02-16
-Depends:    TASK-001, TASK-003
-Agent:      @se-system-architecture-reviewer + @gem-documentation-writer
-Sources:    spec/architecture-kutapay-system-1.md,
-            docs/adr/adr-0001-two-phase-commit-usb-protocol.md
-Target:     design/docs/architecture/trust-boundary.md
-Validate:   File contains "untrusted" and "trusted" and at least one mermaid diagram
-```
-**Instructions:**
-Step 1 — Review:
-```
-@se-system-architecture-reviewer Review the trust boundary design in
-spec/architecture-kutapay-system-1.md and docs/adr/adr-0001-two-phase-commit-usb-protocol.md.
-Identify: violations, missing failure modes, unclear boundaries.
-Output findings to a temporary review note.
-```
-Step 2 — Write:
-```
-@gem-documentation-writer Write design/docs/architecture/trust-boundary.md.
-Deep-dive into the trust boundary. Include:
-- What crosses the boundary (canonical payload → fiscal response)
-- What NEVER crosses (private keys, fiscal numbers, counters — these stay in device)
-- Failure modes at the boundary (power loss, cable disconnect, corrupt payload)
-- Mermaid diagram showing data flow across boundary
-- Table of trust assumptions
-- Incorporate any findings from the architecture review.
-```
-
----
-
-### TASK-006: Component map
-```
-Status:     DONE (after TASK-001)
-Completed:  2026-02-17
-Depends:    TASK-001, TASK-003
-Agent:      @gem-documentation-writer
-Sources:    spec/architecture-kutapay-system-1.md, DISCUSSION.md lines 6975-7050
-Target:     design/docs/architecture/components.md
-Validate:   grep -c "mermaid" design/docs/architecture/components.md  (expect ≥ 2)
-```
-**Instructions:**
-```
-@gem-documentation-writer Write design/docs/architecture/components.md.
-Detail every component in the system:
-
-POS Layer: Sale Entry, Receipt Printer, Sync Queue, Product Catalog, Tax Engine UI
-Fiscal Service: Device Proxy, Tax Calculation Engine, Canonical Serializer, Multi-Terminal Mediator
-USB Device: Schema Validator, Monotonic Counter, ECDSA Signer, Hash-Chained Journal, RTC, Report Generator
-Cloud: Cloud API, Sync Engine, Invoice Store, Device Registry, Dashboard
-
-For each: purpose, inputs, outputs, dependencies.
-Include a detailed Mermaid component diagram showing all connections.
-Include a deployment diagram (single-terminal vs multi-terminal).
-```
-
----
-
-### TASK-007: Data flow diagrams
-```
-Status:     DONE (after TASK-001)
-Completed:  2026-02-17
-Depends:    TASK-001, TASK-003
-Agent:      @gem-documentation-writer + excalidraw skill (optional)
-Sources:    spec/architecture-kutapay-system-1.md
-Target:     design/docs/architecture/data-flow.md
-Validate:   File contains at least 2 mermaid sequence or flowchart diagrams
-```
-**Instructions:**
-```
-@gem-documentation-writer Write design/docs/architecture/data-flow.md.
-Document the major data flows:
-
-1. Happy path: Sale → Tax calc → Canonical payload → PREPARE → COMMIT → Print → Sync → DGI
-   (Mermaid sequence diagram)
-2. Offline flow: Same as above but sync deferred — show queue behavior
-   (Mermaid sequence diagram)
-3. Void flow: Original sale → Void request → New fiscal event → Print void receipt
-   (Mermaid sequence diagram)
-4. Refund flow: Original sale → Refund request → Credit note → New fiscal event
-   (Mermaid sequence diagram)
-5. Multi-terminal flow: Multiple POS → Fiscal Service mediator → Single USB device
-   (Mermaid flowchart)
-```
-
----
-
-### TASK-008: Excalidraw system diagram (optional, visual)
-```
-Status:     DONE (after TASK-001)
-Completed:  2026-02-17
+Status:     READY (after TASK-001)
 Depends:    TASK-001
-Agent:      excalidraw-diagram-generator skill
-Sources:    spec/architecture-kutapay-system-1.md
-Target:     design/docs/architecture/kutapay-system-overview.excalidraw
-Validate:   File is valid JSON and contains "elements"
-```
-**Instructions:**
-Read the excalidraw-diagram-generator skill instructions from:
-`.github/skills/excalidraw-diagram-generator/SKILL.md`
-
-Then generate:
-```
-Create an Excalidraw system architecture diagram for KutaPay showing:
-- POS Application (phone/tablet/PC) in an "untrusted" zone (red border)
-- USB Fiscal Memory device in a "trusted" zone (green border)
-- KutaPay Cloud
-- DGI Tax Authority
-- Arrows: canonical payload, fiscal response, sealed invoice upload
-- Labels on each arrow showing data type
-```
-
----
-
-### TASK-009: Context map for ongoing sessions
-```
-Status:     DONE (after TASK-003)
-Completed:  2026-02-17
-Depends:    TASK-003
-Agent:      @context-architect
-Sources:    all project files
-Target:     memory-bank/context-map.md (informational, not a design doc)
-Validate:   File exists and lists file dependencies
-```
-**Instructions:**
-```
-@context-architect Map all files relevant to KutaPay's architecture.
-Include: docs/*.md, docs/adr/*.md, spec/*.md, design/docs/**/*.md,
-kutapay_technical_design.md, DISCUSSION.md, memory-bank/*.md.
-Identify: which files inform which design sections, gaps, and missing context.
-Save the map to memory-bank/context-map.md.
-```
-
----
-
-## Phase 2 — Hardware Section
-
-### TASK-010: USB Fiscal Memory device page
-```
-Status:     DONE (after TASK-004)
-Completed:  2026-02-17
-Depends:    TASK-004
-Agent:      @gem-documentation-writer
-Sources:    DISCUSSION.md lines 6960-7020 (hardware overview),
-            kutapay_technical_design.md section 6,
-            spec/architecture-kutapay-system-1.md
-Target:     design/docs/hardware/usb-device.md
-Validate:   File contains BOM table and at least one diagram
-```
-**Instructions:**
-```
-@gem-documentation-writer Write design/docs/hardware/usb-device.md.
-Cover:
-- Device purpose and form factor (USB-C female, cable-connected)
-- Block diagram (Mermaid: MCU ↔ SE ↔ Flash ↔ RTC ↔ USB-C)
-- Capabilities: sign, number, timestamp, store, report
-- Physical characteristics: LED indicator, tamper detection
-- Operating environment (DRC: heat, dust, power instability)
-- Comparison to similar devices (Italian fiscal memory, EFDs, hardware wallets)
-```
-
----
-
-### TASK-011: USB 2PC protocol specification
-```
-Status:     DONE (after TASK-004)
-Completed:  2026-02-17
-Depends:    TASK-004
-Agent:      @specification
-Sources:    docs/adr/adr-0001-two-phase-commit-usb-protocol.md,
-            DISCUSSION.md lines 5690-5740 (2PC rationale),
-            DISCUSSION.md lines 7120-7200 (protocol framing),
-            spec/architecture-kutapay-system-1.md
-Target:     spec/protocol-usb-fiscal-device-1.md
-            design/docs/hardware/protocol.md (MkDocs page derived from spec)
-Validate:   spec file contains command definitions; design page contains sequence diagram
-```
-**Instructions:**
-Step 1 — Spec:
-```
-@specification Generate a USB CDC protocol specification for KutaPay.
-Define ALL commands:
-- TXN|PREPARE — request/response format, error codes, timeout
-- TXN|COMMIT — request/response format, nonce validation, error codes
-- QRY|STATUS — device health, free memory, next invoice number
-- QRY|LOG <n> — retrieve specific journal entry
-- RPT|Z — generate Z report (daily closure)
-- RPT|X — generate X report (periodic)
-- RPT|A — generate A report (article-level)
-- ADM|DUMPLOG — full journal export for audit
-- ADM|RESET — authorized counter reset (requires DGI code)
-- CFG|TIME — set/verify RTC
-- CFG|INIT — device activation/registration
-
-For each: message format (STX/ETX framing), payload schema, response schema,
-error codes, timeout, retry behavior, and example.
-
-Include canonical JSON payload specification with exact field order.
-Save to spec/protocol-usb-fiscal-device-1.md
-```
-Step 2 — MkDocs page:
-```
-@gem-documentation-writer Convert spec/protocol-usb-fiscal-device-1.md into
-design/docs/hardware/protocol.md.
-Add Mermaid sequence diagrams for: happy path (PREPARE→COMMIT),
-error path (PREPARE→reject), and power-loss recovery.
-Add admonitions for critical rules. Cross-reference ADR-0001.
-```
-
----
-
-### TASK-012: Secure Element deep-dive
-```
-Status:     DONE (after TASK-010)
-Completed:  2026-02-17
-Depends:    TASK-010
-Agent:      @gem-documentation-writer + @se-security-reviewer
-Sources:    DISCUSSION.md lines 7285-7400 (SE section),
-            spec/architecture-kutapay-system-1.md
-Target:     design/docs/hardware/secure-element.md
-Validate:   File discusses key management and signature algorithm
-```
-**Instructions:**
-Step 1 — Security review:
-```
-@se-security-reviewer Review the Secure Element design described in
-DISCUSSION.md lines 7285-7400. Assess:
-- Key generation (device-generated vs DGI-issued)
-- ECDSA P-256 vs Ed25519 for constrained MCU
-- Anti-cloning protections
-- Monotonic counter usage
-- Backup key policy (no private key backup by design)
-Output findings.
-```
-Step 2 — Write page:
-```
-@gem-documentation-writer Write design/docs/hardware/secure-element.md.
-Cover: key management, signing algorithm, monotonic counter, anti-cloning,
-verification flow, performance characteristics. Include diagram of
-signing flow (MCU hashes → SE signs → response includes signature).
-Incorporate security review findings as admonitions.
-```
-
----
-
-### TASK-013: BOM & manufacturing
-```
-Status:     DONE
-Completed:  2026-02-17
-Depends:    TASK-010
 Agent:      manual
-Sources:    DISCUSSION.md lines 7200-7285 (BOM section),
-            kutapay_technical_design.md section 6
-Target:     design/docs/hardware/bom.md
-Validate:   File contains cost breakdown table
+Sources:    design/mkdocs.yml
+Target:     design/mkdocs.yml
+Validate:   cd design && python -m mkdocs build 2>&1 | tail -3  (no errors about missing files)
 ```
 **Instructions:**
-Write the BOM page with a detailed cost table:
-
-| Component | Example Part | Qty | Unit Cost (USD) | Notes |
-|-----------|-------------|-----|----------------|-------|
-| Secure MCU | STM32L4 / NXP Kinetis | 1 | $3.00-5.00 | ARM Cortex-M4/M33, crypto accelerators |
-| Secure Element | ATECC608B / SE050 | 1 | $1.00-2.00 | ECC signatures, secure key storage |
-| ... (complete from DISCUSSION.md) |
-
-Include: total COGS estimate, sensitivity analysis (what if SE costs double?),
-retail pricing strategy, manufacturing considerations.
-
----
-
-## Phase 3 — Fiscal Engine Section
-
-### TASK-014: Invoice lifecycle page
-```
-Status:     DONE
-Completed:  2026-02-17
-Depends:    TASK-004
-Agent:      @gem-documentation-writer
-Sources:    spec/architecture-kutapay-system-1.md,
-            docs/sfe-specifications-v1-summary.md,
-            .github/copilot-instructions.md (invoice lifecycle section)
-Target:     design/docs/fiscal/invoice-lifecycle.md
-Validate:   Contains state diagram AND sequence diagram (grep "stateDiagram\|sequenceDiagram")
-```
-**Instructions:**
-```
-@gem-documentation-writer Write design/docs/fiscal/invoice-lifecycle.md.
-Include:
-1. The 6-step non-negotiable flow (sequence diagram with all actors)
-2. Invoice state machine (stateDiagram-v2: Draft → Preparing → Prepared → Fiscalized → Delivered → Synced)
-3. Invoice types table (all 5 types with codes and descriptions)
-4. Void flow (new fiscal event, not deletion)
-5. Refund flow (credit note, references original)
-6. Draft cancellation (no fiscal trace)
-7. Admonition: "Nothing is ever deleted"
-```
-
----
-
-### TASK-015: Tax engine (14 DGI groups)
-```
-Status:     DONE (after TASK-004)
-Completed:  2026-02-17
-Depends:    TASK-004
-Agent:      @specification + @gem-documentation-writer
-Sources:    docs/sfe-specifications-v1-summary.md,
-            DISCUSSION.md (search for "tax group" sections)
-Target:     spec/schema-tax-engine-1.md, design/docs/fiscal/tax-engine.md
-Validate:   Spec file lists all 14 tax groups; design page has a table
-```
-**Instructions:**
-Step 1:
-```
-@specification Generate a tax engine schema specification.
-Read docs/sfe-specifications-v1-summary.md.
-Define all 14 DGI tax groups with: code, name, rate, applicability rules.
-Define client classifications: individual, company, commercial individual, professional, embassy.
-Define tax calculation rules and rounding.
-Save to spec/schema-tax-engine-1.md
-```
-Step 2:
-```
-@gem-documentation-writer Convert spec/schema-tax-engine-1.md into
-design/docs/fiscal/tax-engine.md. Add a decision tree diagram (Mermaid flowchart)
-for "which tax group applies?" Include worked examples.
-```
-
----
-
-### TASK-016: Security elements on invoices
-```
-Status:     DONE (after TASK-004)
-Completed:  2026-02-17
-Depends:    TASK-004
-Agent:      @gem-documentation-writer
-Sources:    docs/sfe-specifications-v1-summary.md,
-            kutapay_technical_design.md section 5,
-            spec/architecture-kutapay-system-1.md
-Target:     design/docs/fiscal/security-elements.md
-Validate:   File mentions all 5 elements: fiscal number, device ID, signature, timestamp, QR
-```
-**Instructions:**
-```
-@gem-documentation-writer Write design/docs/fiscal/security-elements.md.
-Document the 5 mandatory security elements on every invoice:
-1. Sequential fiscal invoice number (device-controlled)
-2. Device ID (DEF NID)
-3. Cryptographic authentication code (signature)
-4. Trusted timestamp (from device RTC)
-5. QR code encoding verification data
-
-For each: what it is, who generates it, where it appears on receipt,
-how it's verified, what happens if it's missing.
-Include a mock receipt diagram showing element placement.
-```
-
----
-
-### TASK-017: Reports (Z/X/A) specification
-```
-Status:     DONE
-Completed:  2026-02-17
-Depends:    TASK-004
-Agent:      @specification + @gem-documentation-writer
-Sources:    docs/sfe-specifications-v1-summary.md,
-            DISCUSSION.md (search for "Z report" "X report" "A report")
-Target:     spec/process-fiscal-reports-1.md, design/docs/fiscal/reports.md
-Validate:   Spec defines all 3 report types + audit export
-```
-**Instructions:**
-Step 1:
-```
-@specification Generate a fiscal reports specification.
-Define: Z report (daily closure — contents, triggers, mandatory fields),
-X report (periodic — configurable period, contents), A report (article-level — per-item breakdown),
-Audit export (complete journal dump for tax authority).
-Save to spec/process-fiscal-reports-1.md
-```
-Step 2:
-```
-@gem-documentation-writer Convert to design/docs/fiscal/reports.md.
-Include sample report outputs (mock data).
-```
-
----
-
-## Phase 4 — Cloud & Sync Section
-
-### TASK-018: Cloud architecture
-```
-Status:     DONE (after TASK-004)
-Completed:  2026-02-17
-Depends:    TASK-004
-Agent:      @gem-documentation-writer
-Sources:    spec/architecture-kutapay-system-1.md,
-            DISCUSSION.md lines 7030-7060 (sync agent section)
-Target:     design/docs/cloud/architecture.md
-Validate:   Contains deployment diagram
-```
-**Instructions:**
-```
-@gem-documentation-writer Write design/docs/cloud/architecture.md.
-Cover: cloud service responsibilities (sync, backup, DGI upload, device registry, dashboard),
-deployment options (serverless vs containers), multi-tenant model,
-data residency considerations for DRC.
-Include Mermaid deployment diagram.
-```
-
----
-
-### TASK-019: Offline-first sync design
-```
-Status:     DONE (after TASK-018)
-Completed:  2026-02-17
-Depends:    TASK-018
-Agent:      @gem-documentation-writer
-Sources:    spec/architecture-kutapay-system-1.md,
-            DISCUSSION.md (search for "offline" sections)
-Target:     design/docs/cloud/offline-sync.md
-Validate:   Contains sync state machine diagram
-```
-**Instructions:**
-```
-@gem-documentation-writer Write design/docs/cloud/offline-sync.md.
-Cover: sync queue design, retry logic, conflict resolution, grace period
-for DGI upload, sync status indicators in POS UI, bandwidth optimization.
-Include Mermaid state diagram for invoice sync states:
-PENDING_SYNC → UPLOADING → ACKNOWLEDGED / RETRY / FAILED.
-```
-
----
-
-### TASK-020: DGI integration (with technical spike)
-```
-Status:     DONE (after TASK-018)
-Completed:  2026-02-17
-Depends:    TASK-018
-Agent:      @research-technical-spike + @gem-documentation-writer
-Sources:    docs/sfe-specifications-v1-summary.md,
-            docs/arrete-033-summary.md,
-            kutapay_technical_design.md section 7
-Target:     spec/infrastructure-dgi-integration-1.md,
-            design/docs/cloud/dgi-integration.md
-Validate:   Spike document lists open questions and known facts
-```
-**Instructions:**
-Step 1 — Research spike:
-```
-@research-technical-spike
-Spike: DGI MCF/e-MCF API Integration
-Time-box: focused analysis of available docs only
-Goal: Catalog what we KNOW vs what we DON'T KNOW about the DGI API.
-Read: docs/sfe-specifications-v1-summary.md, docs/arrete-033-summary.md.
-Structure output as: KNOWN (endpoint patterns, auth hints, data requirements)
-vs UNKNOWN (exact API spec, auth method, error handling, offline rules).
-Save to spec/infrastructure-dgi-integration-1.md
-```
-Step 2 — Write page:
-```
-@gem-documentation-writer Write design/docs/cloud/dgi-integration.md.
-Based on the spike findings. Mark unknowns clearly with ??? admonitions.
-Include integration architecture diagram showing KutaPay Cloud → DGI MCF.
-```
-
----
-
-## Phase 5 — POS Application Section
-
-### TASK-021: Multi-terminal design
-```
-Status:     DONE (after TASK-004)
-Completed:  2026-02-17
-Depends:    TASK-004
-Agent:      @gem-documentation-writer
-Sources:    spec/architecture-kutapay-system-1.md,
-            .github/copilot-instructions.md (multi-terminal section),
-            DISCUSSION.md (search for "multi-terminal" "multiple POS")
-Target:     design/docs/pos/multi-terminal.md
-Validate:   Contains deployment diagram for single-terminal AND multi-terminal
-```
-**Instructions:**
-```
-@gem-documentation-writer Write design/docs/pos/multi-terminal.md.
-Cover: per-outlet device model, local fiscal service mediator,
-Wi-Fi/LAN connection between POS terminals and device,
-concurrency handling (who gets the next fiscal number?),
-payload includes outlet_id + pos_terminal_id + cashier_id.
-Diagrams: single-terminal setup, retail (10 lanes), restaurant (mobile waiters).
-```
-
----
-
-### TASK-022: UI/UX design direction
-```
-Status:     DONE (after TASK-004)
-Completed:  2026-02-17
-Depends:    TASK-004
-Agent:      @se-ux-ui-designer + @gem-documentation-writer
-Sources:    docs/odoo-pos-lessons-for-kutapay.md,
-            DISCUSSION.md lines 6975-7030 (POS features)
-Target:     design/docs/pos/ui-ux.md
-Validate:   File contains user journey description and wireframe descriptions
-```
-**Instructions:**
-Step 1:
-```
-@se-ux-ui-designer Review docs/odoo-pos-lessons-for-kutapay.md.
-Define UX principles for KutaPay POS:
-- Checkout speed (target: < 5 seconds to fiscalize)
-- Offline indicators
-- Error recovery flows (device disconnected, nonce expired)
-- Localization (French, Lingala)
-- Mobile-first (Android tablets)
-```
-Step 2:
-```
-@gem-documentation-writer Write design/docs/pos/ui-ux.md.
-Include: key user journeys (sale, void, refund, Z-report),
-UX principles, screen descriptions, accessibility considerations.
-```
-
----
-
-### TASK-023: Integration strategy
-```
-Status:     DONE (after TASK-004)
-Completed:  2026-02-17
-Depends:    TASK-004
-Agent:      @gem-documentation-writer
-Sources:    .github/copilot-instructions.md (integration priority section),
-            kutapay_technical_design.md
-Target:     design/docs/pos/integrations.md
-Validate:   File lists integration priority order
-```
-**Instructions:**
-```
-@gem-documentation-writer Write design/docs/pos/integrations.md.
-Document the integration priority:
-1. Core fiscal API (USB device communication)
-2. CSV import/export
-3. Accounting export
-4. Webhooks
-5. E-commerce plugins
-6. ERP connectors (Odoo, SAP)
-For each: target users, data format, authentication, example payload.
-```
-
----
-
-## Phase 6 — Regulatory Section (independent, can start anytime)
-
-### TASK-024: DRC legal framework overview
-```
-Status:     DONE
-Completed:  2026-02-17
-Agent:      @gem-documentation-writer
-Sources:    docs/arrete-032-summary.md, docs/arrete-033-summary.md,
-            docs/arrete-034-summary.md, docs/arrete-016-2025-summary.md,
-            docs/sfe-specifications-v1-summary.md
-Target:     design/docs/regulatory/legal-framework.md
-Validate:   File references all 5 regulatory documents
-```
-**Instructions:**
-```
-@gem-documentation-writer Write design/docs/regulatory/legal-framework.md.
-Create a one-page overview of DRC's fiscal compliance framework.
-Include: regulatory hierarchy diagram (Mermaid flowchart),
-summary table of all 5 documents with scope and KutaPay impact,
-timeline of regulation adoption, key compliance deadlines.
-```
-
----
-
-### TASK-025: Arrêté summaries page
-```
-Status:     DONE
-Completed:  2026-02-17
-Agent:      manual (compile from existing summaries)
-Sources:    docs/arrete-032-summary.md, docs/arrete-033-summary.md,
-            docs/arrete-034-summary.md, docs/arrete-016-2025-summary.md
-Target:     design/docs/regulatory/arretes.md
-Validate:   File consolidates all 4 arrêté summaries
-```
-**Instructions:**
-Consolidate the 4 existing arrêté summaries into a single MkDocs page.
-Use tabbed content (pymdownx.tabbed) — one tab per arrêté.
-Add cross-references between them where they interact.
-
----
-
-### TASK-026: SFE specifications page
-```
-Status:     DONE
-Completed:  2026-02-17
-Agent:      manual (compile from existing summary)
-Sources:    docs/sfe-specifications-v1-summary.md
-Target:     design/docs/regulatory/sfe-specs.md
-Validate:   File contains the 14 tax groups and 5 invoice types
-```
-**Instructions:**
-Convert the existing SFE summary into a MkDocs page.
-Add structured tables for: tax groups, invoice types, report types, security elements.
-Cross-reference to the relevant design pages (fiscal engine, hardware, reports).
-
----
-
-## Phase 7 — API Reference
-
-### TASK-027: USB device API reference
-```
-Status:     DONE (after TASK-011)
-Completed:  2026-02-17
-Depends:    TASK-011
-Agent:      @se-technical-writer
-Sources:    spec/protocol-usb-fiscal-device-1.md
-Target:     design/docs/api/usb-device.md
-Validate:   File contains all command definitions with request/response examples
-```
-**Instructions:**
-```
-@se-technical-writer Write design/docs/api/usb-device.md as an API reference.
-For each USB command: synopsis, request format, response format,
-error codes, example request, example response, notes.
-Format as a reference document (not narrative). Use code blocks for examples.
-```
-
----
-
-### TASK-028: Cloud API reference
-```
-Status:     DONE (after TASK-018)
-Completed:  2026-02-17
-Depends:    TASK-018
-Agent:      @specification + @se-technical-writer
-Sources:    spec/architecture-kutapay-system-1.md,
-            spec/infrastructure-dgi-integration-1.md
-Target:     spec/design-cloud-api-1.md, design/docs/api/cloud.md
-Validate:   Spec lists all endpoints; design page has example payloads
-```
-**Instructions:**
-Step 1:
-```
-@specification Design the Cloud API for KutaPay.
-Endpoints needed: invoice upload, invoice status, device registration,
-device health, sync status, report generation, audit export.
-Use RESTful conventions. Define request/response schemas.
-Save to spec/design-cloud-api-1.md
-```
-Step 2:
-```
-@se-technical-writer Convert to design/docs/api/cloud.md as API reference.
-```
-
----
-
-### TASK-029: POS plugin API reference
-```
-Status:     DONE (after TASK-023)
-Completed:  2026-02-17
-Depends:    TASK-023
-Agent:      @specification + @se-technical-writer
-Sources:    spec/architecture-kutapay-system-1.md
-Target:     spec/design-pos-plugin-api-1.md, design/docs/api/pos-plugin.md
-Validate:   Spec defines plugin interface; design page has examples
-```
-**Instructions:**
-Step 1:
-```
-@specification Design the POS Plugin API for KutaPay.
-Define the interface that third-party POS systems use to communicate
-with the KutaPay fiscal service. Cover: initialization, invoice submission,
-status query, report retrieval, error handling.
-Save to spec/design-pos-plugin-api-1.md
-```
-Step 2:
-```
-@se-technical-writer Convert to design/docs/api/pos-plugin.md.
-```
-
----
-
-## Phase 8 — Implementation Roadmap
-
-### TASK-030: Roadmap overview
-```
-Status:     DONE (after Phase 1-5 complete)
-Completed:  2026-02-17
-Depends:    TASK-004 through TASK-023
-Agent:      @planner (from project-planning plugin)
-Sources:    spec/*.md (all specs), kutapay_technical_design.md section 11
-Target:     design/docs/implementation/roadmap.md
-Validate:   Contains Gantt or timeline diagram
-```
-**Instructions:**
-```
-@planner Create a high-level implementation roadmap for KutaPay.
-Three phases: B2B Pilot (3 months), Retail (3 months), Enterprise (6 months).
-Include Mermaid Gantt chart. List milestones, dependencies, and risks per phase.
-Save to design/docs/implementation/roadmap.md
-```
-
----
-
-### TASK-031: Phase 1 (B2B) epic breakdown
-```
-Status:     DONE
-Completed:  2026-02-17
-Depends:    TASK-030
-Agent:      /breakdown-epic-arch prompt
-Sources:    spec/*.md, design/docs/implementation/roadmap.md
-Target:     design/docs/implementation/phase-1.md
-Validate:   Contains numbered epics with acceptance criteria
-```
-**Instructions:**
-```
-/breakdown-epic-arch
-Project: KutaPay Phase 1 — B2B Pilot
-Architecture: USB device firmware + single-terminal POS + manual DGI upload
-Target: 10 pilot clients (service companies, wholesalers, schools)
-Duration: 3 months
-
-Break into epics covering:
-1. USB firmware MVP (PREPARE/COMMIT, journal, Z-report)
-2. Fiscal service library (canonical serializer, device proxy, tax engine)
-3. POS MVP (sale entry, receipt generation, basic product catalog)
-4. Manual compliance tooling (CSV export for DGI, audit export)
-5. Testing & Homologation prep
-Each epic: description, acceptance criteria, estimated effort, dependencies.
-```
-
----
-
-### TASK-032: Phase 2 (Retail) epic breakdown
-```
-Status:     DONE
-Completed:  2026-02-17
-Depends:    TASK-031
-Agent:      /breakdown-epic-arch prompt
-Sources:    spec/*.md, design/docs/implementation/phase-1.md
-Target:     design/docs/implementation/phase-2.md
-Validate:   Contains numbered epics
-```
-**Instructions:**
-```
-/breakdown-epic-arch
-Project: KutaPay Phase 2 — Retail & Restaurants
-Extends: Phase 1 deliverables
-New capabilities: multi-terminal, cloud sync, automatic DGI upload,
-full report suite (X, A reports), mobile waiter support
-Target: 100 clients
-Duration: 3 months
-```
-
----
-
-### TASK-033: Phase 3 (Enterprise) epic breakdown
-```
-Status:     DONE (after TASK-032)
-Depends:    TASK-032
-Completed:  2026-02-17
-Agent:      /breakdown-epic-arch prompt
-Sources:    spec/*.md, design/docs/implementation/phase-2.md
-Target:     design/docs/implementation/phase-3.md
-Validate:   Contains numbered epics
-```
-**Instructions:**
-```
-/breakdown-epic-arch
-Project: KutaPay Phase 3 — Enterprise
-Extends: Phase 1+2 deliverables
-New capabilities: ERP connectors, webhook API, fleet management,
-multi-branch dashboard, advanced analytics
-Target: 1000+ clients
-Duration: 6 months
-```
-
----
-
-## Phase 9 — Architecture Decision Records
-
-### TASK-034: ADR index page
-```
-Status:     DONE (after TASK-004)
-Completed:  2026-02-17
-Depends:    TASK-004
-Agent:      manual
-Sources:    docs/adr/*.md
-Target:     design/docs/adr/index.md
-Validate:   File lists ADR-0001 and placeholders for upcoming ADRs
-```
-**Instructions:**
-Create an ADR index page listing all decisions:
-- ADR-0001: Two-Phase Commit for USB Protocol (Accepted) — link to page
-- ADR-0002: Signature Algorithm Selection (Proposed) — to be written
-- ADR-0003: POS Technology Stack (Proposed) — to be written
-Include a brief explanation of the ADR process.
-
----
-
-### TASK-035: ADR-0002 Signature Algorithm
-```
-Status:     DONE (after TASK-012)
-Completed:  2026-02-17
-Depends:    TASK-012
-Agent:      @adr-generator
-Sources:    DISCUSSION.md lines 7285-7400 (SE section),
-            design/docs/hardware/secure-element.md
-Target:     docs/adr/adr-0002-signature-algorithm.md,
-            design/docs/adr/adr-0002.md (copy or symlink)
-Validate:   File contains Options and Rationale sections
-```
-**Instructions:**
-```
-@adr-generator Create ADR-0002: Signature Algorithm Selection.
-Context: USB fiscal device signs invoices via Secure Element.
-Options: ECDSA P-256 (ATECC608 native), Ed25519 (faster but SE050 needed),
-RSA-2048 (large signatures, slow on MCU).
-Constraints: Secure Element hardware support, signature size on receipts,
-DGI hasn't specified algorithm, verification performance.
-Save to docs/adr/adr-0002-signature-algorithm.md
-```
-
----
-
-### TASK-036: ADR-0003 POS Technology Stack
-```
-Status:     DONE (after TASK-022)
-Completed:  2026-02-17
-Depends:    TASK-022
-Agent:      @adr-generator
-Sources:    design/docs/pos/ui-ux.md
-Target:     docs/adr/adr-0003-pos-technology-stack.md,
-            design/docs/adr/adr-0003.md
-Validate:   File contains Options section with at least 3 alternatives
-```
-**Instructions:**
-```
-@adr-generator Create ADR-0003: POS Technology Stack Selection.
-Context: POS must run on Android, desktop, potentially web.
-Must communicate with local USB device via fiscal service.
-Offline-first, low-resource environments.
-Options: PWA + local daemon, Flutter, React Native + native bridge,
-Electron (desktop) + separate Android native app.
-Consider: offline storage, USB communication, dev team skills,
-code sharing between platforms, Odoo integration potential.
-Save to docs/adr/adr-0003-pos-technology-stack.md
-```
-
----
-
-## Phase 10 — Validation & Review
-
-### TASK-037: Full security review
-```
-Status:     DONE (after Phases 2-3 complete)
-Completed:  2026-02-17
-Depends:    TASK-012, TASK-016
-Agent:      @se-security-reviewer
-Sources:    design/docs/hardware/*.md, design/docs/fiscal/*.md,
-            spec/*.md, docs/adr/*.md
-Target:     review/security-review-findings.md
-Validate:   File contains categorized findings (CRITICAL/IMPORTANT/SUGGESTION)
-```
-**Instructions:**
-```
-@se-security-reviewer Perform a comprehensive security review of
-KutaPay's technical design. Read all files in design/docs/hardware/,
-design/docs/fiscal/, spec/, and docs/adr/.
-
-Audit:
-1. Cryptographic design (key management, signing, verification)
-2. Trust boundary enforcement (nothing leaks from trusted to untrusted)
-3. Protocol security (replay protection, nonce lifecycle, anti-tampering)
-4. Data protection (PII handling, invoice data at rest and in transit)
-5. Device lifecycle (provisioning, revocation, replacement)
-
-Output findings categorized as CRITICAL / IMPORTANT / SUGGESTION.
-Save to review/security-review-findings.md
-```
-
----
-
-### TASK-038: Architecture review
-```
-Status:     DONE (after Phases 1-5 complete)
-Completed:  2026-02-17
-Depends:    TASK-004 through TASK-023
-Agent:      @se-system-architecture-reviewer
-Sources:    design/docs/architecture/*.md, spec/*.md
-Target:     review/architecture-review-findings.md
-Validate:   File contains findings
-```
-**Instructions:**
-```
-@se-system-architecture-reviewer Review the complete KutaPay architecture.
-Read: design/docs/architecture/*.md, spec/*.md.
-Check: component coupling, failure modes, scalability,
-trust boundary violations, missing components, consistency.
-Save findings to review/architecture-review-findings.md
-```
-
----
-
-### TASK-039: Stress-test assumptions
-```
-Status:     DONE (after TASK-030)
-Completed:  2026-02-17
-Depends:    TASK-030
-Agent:      @devils-advocate + @critical-thinking
-Sources:    design/docs/implementation/roadmap.md,
-            design/docs/hardware/bom.md
-Target:     review/assumption-challenges.md
-Validate:   File contains at least 5 challenged assumptions
-```
-**Instructions:**
-Step 1:
-```
-@devils-advocate Challenge KutaPay's core assumptions:
-- $10-15 BOM target achievable?
-- One device per outlet sufficient for all scenarios?
-- Offline-first with 48-72h upload deadline realistic?
-- DGI API will be available when needed?
-- Merchants will adopt hardware-requiring solution?
-```
-Step 2:
-```
-@critical-thinking Probe the implementation roadmap:
-- 3 months for B2B pilot firmware + POS — realistic?
-- What if homologation takes 6+ months?
-- What if a competitor gets certified first?
-- What happens to deployed devices if DGI changes crypto requirements?
-```
-
----
-
-### TASK-040: Address review findings
-```
-Status:     DONE (after TASK-037, TASK-038, TASK-039)
-Completed:  2026-02-17
-Depends:    TASK-037, TASK-038, TASK-039
-Agent:      manual (human decision-making)
-Sources:    review/*.md
-Target:     Updates to design/docs/**/*.md, new ADRs as needed
-Validate:   All CRITICAL findings addressed (documented resolution in review files)
-```
-**Instructions:**
-Read all review findings. For each CRITICAL finding:
-- Either fix the design document, OR
-- Create a new ADR documenting why the current approach is acceptable, OR
-- Add a risk to the roadmap with mitigation plan.
-Update review files with resolution status.
-
----
-
-## Phase 11 — Final Assembly
-
-### TASK-041: Build and deploy MkDocs site
-```
-Status:     READY (after TASK-040)
-Depends:    TASK-040
-Agent:      manual
-Sources:    design/**
-Target:     design/site/ (built output)
-Validate:   cd design && mkdocs build --strict  (zero warnings)
-```
-**Instructions:**
-1. Run `cd design && mkdocs build --strict` — fix any warnings.
-2. Verify all pages render correctly.
-3. Verify all Mermaid diagrams render.
-4. Verify all cross-references resolve.
-5. Optionally deploy: `mkdocs gh-deploy` (to GitHub Pages).
-
----
-
-### TASK-042: Update memory bank and commit
-```
-Status:     READY (after TASK-041)
-Depends:    TASK-041
-Agent:      manual
-Sources:    All project files
-Target:     memory-bank/activeContext.md, memory-bank/progress.md
-Validate:   Memory bank reflects completed state
-```
-**Instructions:**
-Update memory bank:
-- `activeContext.md` — Phase: implementation (technical design complete)
-- `progress.md` — Mark all design documentation as done, list next steps (coding Phase 1)
-- `systemPatterns.md` — Add any new patterns discovered during documentation
-Final commit: `git add -A && git commit -m "docs: complete technical design documentation"`
-Push: `git push origin main`
-
----
-
-## Appendix A — PROMPT Files for Automated Ralph Loop
-
-### PROMPT_plan.md
-Save this as `PROMPT_plan.md` at project root if using automated Ralph Loop:
-```
-0a. Read IMPLEMENTATION_PLAN.md to understand the full plan and current status.
-0b. Read spec/*.md and design/docs/**/*.md to understand existing documentation.
-0c. Read memory-bank/*.md for project context.
-
-1. Compare the plan against existing files (gap analysis).
-2. Update IMPLEMENTATION_PLAN.md:
-   - Mark completed tasks as DONE with date
-   - Identify any new tasks needed
-   - Update the Status Summary table
-3. Do NOT implement anything. Planning mode only.
-
-IMPORTANT: Do NOT assume a file is missing — check first.
-```
-
-### PROMPT_build.md
-Save this as `PROMPT_build.md` at project root if using automated Ralph Loop:
-```
-0a. Read IMPLEMENTATION_PLAN.md.
-0b. Read memory-bank/*.md for context.
-0c. Read relevant spec/*.md files.
-
-1. Find the FIRST task with Status: READY whose dependencies are all DONE.
-2. Execute it following the exact Instructions in that task.
-3. If the task says to use an agent (e.g., @specification, @gem-documentation-writer),
-   invoke that agent with the exact prompt provided.
-4. Write output to the exact Target path specified.
-5. Run the Validate check. If it fails, fix the output.
-6. Update IMPLEMENTATION_PLAN.md: change Status: READY → Status: DONE, add Completed: date.
-7. git add -A && git commit -m "docs: [TASK-ID] [short description]"
-8. STOP. Do not start the next task.
-
-RULES:
-- Read ONLY the Source files listed for that task. Do not read all of DISCUSSION.md.
-- Write complete content, no placeholders or stubs.
-- Include Mermaid diagrams where specified.
-- Follow MkDocs Material conventions (admonitions, tabs, etc.).
-```
-
----
-
-## Appendix B — Complete MkDocs Nav Structure
-
+Update `design/mkdocs.yml` with new nav structure:
 ```yaml
+site_name: Bono Pay Technical Design
+
 nav:
   - Home: index.md
   - Architecture:
@@ -1244,11 +165,11 @@ nav:
     - Trust Boundary: architecture/trust-boundary.md
     - Component Map: architecture/components.md
     - Data Flow: architecture/data-flow.md
-  - Hardware:
-    - USB Fiscal Memory: hardware/usb-device.md
-    - USB Protocol (2PC): hardware/protocol.md
-    - Secure Element: hardware/secure-element.md
-    - BOM & Manufacturing: hardware/bom.md
+  - Invoicing Platform:
+    - Product Overview: platform/overview.md
+    - Invoicing API: platform/api.md
+    - Web Dashboard: platform/dashboard.md
+    - SDK & Libraries: platform/sdk.md
   - Fiscal Engine:
     - Invoice Lifecycle: fiscal/invoice-lifecycle.md
     - Tax Engine (14 Groups): fiscal/tax-engine.md
@@ -1258,51 +179,1019 @@ nav:
     - Cloud Architecture: cloud/architecture.md
     - Offline-First Sync: cloud/offline-sync.md
     - DGI Integration: cloud/dgi-integration.md
-  - POS Application:
-    - Multi-Terminal: pos/multi-terminal.md
-    - UI/UX: pos/ui-ux.md
-    - Integrations: pos/integrations.md
+  - Platform & Integrations:
+    - Multi-User Access: platform/multi-user.md
+    - Integrations: platform/integrations.md
   - Regulatory:
     - DRC Legal Framework: regulatory/legal-framework.md
-    - Arrêté Summary: regulatory/arretes.md
+    - "Arrêté Summary": regulatory/arretes.md
     - SFE Specifications: regulatory/sfe-specs.md
   - ADRs:
     - Index: adr/index.md
     - "0001 - Two-Phase Commit": adr/adr-0001.md
     - "0002 - Signature Algorithm": adr/adr-0002.md
-    - "0003 - POS Technology Stack": adr/adr-0003.md
+    - "0003 - Platform Technology Stack": adr/adr-0003.md
+    - "0004 - Cloud Fiscal Signing": adr/adr-0004.md
+    - "0005 - Strategic Pivot": adr/adr-0005.md
   - Implementation:
     - Roadmap: implementation/roadmap.md
-    - Phase 1 - B2B Pilot: implementation/phase-1.md
-    - Phase 2 - Retail: implementation/phase-2.md
-    - Phase 3 - Enterprise: implementation/phase-3.md
+    - "Phase 1 - Software Invoicing": implementation/phase-1.md
+    - "Phase 2 - POS & Retail": implementation/phase-2.md
+    - "Phase 3 - USB Hardware": implementation/phase-3.md
+    - "Phase 4 - Enterprise": implementation/phase-4.md
   - API Reference:
-    - USB Device API: api/usb-device.md
     - Cloud API: api/cloud.md
-    - POS Plugin API: api/pos-plugin.md
+    - Invoicing SDK: api/invoicing-sdk.md
+```
+Also create empty placeholder `.md` files for every NEW page in the nav:
+- `design/docs/platform/overview.md`
+- `design/docs/platform/api.md`
+- `design/docs/platform/dashboard.md`
+- `design/docs/platform/sdk.md`
+- `design/docs/platform/multi-user.md`
+- `design/docs/platform/integrations.md`
+- `design/docs/adr/adr-0004.md`
+- `design/docs/adr/adr-0005.md`
+- `design/docs/implementation/phase-4.md`
+- `design/docs/api/invoicing-sdk.md`
+
+Each placeholder: `# [Title]\n\n!!! note "Rewrite in progress"\n    This page is being updated for the software-first invoicing platform pivot.`
+
+Remove old files that are no longer in nav:
+- `design/docs/pos/multi-terminal.md` → keep content, it will be source for `platform/multi-user.md`
+- `design/docs/pos/ui-ux.md` → keep content, it will be source for `platform/dashboard.md`
+- `design/docs/pos/integrations.md` → keep content, it will be source for `platform/integrations.md`
+- `design/docs/api/pos-plugin.md` → keep content, source for `api/invoicing-sdk.md`
+- `design/docs/adr/adr-0003.md` → will be rewritten in-place
+
+Move the old POS files to `design/docs-archive/pos/` for reference:
+```bash
+mkdir -p design/docs-archive/pos
+mv design/docs/pos/multi-terminal.md design/docs-archive/pos/
+mv design/docs/pos/ui-ux.md design/docs-archive/pos/
+mv design/docs/pos/integrations.md design/docs-archive/pos/
+mv design/docs/api/pos-plugin.md design/docs-archive/api/pos-plugin.md
+rmdir design/docs/pos
 ```
 
 ---
 
-## Appendix C — Agent/Tool Quick Reference
+### TASK-003: Update home page for invoicing platform
+```
+Status:     READY (after TASK-002)
+Depends:    TASK-002
+Agent:      manual
+Sources:    design/docs/index.md (current), docs/odoo-pos-lessons-for-kutapay.md (for UX principles)
+Target:     design/docs/index.md
+Validate:   grep -q "invoicing" design/docs/index.md && grep -q "Bono Pay" design/docs/index.md
+```
+**Instructions:**
+Rewrite `design/docs/index.md` to position Bono Pay as fiscal invoicing infrastructure:
+- **Title:** Bono Pay Technical Design Documentation
+- **Opening paragraph:** Bono Pay is fiscal invoicing infrastructure for the DRC's Facture Normalisée regime. Businesses create, send, and manage fiscally compliant invoices via API or web dashboard. The platform handles fiscal signing, sequential numbering, tax calculation, and DGI compliance — so developers and finance teams don't have to.
+- **Key sections list:** Architecture, Invoicing Platform, Fiscal Engine, Cloud & Sync, Platform & Integrations, Regulatory, ADRs, Implementation, API Reference
+- **Phase roadmap summary:** Phase 1 (Software Invoicing) → Phase 2 (POS & Retail) → Phase 3 (USB Hardware) → Phase 4 (Enterprise)
+- **Design principles from Odoo lessons** (reframed for invoicing): offline-first, PWA, mobile-optimized, multi-currency (CDF/USD), mobile money native
+- **How to use this documentation** section
 
-| Agent/Prompt | Plugin | Use For |
-|---|---|---|
-| `@specification` | standalone | EARS-notation specs → `spec/` |
-| `@adr-generator` | standalone | Architecture Decision Records → `docs/adr/` |
-| `@gem-documentation-writer` | gem-team | Polished MkDocs pages with diagrams |
-| `@gem-planner` | gem-team | High-level planning |
-| `@gem-researcher` | gem-team | Deep research into specific topics |
-| `@se-security-reviewer` | software-engineering-team | Crypto and security audits |
-| `@se-system-architecture-reviewer` | software-engineering-team | Architecture validation |
-| `@se-technical-writer` | software-engineering-team | API reference docs |
-| `@se-ux-ui-designer` | software-engineering-team | UX principles and flows |
-| `@context-architect` | context-engineering | Context mapping |
-| `@planner` | project-planning | Implementation roadmaps |
-| `@research-technical-spike` | technical-spike | Time-boxed research |
-| `@critical-thinking` | standalone | Probing questions |
-| `@devils-advocate` | standalone | Challenge assumptions |
-| `/breakdown-epic-arch` | project-planning | Epic decomposition |
-| `/create-implementation-plan` | project-planning | Phased plans |
-| excalidraw skill | standalone skill | Visual diagrams |
-| plantuml-ascii skill | standalone skill | ASCII diagrams |
+---
+
+## Phase 1 — Foundation Updates
+
+### TASK-004: Rewrite copilot instructions for invoicing platform
+```
+Status:     READY (after TASK-003)
+Depends:    TASK-003
+Agent:      manual
+Sources:    .github/copilot-instructions.md (current), docs/sfe-specifications-v1-summary.md
+Target:     .github/copilot-instructions.md
+Validate:   grep -q "invoicing" .github/copilot-instructions.md
+            grep -cq "NOT.*POS" .github/copilot-instructions.md  (should NOT match — remove old disclaimer)
+```
+**Instructions:**
+Rewrite `.github/copilot-instructions.md` to reflect the pivot. Key changes:
+- **What This Project Is:** Bono Pay is fiscal invoicing infrastructure for the DRC. It is an API-first invoicing platform (like Stripe Invoices) that turns commercial activity into legally recognized tax events under the Facture Normalisée mandate.
+- **Architecture — Trust Boundary (Phase 1):**
+  ```
+  Client Apps (untrusted)  ──invoice request──►  Bono Pay Cloud (trusted)
+           │                                          │
+           ▼                                          │
+     Web Dashboard / API                              │
+                                                      ├── Cloud Signing Service (HSM)
+                                                      ├── Fiscal Ledger
+     Bono Pay Cloud ──sealed invoice──► DGI           ├── Tax Engine
+  ```
+- **Trust boundary rule:** In Phase 1, the Cloud Signing Service (HSM-backed) is the trusted fiscal authority. Client apps (web dashboard, API consumers, SDK users) are untrusted. In Phase 3, the USB Fiscal Memory device can replace the cloud signer for merchants needing full DEF homologation.
+- **Invoice Lifecycle:** (1) Client creates invoice via API/dashboard, (2) Platform validates + applies tax engine, (3) Cloud signing service assigns fiscal number + signs, (4) Platform returns sealed invoice with security elements, (5) Client delivers receipt (email/WhatsApp/print/PDF), (6) Platform syncs to DGI.
+- **Security Elements:** Same 5 elements, generated by cloud HSM in Phase 1 (fiscal number, service ID, signature, timestamp, QR code).
+- **Phasing:** Phase 1 = Software Invoicing, Phase 2 = POS & Retail, Phase 3 = USB Hardware, Phase 4 = Enterprise.
+- **Conventions for AI Agents:** Always respect the trust boundary: client apps are untrusted, cloud signing service is the authority. Invoice mutations are always new fiscal events. Canonical payloads must have deterministic field ordering. Tax logic must handle all 14 DGI tax groups. Offline behavior: client queues invoices locally; cloud fiscalizes on receipt.
+- Remove the old "it is NOT an invoicing SaaS" disclaimer.
+- Remove USB-specific protocol details (move to Phase 3 context).
+
+---
+
+### TASK-005: Rewrite memory bank for invoicing platform
+```
+Status:     READY (after TASK-004)
+Depends:    TASK-004
+Agent:      manual
+Sources:    .github/copilot-instructions.md (updated), docs/sfe-specifications-v1-summary.md,
+            docs/odoo-pos-lessons-for-kutapay.md, memory-bank/ (current files)
+Target:     memory-bank/projectbrief.md, memory-bank/productContext.md,
+            memory-bank/systemPatterns.md, memory-bank/techContext.md,
+            memory-bank/activeContext.md, memory-bank/progress.md,
+            memory-bank/context-map.md
+Validate:   grep -q "invoicing" memory-bank/projectbrief.md
+            grep -q "Cloud Signing" memory-bank/systemPatterns.md
+```
+**Instructions:**
+Rewrite all 7 memory bank files to reflect the pivot:
+- **projectbrief.md** — Mission: fiscal invoicing platform for DRC. Solution: API + dashboard + cloud signing. Success criteria: every invoice sealed with cloud-generated security elements. Constraints: cloud HSM is trusted authority, 14 tax groups, nothing deleted.
+- **productContext.md** — Why: SMBs need fiscally compliant invoices without hardware. Users: finance teams, accountants, developers, SMBs (Phase 1), retailers (Phase 2). UX goals: create invoices in seconds, API-first, Stripe-like developer experience.
+- **systemPatterns.md** — Trust boundary: cloud signing service. Offline-first: client queues, cloud fiscalizes. Hash-chained ledger in cloud. Security elements from HSM. Multi-user access via API keys / roles. Phase 3: USB device as optional trust anchor.
+- **techContext.md** — Stack: cloud HSM for signing, REST API, PWA dashboard (Odoo-inspired UI patterns), PostgreSQL. Open questions: DGI MCF API, signature algorithm format accepted by DGI, cloud HSM vendor selection.
+- **activeContext.md** — Status: documentation pivot in progress. Focus: rewriting docs for software-first invoicing platform.
+- **progress.md** — What works: MkDocs site scaffolded, regulatory docs done. What changed: strategic pivot from POS+hardware to invoicing platform. What's next: architecture rewrites, new platform pages.
+- **context-map.md** — Updated cross-references reflecting new file structure (archived hardware, new platform/ dir, renamed pos→platform).
+
+---
+
+### TASK-006: Rewrite architecture specification
+```
+Status:     READY (after TASK-005)
+Depends:    TASK-005
+Agent:      manual
+Sources:    spec/architecture-kutapay-system-1.md (current), .github/copilot-instructions.md (updated),
+            docs/sfe-specifications-v1-summary.md
+Target:     spec/architecture-kutapay-system-1.md
+Validate:   grep -q "Cloud Signing Service" spec/architecture-kutapay-system-1.md
+            grep -q "EARS" spec/architecture-kutapay-system-1.md
+```
+**Instructions:**
+Rewrite the EARS-notation architecture specification for software-first:
+- **Trust boundary requirements:** "WHEN a merchant creates an invoice via the API or dashboard, THE SYSTEM SHALL route it through the Cloud Signing Service for fiscal number assignment, signing, and ledger storage."
+- **Invoice lifecycle requirements:** Software-first flow (API/dashboard → tax engine → cloud signer → sealed response → DGI sync).
+- **Security element requirements:** "THE SYSTEM SHALL generate fiscal numbers, signatures, timestamps, and QR codes via the Cloud Signing Service (HSM-backed)."
+- **Tax engine requirements:** Keep all 14 DGI tax groups, client classification — these are unchanged.
+- **Report requirements:** Keep Z/X/A/audit reports — source changes from USB journal to cloud fiscal ledger.
+- **Offline requirements:** "WHEN the client application is offline, THE SYSTEM SHALL queue invoice requests locally and fiscalize them upon reconnection to the Cloud Signing Service."
+- **Phase 3 section:** Preserve USB device requirements tagged as "Phase 3: WHEN the USB Fiscal Memory device is deployed..."
+- **DGI integration requirements:** Keep existing, update source of security elements.
+
+---
+
+### TASK-007: Rewrite remaining specs
+```
+Status:     READY (after TASK-006)
+Depends:    TASK-006
+Agent:      manual
+Sources:    spec/ (all files), .github/copilot-instructions.md (updated)
+Target:     spec/design-cloud-api-1.md, spec/design-pos-plugin-api-1.md,
+            spec/infrastructure-dgi-integration-1.md, spec/process-fiscal-reports-1.md,
+            spec/schema-tax-engine-1.md
+Validate:   grep -q "Bono Pay" spec/design-cloud-api-1.md
+```
+**Instructions:**
+Update the remaining spec files to reflect the pivot:
+- `spec/design-cloud-api-1.md` — Cloud API is now the primary interface (not a relay). Add invoicing endpoints (create, list, void, refund invoices). Remove device_id as mandatory; replace with outlet_id / merchant_id.
+- `spec/design-pos-plugin-api-1.md` — Rename content to "Invoicing SDK Specification." Client talks to cloud API directly (no local daemon). Keep canonical payload structure.
+- `spec/infrastructure-dgi-integration-1.md` — Update: security elements sourced from cloud HSM, not USB device. Keep DGI endpoint unknowns.
+- `spec/process-fiscal-reports-1.md` — Reports generated from cloud fiscal ledger, not USB journal. Report types and formats unchanged.
+- `spec/schema-tax-engine-1.md` — Keep as-is (tax engine is platform-agnostic). Update "Bono Pay" name.
+- `spec/protocol-usb-fiscal-device-1.md` — Add header: "Phase 3: USB Hardware Protocol. This spec applies when the USB Fiscal Memory device is deployed."
+
+---
+
+## Phase 2 — Architecture (Software-First Rewrite)
+
+### TASK-008: Rewrite architecture overview
+```
+Status:     READY (after TASK-006)
+Depends:    TASK-006
+Agent:      manual
+Sources:    design/docs/architecture/overview.md (current), spec/architecture-kutapay-system-1.md (updated),
+            .github/copilot-instructions.md (updated), docs/odoo-pos-lessons-for-kutapay.md
+Target:     design/docs/architecture/overview.md
+Validate:   grep -q "Cloud Signing Service" design/docs/architecture/overview.md
+            grep -q "invoicing" design/docs/architecture/overview.md
+```
+**Instructions:**
+Heavy rewrite of architecture overview for software-first invoicing platform:
+- **C4 Context Diagram (Mermaid):** Actors: Merchant, Developer, Auditor → Bono Pay Platform (Invoicing API + Dashboard + Cloud Signing + Sync) → DGI, Payment Providers. Remove Cashier/Teller as primary actor.
+- **Trust Boundary Diagram (Mermaid):** Untrusted Zone: Web Dashboard, API Consumers, SDK, Future POS. Trusted Zone: Cloud Signing Service (HSM), Fiscal Ledger, Tax Engine, Report Generator. Quote all Mermaid labels with punctuation.
+- **Component Map (Mermaid):** Four layers:
+  1. Client Layer: Web Dashboard, API Consumers, SDK, Mobile App
+  2. Platform Services: Invoicing API, Tax Calculation Engine, Canonical Serializer, Multi-User Access Control
+  3. Fiscal Core (trusted): Cloud Signing Service (HSM), Monotonic Counter, Hash-Chained Fiscal Ledger, Report Generator
+  4. External: DGI Sync Agent, Payment Gateway, Notification Service (email/WhatsApp)
+- **Operational Notes:** API-first, offline-capable clients, cloud signing as trusted authority. Mention Phase 3 USB device as future optional trust anchor.
+
+---
+
+### TASK-009: Rewrite trust boundary
+```
+Status:     READY (after TASK-008)
+Depends:    TASK-008
+Agent:      manual
+Sources:    design/docs/architecture/trust-boundary.md (current), spec/architecture-kutapay-system-1.md (updated)
+Target:     design/docs/architecture/trust-boundary.md
+Validate:   grep -q "Cloud Signing Service" design/docs/architecture/trust-boundary.md
+```
+**Instructions:**
+Heavy rewrite for software-first trust boundary:
+- **New trust boundary:** Client apps (web dashboard, API consumers, SDK, future POS) are untrusted. Bono Pay Cloud Signing Service (HSM-backed) is the trusted fiscal authority.
+- **What crosses the boundary (untrusted → trusted):** Invoice creation requests (canonical JSON payload with deterministic field ordering).
+- **What the trusted zone produces:** Fiscal number, signature (HSM-generated), timestamp, QR code, sealed invoice. These are NEVER fabricated by client apps.
+- **What never crosses back:** HSM private keys, raw monotonic counter state, internal ledger mutation commands.
+- **Mermaid diagram:** Untrusted Zone (Dashboard, API, SDK) → Trusted Zone (Cloud Signing Service, Fiscal Ledger, Counter Manager). Quote all labels.
+- **Failure modes:** Cloud service unavailable → client queues locally. Key rotation → HSM handles internally. Counter corruption → cloud service enforces monotonic ordering with db constraints.
+- **Trust assumptions table:** Cloud HSM is the authority, client apps never sign, multi-user access controlled by API keys + roles.
+- **Phase 3 section:** "When the USB Fiscal Memory device is deployed, it replaces the Cloud Signing Service as the trusted authority for merchants who need full DEF homologation." Preserve the concept but label it future.
+
+---
+
+### TASK-010: Rewrite component map
+```
+Status:     READY (after TASK-008)
+Depends:    TASK-008
+Agent:      manual
+Sources:    design/docs/architecture/components.md (current), design/docs/architecture/overview.md (updated)
+Target:     design/docs/architecture/components.md
+Validate:   grep -q "Invoicing API" design/docs/architecture/components.md
+```
+**Instructions:**
+Heavy rewrite — replace POS Layer + USB Device with invoicing platform components:
+- **Client Layer:** Web Dashboard (PWA), API Consumers, SDK/Libraries, Mobile App (future), POS Integration (Phase 2)
+- **Platform Services Layer:** Invoicing API (REST), Tax Calculation Engine, Canonical Serializer, Receipt Delivery (email/WhatsApp/PDF/print), Multi-User Access Control (roles, API keys, outlet scoping)
+- **Fiscal Core Layer (trusted):** Cloud Signing Service (HSM), Monotonic Counter Manager, Hash-Chained Fiscal Ledger, Report Generator (Z/X/A/audit)
+- **Cloud Infrastructure Layer:** Sync Engine + Invoice Store, DGI Integration Agent, Merchant Registry, Dashboard & Analytics, Backup & Archival
+- Two Mermaid diagrams: (1) Component dependency map, (2) Deployment diagram showing cloud services. Quote all labels.
+
+---
+
+### TASK-011: Rewrite data flow diagrams
+```
+Status:     READY (after TASK-008)
+Depends:    TASK-008
+Agent:      manual
+Sources:    design/docs/architecture/data-flow.md (current), spec/architecture-kutapay-system-1.md (updated)
+Target:     design/docs/architecture/data-flow.md
+Validate:   grep -c "sequenceDiagram" design/docs/architecture/data-flow.md  (expect >= 5)
+```
+**Instructions:**
+Heavy rewrite — all 5 sequence diagrams rewritten for software-first:
+1. **Happy path (API invoice creation):** Developer/Merchant → Invoicing API → Tax Engine → Cloud Signing Service (HSM) → Fiscal Ledger → DGI Sync Queue → Response with sealed invoice
+2. **Dashboard invoice creation:** Merchant (Web Dashboard) → same flow as #1 but via browser
+3. **Offline client flow:** SDK/Client → queues invoice locally (IndexedDB) → reconnects → Invoicing API → Cloud Signing Service → sealed response synced back
+4. **Void / Credit note:** Merchant → Invoicing API → create new fiscal event referencing original → Cloud Signing Service signs credit note → new ledger entry
+5. **Report generation:** Merchant/Auditor → Cloud API → Report Generator queries Fiscal Ledger → Z/X/A/audit report returned
+All diagrams use `sequenceDiagram` Mermaid syntax. Quote participant labels with punctuation.
+
+---
+
+## Phase 3 — Invoicing Platform (New Pages)
+
+### TASK-012: Create platform overview page
+```
+Status:     READY (after TASK-008)
+Depends:    TASK-008
+Agent:      manual
+Sources:    .github/copilot-instructions.md (updated), docs/odoo-pos-lessons-for-kutapay.md,
+            docs/sfe-specifications-v1-summary.md
+Target:     design/docs/platform/overview.md
+Validate:   grep -q "Stripe" design/docs/platform/overview.md
+```
+**Instructions:**
+Create the product overview page for the invoicing platform:
+- **What is Bono Pay:** A fiscal invoicing platform (like Stripe Invoices) for the DRC. API-first. Web dashboard. Cloud-based fiscal compliance.
+- **How it works:** (1) Create invoice via API or dashboard, (2) Platform calculates taxes using 14 DGI groups, (3) Cloud Signing Service seals the invoice, (4) Deliver receipt via email/WhatsApp/PDF/print, (5) Automatic DGI sync.
+- **Design principles (from Odoo lessons):** Offline-first (queue locally, fiscalize on reconnect), PWA (browser-based, no install), mobile-optimized (works on $50 Android tablets), multi-currency (CDF/USD), mobile money native (Airtel Money, M-Pesa, Orange Money).
+- **Target users:** Finance teams, accountants, SMBs, developers building integrations, POS vendors (Phase 2).
+- **Mermaid diagram:** Simple flow showing API/Dashboard → Cloud → Sealed Invoice → Delivery channels.
+- **Phasing summary:** What is available now (Phase 1) vs future (Phase 2: POS, Phase 3: USB hardware).
+
+---
+
+### TASK-013: Create invoicing API page
+```
+Status:     READY (after TASK-012)
+Depends:    TASK-012
+Agent:      manual
+Sources:    design/docs/api/cloud.md (current — has endpoint examples),
+            spec/design-cloud-api-1.md (updated), docs/sfe-specifications-v1-summary.md
+Target:     design/docs/platform/api.md
+Validate:   grep -q "POST /api/v1/invoices" design/docs/platform/api.md
+```
+**Instructions:**
+Create the Invoicing API overview page (developer-facing):
+- **Authentication:** API keys per merchant/outlet. Bearer token. Rate limiting.
+- **Core endpoints:**
+  - `POST /api/v1/invoices` — Create and fiscalize an invoice (canonical payload → signed response)
+  - `GET /api/v1/invoices/{fiscal_number}` — Retrieve a sealed invoice
+  - `POST /api/v1/invoices/{fiscal_number}/void` — Void (creates credit note fiscal event)
+  - `POST /api/v1/invoices/{fiscal_number}/refund` — Refund (creates credit note referencing original)
+  - `GET /api/v1/invoices` — List invoices with filters (date range, client, status)
+  - `POST /api/v1/reports` — Generate Z/X/A reports
+  - `GET /api/v1/tax-groups` — List available tax groups
+- **Canonical payload structure:** Show JSON example with merchant_nif, client block (name, nif, classification), items[], tax_groups[], totals, timestamp. Deterministic field ordering for signature reproducibility.
+- **Response structure:** fiscal_number, auth_code, timestamp, qr_payload, signed_hash, dgi_status.
+- **Error handling:** Validation errors, rate limiting, authentication failures.
+- **Webhook notifications:** Invoice status changes (fiscalized, synced to DGI, DGI acknowledged).
+- **Code examples:** curl, Python, JavaScript.
+
+---
+
+### TASK-014: Create web dashboard page
+```
+Status:     READY (after TASK-012)
+Depends:    TASK-012
+Agent:      manual
+Sources:    docs/odoo-pos-lessons-for-kutapay.md (UI patterns, offline, PWA, touchscreen),
+            design/docs-archive/pos/ui-ux.md (preserve Odoo-inspired UX principles)
+Target:     design/docs/platform/dashboard.md
+Validate:   grep -q "PWA" design/docs/platform/dashboard.md
+            grep -q "offline" design/docs/platform/dashboard.md
+```
+**Instructions:**
+Create the Web Dashboard design page, applying Odoo POS UX lessons to an invoicing dashboard:
+- **Architecture:** PWA (Progressive Web App), browser-based, no install. Service Worker for offline. IndexedDB for local queue.
+- **Key screens:** (1) Invoice creation form (client selection, line items, tax group assignment, payment method), (2) Invoice list/search (filter by date, client, status, fiscal number), (3) Client management (DRC classification: individual, company, professional, embassy), (4) Reports dashboard (Z/X/A, audit export), (5) Settings (outlet management, API keys, user roles).
+- **UX principles from Odoo:** Large tap targets, minimal text input, instant search from local data, numpad for amount entry, category/product grid for quick item selection, dual-currency display (CDF/USD), mobile money payment integration.
+- **Offline behavior:** Invoice drafts saved to IndexedDB. Fiscal status indicator: green Connected (real-time signing), yellow Queued (offline, will fiscalize on reconnect), red Error. Queued invoices auto-submit when connectivity returns.
+- **Delivery:** After fiscalization, offer: email, WhatsApp share, PDF download, thermal print (via browser print API).
+- **Mermaid wireframe flow:** Dashboard → Create Invoice → Add Items + Tax → Submit → Cloud Signs → Receipt Delivery.
+
+---
+
+### TASK-015: Create SDK & libraries page
+```
+Status:     READY (after TASK-013)
+Depends:    TASK-013
+Agent:      manual
+Sources:    design/docs-archive/api/pos-plugin.md (preserve payload structure),
+            design/docs/platform/api.md (updated), spec/design-pos-plugin-api-1.md
+Target:     design/docs/platform/sdk.md
+Validate:   grep -q "npm install" design/docs/platform/sdk.md || grep -q "pip install" design/docs/platform/sdk.md
+```
+**Instructions:**
+Create the SDK/Libraries page (replaces old POS Plugin API):
+- **Purpose:** Client libraries that wrap the Invoicing API for common languages/frameworks.
+- **SDKs planned:** JavaScript/TypeScript (npm), Python (pip), PHP (composer). Future: Java, .NET.
+- **Core SDK features:** Authentication handling, canonical payload serialization (deterministic field ordering), offline queue with auto-retry, webhook signature verification, tax group helpers, receipt rendering (HTML/PDF).
+- **Example usage (JavaScript):**
+  ```javascript
+  import { BonoPay } from '@bonopay/sdk';
+  const client = new BonoPay({ apiKey: process.env.BONOPAY_API_KEY });
+  const invoice = await client.invoices.create({
+    client: { name: 'Acme Ltd', nif: '987654321', classification: 'Company' },
+    items: [{ description: 'Consulting', quantity: 1, unit_price: 500, tax_group: 'VAT_STD' }],
+    currency: 'CDF'
+  });
+  console.log(invoice.fiscal_number, invoice.qr_payload);
+  ```
+- **Offline mode:** SDK queues invoices in IndexedDB/SQLite, retries on reconnect. Fiscal status callback.
+- **POS integration guide (Phase 2 preview):** How POS vendors will integrate the SDK to fiscalize their transactions through Bono Pay.
+
+---
+
+## Phase 4 — Fiscal Engine (Rewrite for Cloud Signing)
+
+### TASK-016: Rewrite invoice lifecycle
+```
+Status:     READY (after TASK-008)
+Depends:    TASK-008
+Agent:      manual
+Sources:    design/docs/fiscal/invoice-lifecycle.md (current), spec/architecture-kutapay-system-1.md (updated),
+            .github/copilot-instructions.md (updated)
+Target:     design/docs/fiscal/invoice-lifecycle.md
+Validate:   grep -q "Cloud Signing Service" design/docs/fiscal/invoice-lifecycle.md
+            grep -c "sequenceDiagram" design/docs/fiscal/invoice-lifecycle.md  (expect >= 2)
+```
+**Instructions:**
+Heavy rewrite — invoice lifecycle for software-first platform:
+- **New 6-step flow:** (1) Client creates invoice via API or dashboard, (2) Platform validates fields + applies tax engine (14 groups, client classification), (3) Cloud Signing Service assigns sequential fiscal number, signs with HSM, timestamps, generates QR, (4) Platform stores sealed invoice in fiscal ledger (hash-chained, append-only), (5) Client delivers receipt (email/WhatsApp/PDF/print), (6) Sync Agent uploads to DGI (immediate or deferred).
+- **State machine (Mermaid stateDiagram):** Draft → Submitted → Validated → Fiscalized → Delivered → Synced_to_DGI → Acknowledged. Error states: Validation_Failed, Signing_Error, DGI_Rejected.
+- **Invoice types:** Sale, advance, credit note, export invoice, export credit note — unchanged.
+- **Void / refund:** New fiscal events referencing original. Never deletions.
+- **Draft cancellation:** Before fiscalization → no fiscal trace.
+- **Sequence diagram (Mermaid):** Merchant → API → Tax Engine → Cloud Signing Service → Fiscal Ledger → DGI Sync → Response.
+- **Phase 3 note:** "When USB hardware is deployed, the Cloud Signing Service is replaced by the USB Fiscal Memory device in the signing step."
+
+---
+
+### TASK-017: Update tax engine (minor)
+```
+Status:     READY (after TASK-008)
+Depends:    TASK-008
+Agent:      manual
+Sources:    design/docs/fiscal/tax-engine.md (current)
+Target:     design/docs/fiscal/tax-engine.md
+Validate:   ! grep -q "POS" design/docs/fiscal/tax-engine.md  (no POS references remain)
+```
+**Instructions:**
+Minor update — the tax engine is platform-agnostic:
+- Replace all instances of "POS" with "invoicing platform" or "client application" (about 5 occurrences).
+- Replace any reference to "USB Fiscal Memory returns the fiscal response" with "Cloud Signing Service returns the fiscal response."
+- Keep all 14 tax group definitions, client classification table, calculation/rounding rules, worked examples — these are unchanged.
+- Keep all Mermaid diagrams — update node labels if they mention POS.
+
+---
+
+### TASK-018: Rewrite security elements
+```
+Status:     READY (after TASK-008)
+Depends:    TASK-008
+Agent:      manual
+Sources:    design/docs/fiscal/security-elements.md (current), spec/architecture-kutapay-system-1.md (updated)
+Target:     design/docs/fiscal/security-elements.md
+Validate:   grep -q "Cloud Signing Service" design/docs/fiscal/security-elements.md
+            grep -q "HSM" design/docs/fiscal/security-elements.md
+```
+**Instructions:**
+Heavy rewrite — security elements now generated by cloud HSM:
+- **5 mandatory security elements (unchanged in purpose):**
+  1. Sequential fiscal number — generated by Cloud Signing Service (monotonic counter in database with transaction isolation)
+  2. Fiscal authority ID — identifies the signing service instance (replaces device_id DEF NID in Phase 1)
+  3. Cryptographic authentication code — ECDSA signature generated by HSM
+  4. Trusted timestamp — server-side UTC timestamp from NTP-synced cloud infrastructure
+  5. QR code — encodes fiscal_number + auth_code + timestamp + verification URL
+- **Generation table:** Each element with Phase 1 source (Cloud HSM) and Phase 3 source (USB device).
+- **What clients MAY NOT do:** Fabricate any security element. Client apps only display/deliver them.
+- **Key management:** HSM handles key generation, storage, rotation. Keys never leave the HSM boundary.
+- **Verification:** QR code points to Bono Pay verification endpoint. Auditors/inspectors can scan to verify.
+- **Mock receipt layout (keep existing)** — update "DEF NID" label to "Fiscal Authority ID."
+
+---
+
+### TASK-019: Update reports
+```
+Status:     READY (after TASK-016)
+Depends:    TASK-016
+Agent:      manual
+Sources:    design/docs/fiscal/reports.md (current), spec/process-fiscal-reports-1.md
+Target:     design/docs/fiscal/reports.md
+Validate:   grep -q "fiscal ledger" design/docs/fiscal/reports.md
+```
+**Instructions:**
+Moderate rewrite — report source changes from USB journal to cloud fiscal ledger:
+- **Report types:** Z (daily closure), X (periodic), A (article-level), audit export — unchanged.
+- **Report source:** "Reports are generated from the cloud fiscal ledger, which maintains the hash-chained, append-only record of all sealed invoices." Remove references to USB device journal.
+- **Report generation flow (Mermaid sequence diagram):** Merchant/Auditor → Cloud API → Report Generator queries Fiscal Ledger → Report returned (JSON + PDF).
+- **Report access:** Via API endpoint `POST /api/v1/reports` or via web dashboard Reports screen.
+- **Sample outputs:** Keep existing JSON samples — they are format-identical regardless of signing source.
+- **Phase 3 note:** "When USB hardware is deployed, reports can also be generated directly on the device via RPT commands."
+
+---
+
+## Phase 5 — Cloud (Rewrite for Primary Authority)
+
+### TASK-020: Rewrite cloud architecture
+```
+Status:     READY (after TASK-008)
+Depends:    TASK-008
+Agent:      manual
+Sources:    design/docs/cloud/architecture.md (current), spec/architecture-kutapay-system-1.md (updated)
+Target:     design/docs/cloud/architecture.md
+Validate:   grep -q "primary fiscal authority" design/docs/cloud/architecture.md
+```
+**Instructions:**
+Moderate rewrite — the cloud is now the PRIMARY fiscal authority, not a relay:
+- **Role change:** Cloud moves from "stores sealed invoices from USB device" to "IS the fiscal authority — signs, numbers, timestamps, and stores invoices."
+- **Components (Mermaid diagram):**
+  - Cloud Signing Service (HSM): fiscal number assignment, ECDSA signing, timestamp generation
+  - Fiscal Ledger: hash-chained, append-only PostgreSQL with strict transaction isolation
+  - Monotonic Counter Manager: guarantees sequential numbering per outlet
+  - Tax Engine Service: calculates taxes per 14 DGI groups
+  - Sync Agent: uploads sealed invoices to DGI (MCF/e-MCF)
+  - Merchant Registry: outlet management, API key provisioning, user roles
+  - Dashboard: analytics, reports, audit exports
+- **Multi-tenant:** Each merchant gets isolated namespace, audit partition, quota enforcement.
+- **Deployment:** Cloud-native (containers), PostgreSQL, HSM integration (AWS CloudHSM / Azure Dedicated HSM / HashiCorp Vault).
+- **Phase 3 note:** "Device Registry component activates when USB hardware is deployed."
+
+---
+
+### TASK-021: Rewrite offline sync
+```
+Status:     READY (after TASK-020)
+Depends:    TASK-020
+Agent:      manual
+Sources:    design/docs/cloud/offline-sync.md (current)
+Target:     design/docs/cloud/offline-sync.md
+Validate:   grep -q "IndexedDB" design/docs/cloud/offline-sync.md
+```
+**Instructions:**
+Moderate rewrite — offline means "client offline from cloud," not "device offline from cloud":
+- **Offline scenario:** Client app (dashboard/SDK) loses connectivity. Invoices are drafted and queued locally (IndexedDB in browser, SQLite in SDK). When connectivity returns, queued invoices are submitted to the Cloud API for fiscalization.
+- **Key difference from USB model:** Invoices are NOT fiscalized while offline. They are queued as drafts. Fiscalization happens when the cloud signing service processes them. This is compliant because the SFE spec allows deferred transmission.
+- **Sync state machine (Mermaid stateDiagram):** DRAFT_LOCAL → QUEUED → SUBMITTING → FISCALIZED → SYNCED_TO_DGI → ACKNOWLEDGED. Error states: SUBMISSION_FAILED → RETRY.
+- **Retry logic:** Exponential backoff, max 3 retries, then alert merchant. Grace period for DGI upload.
+- **Conflict resolution:** Cloud assigns fiscal numbers in arrival order. No client-generated fiscal numbers.
+- **Dashboard indicators:** Green Real-time, Yellow Queued (X invoices pending), Red Offline / Error.
+- **Phase 3 note:** "With USB hardware, invoices can be fiscalized offline by the device. The cloud sync role returns to its original relay function."
+
+---
+
+### TASK-022: Update DGI integration
+```
+Status:     READY (after TASK-020)
+Depends:    TASK-020
+Agent:      manual
+Sources:    design/docs/cloud/dgi-integration.md (current), spec/infrastructure-dgi-integration-1.md
+Target:     design/docs/cloud/dgi-integration.md
+Validate:   grep -q "Cloud Signing Service" design/docs/cloud/dgi-integration.md
+```
+**Instructions:**
+Moderate rewrite — update source of security elements:
+- **Architecture diagram (Mermaid):** Client → Bono Pay Cloud (Signing Service) → DGI (MCF/e-MCF). Remove "Replacement DEF" → replace with "Cloud Redundancy / Failover."
+- **What we control:** Cloud Signing Service generates all security elements. Sync Agent uploads sealed invoices. Merchant Registry handles outlet identification.
+- **What DGI controls:** MCF/e-MCF endpoints, acknowledgment protocol, audit requests.
+- **Known constraints:** Keep existing. Update: security elements sourced from cloud HSM, not USB device.
+- **Unknowns (still open):** MCF/e-MCF API spec unpublished, exact signature format DGI accepts, device registration protocol (now: "service registration protocol" for cloud-based SFE).
+- **Phase 3 note:** "With USB hardware deployed, the DEF device_id replaces the fiscal_authority_id in DGI transmissions."
+
+---
+
+## Phase 6 — Platform & Integrations (Rewrite POS → Platform)
+
+### TASK-023: Create multi-user access page
+```
+Status:     READY (after TASK-008)
+Depends:    TASK-008
+Agent:      manual
+Sources:    design/docs-archive/pos/multi-terminal.md (preserve multi-access concepts),
+            design/docs/architecture/overview.md (updated)
+Target:     design/docs/platform/multi-user.md
+Validate:   grep -q "API key" design/docs/platform/multi-user.md
+```
+**Instructions:**
+Reframe multi-terminal → multi-user for an invoicing platform:
+- **Core concept:** Multiple users/systems share a fiscal service via API keys and role-based access. One outlet can have multiple API consumers (dashboard users, integration systems, future POS terminals).
+- **Access model:** Merchant → Outlets → Users/API Keys. Each user has a role (admin, invoicer, viewer, auditor). Each API key is scoped to an outlet.
+- **Concurrency:** Cloud service handles concurrent invoice creation. Sequential fiscal numbering is enforced by database transaction isolation (serializable level on counter table). No race conditions.
+- **Traceability:** Every invoice tags `outlet_id`, `user_id` or `api_key_id`, and `source` (dashboard/api/sdk/pos).
+- **Mermaid diagram:** Multiple clients (Dashboard User, API Consumer, SDK App, Future POS) → Bono Pay Cloud (serialized fiscal numbering) → Fiscal Ledger.
+- **Phase 2 preview:** How POS terminals will connect as additional API consumers alongside dashboard users.
+
+---
+
+### TASK-024: Create platform integrations page
+```
+Status:     READY (after TASK-023)
+Depends:    TASK-023
+Agent:      manual
+Sources:    design/docs-archive/pos/integrations.md (preserve integration tier concept),
+            design/docs/platform/api.md (updated)
+Target:     design/docs/platform/integrations.md
+Validate:   grep -q "webhook" design/docs/platform/integrations.md
+```
+**Instructions:**
+Reframe integration tiers for invoicing platform (not POS):
+- **Tier 1 — Core Invoicing API (Phase 1):** REST API for creating, managing, and querying fiscalized invoices. Authentication via API keys.
+- **Tier 2 — CSV Import/Export (Phase 1):** Bulk invoice creation from CSV. Accounting export (OHADA-compliant).
+- **Tier 3 — Accounting Software Export (Phase 1):** Export sealed invoices to common formats (Sage, QuickBooks, Odoo Accounting).
+- **Tier 4 — Webhooks (Phase 1):** Real-time notifications for invoice status changes. HMAC-signed payloads (`X-BonoPay-Signature`).
+- **Tier 5 — E-Commerce Plugins (Phase 2):** WooCommerce, Shopify, PrestaShop plugins that auto-fiscalize orders.
+- **Tier 6 — POS Integration SDK (Phase 2):** SDK for POS vendors to embed Bono Pay fiscalization.
+- **Tier 7 — ERP Connectors (Phase 4):** Odoo, SAP, Microsoft Dynamics connectors for enterprise batch invoicing.
+- **Authentication:** API keys per outlet. Mutual TLS for enterprise. Webhook signature verification.
+
+---
+
+## Phase 7 — Regulatory (Minor Updates)
+
+### TASK-025: Update legal framework
+```
+Status:     READY
+Agent:      manual
+Sources:    design/docs/regulatory/legal-framework.md (current)
+Target:     design/docs/regulatory/legal-framework.md
+Validate:   grep -q "Phase 1" design/docs/regulatory/legal-framework.md
+```
+**Instructions:**
+Minor update — add phasing context:
+- Add a section "Bono Pay Compliance Phasing" explaining: Phase 1 delivers SFE (billing system) software compliance. Phase 3 adds DEF hardware for full fiscal device homologation. The regulatory requirements themselves don't change.
+- Replace "KutaPay" → "Bono Pay" if any remain (should already be done).
+- Replace references to "POS / USB device / cloud stack" → "invoicing platform."
+- Keep all regulatory content (arrete summaries, timeline, implications) — it's factual.
+
+---
+
+### TASK-026: Update arretes summary
+```
+Status:     READY
+Agent:      manual
+Sources:    design/docs/regulatory/arretes.md (current)
+Target:     design/docs/regulatory/arretes.md
+Validate:   grep -q "Phase" design/docs/regulatory/arretes.md
+```
+**Instructions:**
+Minor update:
+- Add phase labels: Arrete 033 (SFE software compliance) → applies Phase 1. Arrete 034 (hardware commercialization) → applies Phase 3.
+- Update any remaining POS references.
+- Content is factual regulatory summaries — keep as-is.
+
+---
+
+### TASK-027: Update SFE specifications
+```
+Status:     READY
+Agent:      manual
+Sources:    design/docs/regulatory/sfe-specs.md (current)
+Target:     design/docs/regulatory/sfe-specs.md
+Validate:   grep -q "Cloud Signing" design/docs/regulatory/sfe-specs.md || grep -q "Phase 1" design/docs/regulatory/sfe-specs.md
+```
+**Instructions:**
+Moderate update — add Phase 1 column to security elements:
+- **Security Elements table:** Add "Phase 1 Source" column showing Cloud HSM alongside existing hardware descriptions.
+- **Trust boundary reminder:** Update to mention cloud signing service as Phase 1 authority.
+- **Tax groups, invoice types, reports, offline behavior, immutability:** Keep as-is — these are regulatory requirements, not architecture.
+- **Open unknowns:** Keep MCF/e-MCF API spec, signature format, registration protocol — these still apply.
+
+---
+
+## Phase 8 — API Reference (Rewrite)
+
+### TASK-028: Rewrite cloud API reference
+```
+Status:     READY (after TASK-013)
+Depends:    TASK-013
+Agent:      manual
+Sources:    design/docs/api/cloud.md (current), design/docs/platform/api.md (updated),
+            spec/design-cloud-api-1.md (updated)
+Target:     design/docs/api/cloud.md
+Validate:   grep -q "POST /api/v1/invoices" design/docs/api/cloud.md
+```
+**Instructions:**
+Moderate rewrite — Cloud API is now the primary interface:
+- **Remove** `X-KUTAPAY-DEVICE-ID` header (no device in Phase 1). Replace with `X-BONOPAY-OUTLET-ID`.
+- **Add invoice CRUD endpoints:** Create, retrieve, list, void, refund (aligned with platform/api.md).
+- **Update device registration → merchant/outlet registration:** `POST /api/v1/merchants/register`, `POST /api/v1/outlets/register`.
+- **Keep:** Reports endpoints, sync status, audit export.
+- **Update example payloads:** Remove `device_id` field. Add `outlet_id`, `user_id`. Keep `fiscal_number`, `auth_code`, `timestamp`, `qr_payload`.
+- **Error handling:** Keep structure, update error codes.
+
+---
+
+### TASK-029: Create invoicing SDK API reference
+```
+Status:     READY (after TASK-015)
+Depends:    TASK-015
+Agent:      manual
+Sources:    design/docs/platform/sdk.md (updated), design/docs-archive/api/pos-plugin.md (preserve patterns)
+Target:     design/docs/api/invoicing-sdk.md
+Validate:   grep -q "BonoPay" design/docs/api/invoicing-sdk.md
+```
+**Instructions:**
+Create the Invoicing SDK API reference (replaces POS Plugin API):
+- **SDK methods:** `client.invoices.create()`, `client.invoices.get()`, `client.invoices.list()`, `client.invoices.void()`, `client.invoices.refund()`, `client.reports.generate()`, `client.taxGroups.list()`.
+- **Offline mode API:** `client.setOfflineMode(true)`, `client.queue.pending()`, `client.queue.flush()`.
+- **Webhook handling:** `client.webhooks.verify(payload, signature)`.
+- **Configuration:** API key, base URL, timeout, retry policy, offline storage backend.
+- **Error types:** `ValidationError`, `AuthenticationError`, `RateLimitError`, `FiscalizationError`, `OfflineQueueError`.
+- **Code examples:** JavaScript, Python, PHP for each method.
+
+---
+
+## Phase 9 — Implementation Roadmap (Rewrite)
+
+### TASK-030: Rewrite roadmap
+```
+Status:     READY (after TASK-008)
+Depends:    TASK-008
+Agent:      manual
+Sources:    design/docs/implementation/roadmap.md (current), .github/copilot-instructions.md (updated)
+Target:     design/docs/implementation/roadmap.md
+Validate:   grep -q "Software Invoicing" design/docs/implementation/roadmap.md
+            grep -c "Phase" design/docs/implementation/roadmap.md  (expect >= 4)
+```
+**Instructions:**
+Heavy rewrite — 4-phase roadmap for invoicing platform:
+- **Gantt chart (Mermaid):** Phase 1 (Software Invoicing, 6 months) → Phase 2 (POS & Retail, 6 months) → Phase 3 (USB Hardware, 6 months) → Phase 4 (Enterprise, ongoing).
+- **Phase overview table:** Phase, Duration, Key Deliverables, Target Users, Success Metrics.
+- **Risk section:** Cloud HSM availability, DGI API unknowns, regulatory acceptance of software-only SFE before DEF homologation.
+- **Dependencies:** Phase 2 depends on Phase 1 API stability. Phase 3 depends on Phase 1 cloud architecture (USB device must produce compatible security elements). Phase 4 depends on Phase 2 proving retail scale.
+
+---
+
+### TASK-031: Rewrite Phase 1 — Software Invoicing
+```
+Status:     READY (after TASK-030)
+Depends:    TASK-030
+Agent:      manual
+Sources:    design/docs/implementation/phase-1.md (current), .github/copilot-instructions.md (updated),
+            docs/odoo-pos-lessons-for-kutapay.md (UX patterns for dashboard)
+Target:     design/docs/implementation/phase-1.md
+Validate:   grep -q "Cloud Signing" design/docs/implementation/phase-1.md
+            grep -q "B2B" design/docs/implementation/phase-1.md
+```
+**Instructions:**
+Heavy rewrite — Phase 1 is software invoicing, no hardware:
+- **5 Epics:**
+  1. **Cloud Fiscal Signing Service:** HSM integration, monotonic counter, hash-chained ledger, ECDSA signing, fiscal number generation.
+  2. **Invoicing REST API:** CRUD endpoints, tax calculation, canonical payload validation, webhook notifications.
+  3. **Web Dashboard (PWA):** Invoice creation/management, client database, reports, offline queue (IndexedDB + Service Worker), Odoo-inspired UX.
+  4. **Tax Engine + DGI Integration Stub:** 14 tax groups, client classification, DGI sync agent (stubbed until API available).
+  5. **B2B Pilot:** 10 service companies / wholesalers / schools in Kinshasa. Success: 1000 fiscalized invoices/month. Metrics: API latency < 500ms, signing reliability > 99.9%.
+- **Timeline:** 6 months. Month 1-2: signing service + API. Month 3-4: dashboard + tax engine. Month 5-6: pilot + iterate.
+- **No hardware dependency.** No USB device. No local daemon. No firmware.
+
+---
+
+### TASK-032: Rewrite Phase 2 — POS & Retail
+```
+Status:     READY (after TASK-031)
+Depends:    TASK-031
+Agent:      manual
+Sources:    design/docs/implementation/phase-2.md (current), docs/odoo-pos-lessons-for-kutapay.md
+Target:     design/docs/implementation/phase-2.md
+Validate:   grep -q "POS SDK" design/docs/implementation/phase-2.md
+```
+**Instructions:**
+Heavy rewrite — Phase 2 adds POS and retail integrations:
+- **Epics:**
+  1. **POS Integration SDK:** JavaScript/Python SDK for POS vendors to embed Bono Pay fiscalization. Offline queue with auto-retry.
+  2. **Multi-Terminal Support:** Multiple POS terminals per outlet, all hitting the same cloud fiscal service. Concurrent invoice creation with serialized numbering.
+  3. **Mobile Money Integration:** Airtel Money, M-Pesa, Orange Money as payment methods recorded in invoices.
+  4. **Restaurant Features:** Table management, split bills, waiter ID tracking. From Odoo POS lessons.
+  5. **E-Commerce Plugins:** WooCommerce, Shopify auto-fiscalization.
+- **Target:** 100 retail/restaurant outlets. Success: 10,000 invoices/day across all clients.
+- **Timeline:** 6 months after Phase 1.
+
+---
+
+### TASK-033: Rewrite Phase 3 — USB Hardware
+```
+Status:     READY (after TASK-031)
+Depends:    TASK-031
+Agent:      manual
+Sources:    design/docs/implementation/phase-3.md (current),
+            design/docs-archive/hardware/ (preserved hardware docs as source)
+Target:     design/docs/implementation/phase-3.md
+Validate:   grep -q "USB Fiscal Memory" design/docs/implementation/phase-3.md
+            grep -q "DEF homologation" design/docs/implementation/phase-3.md
+```
+**Instructions:**
+Heavy rewrite — Phase 3 is USB hardware (formerly Phase 1):
+- **Epics:**
+  1. **USB Fiscal Memory Device:** Hardware design, secure MCU + SE + flash + RTC. $10-15 BOM target. Refer to archived docs for full spec.
+  2. **Firmware + 2PC Protocol:** PREPARE → COMMIT handshake, nonce-based, USB CDC. Archived protocol.md has full command set.
+  3. **Local Fiscal Service:** Mediator between POS terminals and USB device over LAN. Serializes concurrent requests.
+  4. **DEF Homologation:** DGI certification, device registration protocol, key provisioning.
+  5. **Migration Path:** Merchants can switch from cloud signing to USB device signing. Cloud service detects device presence and delegates signing authority.
+- **Target:** Full DEF homologation. Merchants who need hardware-level trust can deploy USB devices.
+- **Reference:** All archived hardware docs in `design/docs-archive/hardware/` remain the canonical spec.
+- **Timeline:** 6 months after Phase 2.
+
+---
+
+### TASK-034: Create Phase 4 — Enterprise
+```
+Status:     READY (after TASK-031)
+Depends:    TASK-031
+Agent:      manual
+Sources:    design/docs/implementation/phase-3.md (current — has enterprise content to extract)
+Target:     design/docs/implementation/phase-4.md
+Validate:   grep -q "ERP" design/docs/implementation/phase-4.md
+```
+**Instructions:**
+Create Phase 4 enterprise page (extracted from old Phase 3):
+- **Epics:**
+  1. **ERP Connectors:** Odoo, SAP Business One, Microsoft Dynamics. Batch invoicing, inventory sync, accounting reconciliation.
+  2. **Fleet Management:** Multi-outlet management dashboard. Device fleet monitoring (Phase 3 USB devices). Configuration drift alerts.
+  3. **Advanced Analytics:** Revenue dashboards, tax liability forecasting, compliance scoring per outlet.
+  4. **Webhook API v2:** Advanced event streaming, real-time audit feeds, compliance automation.
+  5. **Multi-Country (Future):** Framework for expanding beyond DRC to other African markets with similar fiscal mandates.
+- **Target:** Enterprise customers with 50+ outlets.
+- **Timeline:** Ongoing after Phase 3.
+
+---
+
+## Phase 10 — ADRs
+
+### TASK-035: Rewrite ADR-0003 — Platform Technology Stack
+```
+Status:     READY (after TASK-008)
+Depends:    TASK-008
+Agent:      manual
+Sources:    design/docs/adr/adr-0003.md (current), docs/odoo-pos-lessons-for-kutapay.md
+Target:     design/docs/adr/adr-0003.md
+Validate:   grep -q "Invoicing Platform" design/docs/adr/adr-0003.md || grep -q "Platform Technology" design/docs/adr/adr-0003.md
+```
+**Instructions:**
+Heavy rewrite — from "POS Technology Stack" to "Platform Technology Stack":
+- **Decision:** Build the invoicing platform as a cloud-native REST API (Node.js/Python) with a PWA web dashboard (React/Vue).
+- **Context:** Bono Pay is an invoicing platform, not a POS. No local daemon needed in Phase 1 (cloud is the fiscal authority). Dashboard must work offline (PWA + Service Worker + IndexedDB).
+- **Options evaluated:** (1) Monolithic Django/Rails + server-rendered pages, (2) API-first (Node.js/FastAPI) + SPA dashboard (React), (3) Full serverless (Lambda/Functions), (4) Odoo module approach.
+- **Rationale:** API-first enables SDK/integration ecosystem. SPA dashboard applies Odoo UX lessons (offline, touchscreen, instant search). Cloud-native deployment scales.
+- **Consequences:** Dashboard is a separate SPA consuming the same API that SDK users call. Offline dashboard uses IndexedDB queue. No USB device dependency in Phase 1.
+
+---
+
+### TASK-036: Create ADR-0004 — Cloud Fiscal Signing
+```
+Status:     READY (after TASK-008)
+Depends:    TASK-008
+Agent:      manual
+Sources:    .github/copilot-instructions.md (updated), docs/sfe-specifications-v1-summary.md
+Target:     design/docs/adr/adr-0004.md
+Validate:   grep -q "HSM" design/docs/adr/adr-0004.md
+```
+**Instructions:**
+Create new ADR documenting the cloud signing decision:
+- **Decision:** Use a Cloud HSM-backed signing service as the trusted fiscal authority in Phase 1.
+- **Context:** The original architecture required a USB Fiscal Memory device from day 1. The strategic pivot to an invoicing platform requires a software-only path. Cloud HSM provides equivalent cryptographic guarantees (key isolation, tamper evidence, audit logging) without hardware deployment to merchants.
+- **Options:** (1) Cloud HSM (AWS CloudHSM, Azure Dedicated HSM), (2) Software-only signing (keys in database — rejected: not tamper-resistant), (3) HashiCorp Vault Transit secrets engine, (4) Require USB hardware from day 1 (rejected: blocks software-first strategy).
+- **Rationale:** Cloud HSM provides FIPS 140-2 Level 3 key protection, per-operation audit logs, and key rotation. It is the closest software equivalent to the secure element in the USB device.
+- **Consequences:** Monotonic counter must be enforced at the database level (serializable isolation). Hash chaining must be maintained in PostgreSQL. Phase 3 migration path: USB device can take over signing when deployed.
+- **Regulatory risk:** DRC regulations mandate DEF hardware for full homologation. Cloud HSM is SFE-compliant but may not satisfy DEF requirements without the physical device. Phase 3 addresses this.
+
+---
+
+### TASK-037: Create ADR-0005 — Strategic Pivot
+```
+Status:     READY (after TASK-036)
+Depends:    TASK-036
+Agent:      manual
+Sources:    .github/copilot-instructions.md (updated)
+Target:     design/docs/adr/adr-0005.md
+Validate:   grep -q "invoicing platform" design/docs/adr/adr-0005.md
+```
+**Instructions:**
+Create ADR documenting the strategic pivot:
+- **Decision:** Pivot from POS + USB hardware product to API-first invoicing platform with phased hardware introduction.
+- **Context:** Original design assumed POS+USB device from Phase 1. Market analysis showed: (1) SMBs need invoicing compliance before POS features, (2) hardware deployment logistics slow adoption, (3) an API-first approach enables faster go-to-market and broader integrations.
+- **Options:** (1) Keep POS+hardware first (rejected: slow to market, high capex), (2) Invoicing platform with phased hardware (selected), (3) Pure SaaS with no hardware path (rejected: can't achieve full DEF homologation).
+- **Rationale:** Software-first enables B2B pilot in 6 months with zero hardware. Cloud signing is SFE-compliant. Hardware path preserved for Phase 3 when merchants need full DEF certification.
+- **Impact:** All documentation restructured. Hardware docs archived. Architecture rewritten for cloud-first. Implementation plan resequenced.
+
+---
+
+### TASK-038: Update ADR index
+```
+Status:     READY (after TASK-037)
+Depends:    TASK-037
+Agent:      manual
+Sources:    design/docs/adr/index.md (current)
+Target:     design/docs/adr/index.md
+Validate:   grep -q "0005" design/docs/adr/index.md
+```
+**Instructions:**
+Update ADR index to include all decisions:
+- ADR-0001: Two-Phase Commit for USB Protocol — Status: Accepted (applies Phase 3)
+- ADR-0002: Signature Algorithm Selection — Status: Proposed (applies Phase 3 hardware + Phase 1 cloud HSM)
+- ADR-0003: Platform Technology Stack — Status: Accepted (renamed from POS)
+- ADR-0004: Cloud Fiscal Signing — Status: Accepted
+- ADR-0005: Strategic Pivot to Invoicing Platform — Status: Accepted
+- Remove broken links to files outside MkDocs tree. Use relative links to in-tree ADR pages only.
+
+---
+
+## Phase 11 — Validation & Final Assembly
+
+### TASK-039: Strict build validation and link check
+```
+Status:     READY (after TASK-025, TASK-026, TASK-027, TASK-028, TASK-029, TASK-030, TASK-031, TASK-032, TASK-033, TASK-034, TASK-035, TASK-036, TASK-037, TASK-038)
+Depends:    all previous tasks
+Agent:      manual
+Sources:    design/**
+Target:     (fix any broken links or build warnings)
+Validate:   cd design && python -m mkdocs build --strict 2>&1 | tail -5  (zero warnings)
+```
+**Instructions:**
+1. Run `cd design && python -m mkdocs build --strict`.
+2. Fix any broken cross-references (links to archived files, renamed pages, etc.).
+3. Verify all Mermaid diagrams parse correctly (no unquoted label errors).
+4. Verify no references to "KutaPay" remain (should all be "Bono Pay").
+5. Verify no orphaned pages (pages in docs/ not in nav).
+6. Re-run strict build until clean.
+
+---
+
+### TASK-040: Final commit, memory bank update, and push
+```
+Status:     READY (after TASK-039)
+Depends:    TASK-039
+Agent:      manual
+Sources:    All project files
+Target:     memory-bank/activeContext.md, memory-bank/progress.md
+Validate:   Memory bank reflects completed pivot state
+```
+**Instructions:**
+1. Update `memory-bank/activeContext.md` — Status: Pivot documentation complete. Focus: begin Phase 1 implementation (cloud signing service, invoicing API).
+2. Update `memory-bank/progress.md` — What works: complete MkDocs documentation for invoicing platform. What's next: implement Phase 1 software. Hardware docs archived for Phase 3.
+3. Final commit: `git add -A && git commit -m "docs: complete strategic pivot — invoicing platform first, hardware Phase 3"`.
+4. Push: `git push origin main`.
+
+---
+
+### TASK-041: Generate pivot summary report
+```
+Status:     READY (after TASK-040)
+Depends:    TASK-040
+Agent:      manual
+Sources:    git log, design/**
+Target:     (console output only — no file creation needed)
+Validate:   (informational — always passes)
+```
+**Instructions:**
+Print a summary of the pivot:
+1. `git diff --stat origin/main..HEAD` — show all files changed.
+2. `find design/docs -name "*.md" | wc -l` — count pages in main site.
+3. `find design/docs-archive -name "*.md" | wc -l` — count archived pages.
+4. `grep -r "Bono Pay" design/docs/ | wc -l` — count brand references.
+5. `grep -r "KutaPay" design/docs/ | wc -l` — should be 0.
+6. Print: "Pivot complete. X pages in site, Y pages archived, Z brand references. Ready for Phase 1 implementation."
+
+---
+
+## Appendix A — PROMPT Files
+
+### PROMPT_build.md
+```
+0a. Read IMPLEMENTATION_PLAN.md.
+0b. Read memory-bank/*.md for context.
+0c. Read relevant spec/*.md files.
+
+1. Find the FIRST task with Status: READY whose dependencies are all DONE.
+2. Execute it following the exact Instructions in that task.
+3. If the task says to use an agent, follow the agent's instructions yourself.
+4. Write output to the exact Target path specified.
+5. Run the Validate check. If it fails, fix the output.
+6. Update IMPLEMENTATION_PLAN.md: change Status: READY → Status: DONE, add Completed: date.
+7. git add -A && git commit -m "docs: [TASK-ID] [short description]"
+8. STOP. Do not start the next task.
+
+RULES:
+- Read ONLY the Source files listed for that task.
+- Write complete content, no placeholders or stubs.
+- Include Mermaid diagrams where specified. Always quote labels containing ( ) / , with double quotes.
+- Follow MkDocs Material conventions (admonitions, tabs, etc.).
+- Use "Bono Pay" as the product name everywhere. Never "KutaPay."
+- The product is a fiscal invoicing platform (like Stripe Invoices), NOT a POS system.
+- Phase 1 is software-only. Cloud Signing Service (HSM) is the trusted fiscal authority.
+- USB hardware is Phase 3, archived out of the main docs site.
+```
+
+## Appendix B — New Nav Structure
+
+```yaml
+nav:
+  - Home: index.md
+  - Architecture:
+    - Overview: architecture/overview.md
+    - Trust Boundary: architecture/trust-boundary.md
+    - Component Map: architecture/components.md
+    - Data Flow: architecture/data-flow.md
+  - Invoicing Platform:
+    - Product Overview: platform/overview.md
+    - Invoicing API: platform/api.md
+    - Web Dashboard: platform/dashboard.md
+    - SDK & Libraries: platform/sdk.md
+  - Fiscal Engine:
+    - Invoice Lifecycle: fiscal/invoice-lifecycle.md
+    - Tax Engine (14 Groups): fiscal/tax-engine.md
+    - Security Elements: fiscal/security-elements.md
+    - Reports (Z/X/A): fiscal/reports.md
+  - Cloud & Sync:
+    - Cloud Architecture: cloud/architecture.md
+    - Offline-First Sync: cloud/offline-sync.md
+    - DGI Integration: cloud/dgi-integration.md
+  - Platform & Integrations:
+    - Multi-User Access: platform/multi-user.md
+    - Integrations: platform/integrations.md
+  - Regulatory:
+    - DRC Legal Framework: regulatory/legal-framework.md
+    - "Arrêté Summary": regulatory/arretes.md
+    - SFE Specifications: regulatory/sfe-specs.md
+  - ADRs:
+    - Index: adr/index.md
+    - "0001 - Two-Phase Commit": adr/adr-0001.md
+    - "0002 - Signature Algorithm": adr/adr-0002.md
+    - "0003 - Platform Technology Stack": adr/adr-0003.md
+    - "0004 - Cloud Fiscal Signing": adr/adr-0004.md
+    - "0005 - Strategic Pivot": adr/adr-0005.md
+  - Implementation:
+    - Roadmap: implementation/roadmap.md
+    - "Phase 1 - Software Invoicing": implementation/phase-1.md
+    - "Phase 2 - POS & Retail": implementation/phase-2.md
+    - "Phase 3 - USB Hardware": implementation/phase-3.md
+    - "Phase 4 - Enterprise": implementation/phase-4.md
+  - API Reference:
+    - Cloud API: api/cloud.md
+    - Invoicing SDK: api/invoicing-sdk.md
+```
+
+## Appendix C — Key Source Documents
+
+| Document | Purpose | Location |
+|----------|---------|----------|
+| DISCUSSION.md | Full regulatory analysis + design decisions (12K lines) | project root |
+| kutapay_technical_design.md | Original technical design narrative | project root |
+| SFE Specifications v1 Summary | DGI technical requirements for billing systems | docs/sfe-specifications-v1-summary.md |
+| Arrete summaries (032/033/034/016) | Regulatory context | docs/arrete-*-summary.md |
+| Odoo POS Lessons | UX/offline/PWA patterns to adopt for dashboard | docs/odoo-pos-lessons-for-kutapay.md |
+| Original architecture spec | EARS requirements (rewrite target) | spec/architecture-kutapay-system-1.md |
+| Archived hardware docs | USB device specs for Phase 3 | design/docs-archive/hardware/ |
+| Archived POS docs | Multi-terminal, UI/UX, integrations (source for rewrites) | design/docs-archive/pos/ |

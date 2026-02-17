@@ -9,7 +9,7 @@
 <link href="../reports/" rel="next"/>
 <link href="../../assets/images/favicon.png" rel="icon"/>
 <meta content="mkdocs-1.6.1, mkdocs-material-9.7.1" name="generator"/>
-<title>Security Elements - KutaPay Technical Design</title>
+<title>Security Elements - Bono Pay Technical Design</title>
 <link href="../../assets/stylesheets/main.484c7ddc.min.css" rel="stylesheet"/>
 <link href="../../assets/stylesheets/palette.ab4e12ef.min.css" rel="stylesheet"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
@@ -17,7 +17,7 @@
 <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
 <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
 </head>
-<body data-md-color-accent="deep-purple" data-md-color-primary="deep-purple" data-md-color-scheme="slate" dir="ltr">
+<body data-md-color-accent="#3FFF00" data-md-color-primary="#3FFF00" data-md-color-scheme="slate" dir="ltr">
 <input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
 <input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
 <label class="md-overlay" for="__drawer"></label>
@@ -30,7 +30,7 @@
 </div>
 <header class="md-header md-header--shadow" data-md-component="header">
 <nav aria-label="Header" class="md-header__inner md-grid">
-<a aria-label="KutaPay Technical Design" class="md-header__button md-logo" data-md-component="logo" href="../.." title="KutaPay Technical Design">
+<a aria-label="Bono Pay Technical Design" class="md-header__button md-logo" data-md-component="logo" href="../.." title="Bono Pay Technical Design">
 <svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
 </a>
 <label class="md-header__button md-icon" for="__drawer">
@@ -40,7 +40,7 @@
 <div class="md-header__ellipsis">
 <div class="md-header__topic">
 <span class="md-ellipsis">
-            KutaPay Technical Design
+            Bono Pay Technical Design
           </span>
 </div>
 <div class="md-header__topic" data-md-component="header-topic">
@@ -92,10 +92,10 @@
 <div class="md-sidebar__inner">
 <nav aria-label="Navigation" class="md-nav md-nav--primary" data-md-level="0">
 <label class="md-nav__title" for="__drawer">
-<a aria-label="KutaPay Technical Design" class="md-nav__button md-logo" data-md-component="logo" href="../.." title="KutaPay Technical Design">
+<a aria-label="Bono Pay Technical Design" class="md-nav__button md-logo" data-md-component="logo" href="../.." title="Bono Pay Technical Design">
 <svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
 </a>
-    KutaPay Technical Design
+    Bono Pay Technical Design
   </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
@@ -896,7 +896,7 @@
 <div class="md-content" data-md-component="content">
 <article class="md-content__inner md-typeset">
 <h1 id="security-elements-on-invoices">Security elements on invoices<a class="headerlink" href="#security-elements-on-invoices" title="Permanent link">¶</a></h1>
-<p>The DGI SFE specification and the KutaPay architecture rules mandate that every fiscal event carries five immutable security elements. The USB Fiscal Memory device (DEF) owns the counters, identifiers, timestamps, and signatures that prove an invoice was issued by an authorized system; the POS, fiscal service, and cloud must treat them as sealed outputs. This page explains what each element is, who produces it, where it appears on the receipt, how the system verifies it, and what to do when it is missing.</p>
+<p>The DGI SFE specification and the Bono Pay architecture rules mandate that every fiscal event carries five immutable security elements. The USB Fiscal Memory device (DEF) owns the counters, identifiers, timestamps, and signatures that prove an invoice was issued by an authorized system; the POS, fiscal service, and cloud must treat them as sealed outputs. This page explains what each element is, who produces it, where it appears on the receipt, how the system verifies it, and what to do when it is missing.</p>
 <div class="admonition warning">
 <p class="admonition-title">Device-generated security elements</p>
 <p>The POS MAY NOT fabricate any of these values. They must be generated inside the DEF, travel only in sealed payloads, and stay embedded in the hash-chained journal (spec/architecture-kutapay-system-1.md; docs/sfe-specifications-v1-summary.md). Missing or modified elements invalidate the invoice.</p>
@@ -915,7 +915,7 @@
 <li><strong>Generated by:</strong> The trusted hardware during provisioning; the DEF includes it in every response alongside the fiscal number and signature.</li>
 <li><strong>Receipt placement:</strong> Printed beside the fiscal number (and often in the security block) so inspectors can trace the outlet/device pair.</li>
 <li><strong>Verification:</strong> The cloud compares it to the device registry; auditors can cross-check it against the DEF’s public key metadata in the registry.</li>
-<li><strong>Missing / invalid:</strong> Without a DEF ID the invoice cannot be tied to a certified device, so the DGI and KutaPay cloud must mark it non-compliant and block further uploads.</li>
+<li><strong>Missing / invalid:</strong> Without a DEF ID the invoice cannot be tied to a certified device, so the DGI and Bono Pay cloud must mark it non-compliant and block further uploads.</li>
 </ul>
 <h2 id="cryptographic-authentication-code-signature">Cryptographic authentication code (signature)<a class="headerlink" href="#cryptographic-authentication-code-signature" title="Permanent link">¶</a></h2>
 <ul>
@@ -943,7 +943,7 @@
 </ul>
 <h2 id="mock-receipt-layout">Mock receipt layout<a class="headerlink" href="#mock-receipt-layout" title="Permanent link">¶</a></h2>
 <pre class="mermaid"><code>flowchart TB
-  subgraph receipt["Mock receipt (KutaPay fiscalized)"]
+  subgraph receipt["Mock receipt (Bono Pay fiscalized)"]
     merchant[Merchant + outlet info]
     fiscal["Fiscal number\nDevice ID (DEF NID)"]
     timestamp["Trusted timestamp"]

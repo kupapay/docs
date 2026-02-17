@@ -9,7 +9,7 @@
 <link href="../ui-ux/" rel="next"/>
 <link href="../../assets/images/favicon.png" rel="icon"/>
 <meta content="mkdocs-1.6.1, mkdocs-material-9.7.1" name="generator"/>
-<title>Multi-Terminal - KutaPay Technical Design</title>
+<title>Multi-Terminal - Bono Pay Technical Design</title>
 <link href="../../assets/stylesheets/main.484c7ddc.min.css" rel="stylesheet"/>
 <link href="../../assets/stylesheets/palette.ab4e12ef.min.css" rel="stylesheet"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
@@ -17,7 +17,7 @@
 <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
 <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
 </head>
-<body data-md-color-accent="deep-purple" data-md-color-primary="deep-purple" data-md-color-scheme="slate" dir="ltr">
+<body data-md-color-accent="#3FFF00" data-md-color-primary="#3FFF00" data-md-color-scheme="slate" dir="ltr">
 <input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
 <input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
 <label class="md-overlay" for="__drawer"></label>
@@ -30,7 +30,7 @@
 </div>
 <header class="md-header md-header--shadow" data-md-component="header">
 <nav aria-label="Header" class="md-header__inner md-grid">
-<a aria-label="KutaPay Technical Design" class="md-header__button md-logo" data-md-component="logo" href="../.." title="KutaPay Technical Design">
+<a aria-label="Bono Pay Technical Design" class="md-header__button md-logo" data-md-component="logo" href="../.." title="Bono Pay Technical Design">
 <svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
 </a>
 <label class="md-header__button md-icon" for="__drawer">
@@ -40,7 +40,7 @@
 <div class="md-header__ellipsis">
 <div class="md-header__topic">
 <span class="md-ellipsis">
-            KutaPay Technical Design
+            Bono Pay Technical Design
           </span>
 </div>
 <div class="md-header__topic" data-md-component="header-topic">
@@ -92,10 +92,10 @@
 <div class="md-sidebar__inner">
 <nav aria-label="Navigation" class="md-nav md-nav--primary" data-md-level="0">
 <label class="md-nav__title" for="__drawer">
-<a aria-label="KutaPay Technical Design" class="md-nav__button md-logo" data-md-component="logo" href="../.." title="KutaPay Technical Design">
+<a aria-label="Bono Pay Technical Design" class="md-nav__button md-logo" data-md-component="logo" href="../.." title="Bono Pay Technical Design">
 <svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
 </a>
-    KutaPay Technical Design
+    Bono Pay Technical Design
   </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
@@ -896,7 +896,7 @@
 <div class="md-content" data-md-component="content">
 <article class="md-content__inner md-typeset">
 <h1 id="multi-terminal-orchestration">Multi-terminal orchestration<a class="headerlink" href="#multi-terminal-orchestration" title="Permanent link">¶</a></h1>
-<p>KutaPay keeps <strong>one trusted USB Fiscal Memory device per outlet</strong>, so when multiple POS terminals share the same retail counter or restaurant floor, a local fiscal service mediates every interaction. This page explains how that mediator keeps the trust boundary intact while coordinating concurrent terminals, starving the device only one canonical PREPARE/COMMIT stream at a time, and delivering auditable invoices with the required metadata.</p>
+<p>Bono Pay keeps <strong>one trusted USB Fiscal Memory device per outlet</strong>, so when multiple POS terminals share the same retail counter or restaurant floor, a local fiscal service mediates every interaction. This page explains how that mediator keeps the trust boundary intact while coordinating concurrent terminals, starving the device only one canonical PREPARE/COMMIT stream at a time, and delivering auditable invoices with the required metadata.</p>
 <h2 id="core-principles">Core principles<a class="headerlink" href="#core-principles" title="Permanent link">¶</a></h2>
 <ul>
 <li><strong>One device per outlet, not per cashier:</strong> every outlet advertises a single DEF NID and a single monotonic counter. Multiple POS stations rely on that device’s serial number for reporting and audit.</li>
@@ -941,7 +941,7 @@
     POS["POS terminal (single lane)"]
     FISCAL["Local fiscal service (embedded)"]
     USB["USB Fiscal Memory device"]
-    CLOUD["KutaPay Cloud / Sync Agent"]
+    CLOUD["Bono Pay Cloud / Sync Agent"]
     DGI["DGI / MCF endpoint"]
 
     POS --&gt;|canonical payload| FISCAL
@@ -960,7 +960,7 @@
     end
     FISCAL["Local fiscal service (retail mediator)"]
     USB["USB Fiscal Memory device"]
-    CLOUD["KutaPay Cloud"]
+    CLOUD["Bono Pay Cloud"]
     DGI["DGI / MCF"]
 
     POS1 --&gt;|canonical payload| FISCAL
@@ -978,7 +978,7 @@
     Waiter3["Waiter Tablet N"]
     HUB["Local fiscal service hub"]
     USB["USB Fiscal Memory device"]
-    CLOUD["KutaPay Cloud"]
+    CLOUD["Bono Pay Cloud"]
     DGI["DGI / MCF"]
 
     Waiter1 --&gt;|canonical payload| HUB

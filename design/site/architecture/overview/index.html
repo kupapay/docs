@@ -9,7 +9,7 @@
 <link href="../trust-boundary/" rel="next"/>
 <link href="../../assets/images/favicon.png" rel="icon"/>
 <meta content="mkdocs-1.6.1, mkdocs-material-9.7.1" name="generator"/>
-<title>Architecture Overview - KutaPay Technical Design</title>
+<title>Architecture Overview - Bono Pay Technical Design</title>
 <link href="../../assets/stylesheets/main.484c7ddc.min.css" rel="stylesheet"/>
 <link href="../../assets/stylesheets/palette.ab4e12ef.min.css" rel="stylesheet"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
@@ -17,7 +17,7 @@
 <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
 <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
 </head>
-<body data-md-color-accent="deep-purple" data-md-color-primary="deep-purple" data-md-color-scheme="slate" dir="ltr">
+<body data-md-color-accent="#3FFF00" data-md-color-primary="#3FFF00" data-md-color-scheme="slate" dir="ltr">
 <input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
 <input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
 <label class="md-overlay" for="__drawer"></label>
@@ -30,7 +30,7 @@
 </div>
 <header class="md-header md-header--shadow" data-md-component="header">
 <nav aria-label="Header" class="md-header__inner md-grid">
-<a aria-label="KutaPay Technical Design" class="md-header__button md-logo" data-md-component="logo" href="../.." title="KutaPay Technical Design">
+<a aria-label="Bono Pay Technical Design" class="md-header__button md-logo" data-md-component="logo" href="../.." title="Bono Pay Technical Design">
 <svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
 </a>
 <label class="md-header__button md-icon" for="__drawer">
@@ -40,7 +40,7 @@
 <div class="md-header__ellipsis">
 <div class="md-header__topic">
 <span class="md-ellipsis">
-            KutaPay Technical Design
+            Bono Pay Technical Design
           </span>
 </div>
 <div class="md-header__topic" data-md-component="header-topic">
@@ -92,10 +92,10 @@
 <div class="md-sidebar__inner">
 <nav aria-label="Navigation" class="md-nav md-nav--primary" data-md-level="0">
 <label class="md-nav__title" for="__drawer">
-<a aria-label="KutaPay Technical Design" class="md-nav__button md-logo" data-md-component="logo" href="../.." title="KutaPay Technical Design">
+<a aria-label="Bono Pay Technical Design" class="md-nav__button md-logo" data-md-component="logo" href="../.." title="Bono Pay Technical Design">
 <svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
 </a>
-    KutaPay Technical Design
+    Bono Pay Technical Design
   </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
@@ -868,21 +868,21 @@
 <div class="md-content" data-md-component="content">
 <article class="md-content__inner md-typeset">
 <h1 id="architecture-overview">Architecture Overview<a class="headerlink" href="#architecture-overview" title="Permanent link">¶</a></h1>
-<p>This page gives new developers a grounding in the KutaPay system: the POS clients that operate in untrusted spaces, the trusted USB Fiscal Memory device that enforces compliance, and the cloud services that consolidate audit data and relay sealed invoices to the DGI. The text below draws directly from the architecture specification, the technical design brief, and the Copilot instructions so that everyone touching the docs stays aligned with the trust boundary, offline-first, and security-element requirements.</p>
+<p>This page gives new developers a grounding in the Bono Pay system: the POS clients that operate in untrusted spaces, the trusted USB Fiscal Memory device that enforces compliance, and the cloud services that consolidate audit data and relay sealed invoices to the DGI. The text below draws directly from the architecture specification, the technical design brief, and the Copilot instructions so that everyone touching the docs stays aligned with the trust boundary, offline-first, and security-element requirements.</p>
 <h2 id="system-context-c4">System Context (C4)<a class="headerlink" href="#system-context-c4" title="Permanent link">¶</a></h2>
-<p>Developers joining the project must know who depends on KutaPay and what the platform communicates outward. Cashiers, outlet owners, and auditors interact with the platform directly, while sealed invoices leave the platform only once they are ready for the DGI or payment providers. This C4 context diagram keeps that actor-level view front and center.</p>
+<p>Developers joining the project must know who depends on Bono Pay and what the platform communicates outward. Cashiers, outlet owners, and auditors interact with the platform directly, while sealed invoices leave the platform only once they are ready for the DGI or payment providers. This C4 context diagram keeps that actor-level view front and center.</p>
 <pre class="mermaid"><code>flowchart LR
     Cashier["Cashier / Teller"]
     Owner["Outlet Owner"]
     Auditor["Auditor / Regulator"]
-    KutaPay["KutaPay Platform\n(POS + Fiscal Service + Cloud)"]
+    Bono Pay["Bono Pay Platform\n(POS + Fiscal Service + Cloud)"]
     DGI["DGI MCF / e-MCF"]
     PaymentProviders["Payment Providers"]
-    Cashier --&gt;|Issues fiscal invoice| KutaPay
-    Owner --&gt;|Monitors compliance| KutaPay
-    Auditor --&gt;|Requests reports &amp; audits| KutaPay
-    KutaPay --&gt;|Sealed invoice upload| DGI
-    KutaPay --&gt;|Payment events + status| PaymentProviders</code></pre>
+    Cashier --&gt;|Issues fiscal invoice| Bono Pay
+    Owner --&gt;|Monitors compliance| Bono Pay
+    Auditor --&gt;|Requests reports &amp; audits| Bono Pay
+    Bono Pay --&gt;|Sealed invoice upload| DGI
+    Bono Pay --&gt;|Payment events + status| PaymentProviders</code></pre>
 <h2 id="trust-boundary">Trust Boundary<a class="headerlink" href="#trust-boundary" title="Permanent link">¶</a></h2>
 <p>The USB Fiscal Memory device is the only trusted execution point: it validates canonical payloads, increments the monotonic counter, signs the invoice, stores it immutably, and returns the security elements (fiscal number, device ID, signature, timestamp, QR). All POS/Cloud services, even the local fiscal service trusted to serialize commands, remain in the untrusted zone and must never claim those security elements as their own.</p>
 <div class="admonition warning">
@@ -893,7 +893,7 @@
 <pre class="mermaid"><code>flowchart LR
     subgraph Untrusted Zone
         POSApp[POS App + Sync Queue]
-        FiscalService[Local Fiscal Service\n(tokenizes PREPARE/COMMIT)]
+        FiscalService["Local Fiscal Service&lt;br/&gt;tokenizes PREPARE/COMMIT"]
     end
     subgraph Trusted Zone
         USBDevice[USB Fiscal Memory Device]
@@ -923,8 +923,8 @@
         MonotonicCounter[Monotonic Counter]
         Signer[ECDSA Signer]
         HashJournal[Hash-Chained Journal]
-        RTC[RTC / Trusted Timestamp]
-        ReportGen[Report Generator (Z/X/A, audit)]
+        RTC["RTC / Trusted Timestamp"]
+        ReportGen["Report Generator: Z/X/A + audit"]
     end
     subgraph Cloud Layer
         CloudAPI[Cloud API &amp; Device Registry]

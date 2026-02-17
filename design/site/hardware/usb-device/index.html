@@ -9,7 +9,7 @@
 <link href="../protocol/" rel="next"/>
 <link href="../../assets/images/favicon.png" rel="icon"/>
 <meta content="mkdocs-1.6.1, mkdocs-material-9.7.1" name="generator"/>
-<title>USB Fiscal Memory - KutaPay Technical Design</title>
+<title>USB Fiscal Memory - Bono Pay Technical Design</title>
 <link href="../../assets/stylesheets/main.484c7ddc.min.css" rel="stylesheet"/>
 <link href="../../assets/stylesheets/palette.ab4e12ef.min.css" rel="stylesheet"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
@@ -17,7 +17,7 @@
 <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
 <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
 </head>
-<body data-md-color-accent="deep-purple" data-md-color-primary="deep-purple" data-md-color-scheme="slate" dir="ltr">
+<body data-md-color-accent="#3FFF00" data-md-color-primary="#3FFF00" data-md-color-scheme="slate" dir="ltr">
 <input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
 <input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
 <label class="md-overlay" for="__drawer"></label>
@@ -30,7 +30,7 @@
 </div>
 <header class="md-header md-header--shadow" data-md-component="header">
 <nav aria-label="Header" class="md-header__inner md-grid">
-<a aria-label="KutaPay Technical Design" class="md-header__button md-logo" data-md-component="logo" href="../.." title="KutaPay Technical Design">
+<a aria-label="Bono Pay Technical Design" class="md-header__button md-logo" data-md-component="logo" href="../.." title="Bono Pay Technical Design">
 <svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
 </a>
 <label class="md-header__button md-icon" for="__drawer">
@@ -40,7 +40,7 @@
 <div class="md-header__ellipsis">
 <div class="md-header__topic">
 <span class="md-ellipsis">
-            KutaPay Technical Design
+            Bono Pay Technical Design
           </span>
 </div>
 <div class="md-header__topic" data-md-component="header-topic">
@@ -92,10 +92,10 @@
 <div class="md-sidebar__inner">
 <nav aria-label="Navigation" class="md-nav md-nav--primary" data-md-level="0">
 <label class="md-nav__title" for="__drawer">
-<a aria-label="KutaPay Technical Design" class="md-nav__button md-logo" data-md-component="logo" href="../.." title="KutaPay Technical Design">
+<a aria-label="Bono Pay Technical Design" class="md-nav__button md-logo" data-md-component="logo" href="../.." title="Bono Pay Technical Design">
 <svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
 </a>
-    KutaPay Technical Design
+    Bono Pay Technical Design
   </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
@@ -922,7 +922,7 @@
 <div class="md-content" data-md-component="content">
 <article class="md-content__inner md-typeset">
 <h1 id="usb-fiscal-memory-device">USB Fiscal Memory Device<a class="headerlink" href="#usb-fiscal-memory-device" title="Permanent link">¶</a></h1>
-<p>KutaPay's USB Fiscal Memory device is the trusted anchor of the fiscal compliance stack. It sits inside the trust boundary, listens to canonical payloads from the untrusted POS, and emits sealed fiscal responses that the POS prints and the cloud eventually uploads to the DGI. Every fiscalized invoice flows through this hardware so it alone controls counters, timestamps, signatures, and the immutable journal.</p>
+<p>Bono Pay's USB Fiscal Memory device is the trusted anchor of the fiscal compliance stack. It sits inside the trust boundary, listens to canonical payloads from the untrusted POS, and emits sealed fiscal responses that the POS prints and the cloud eventually uploads to the DGI. Every fiscalized invoice flows through this hardware so it alone controls counters, timestamps, signatures, and the immutable journal.</p>
 <div class="admonition warning">
 <p class="admonition-title">Trusted boundary</p>
 <p>Only the USB Fiscal Memory device may increment counters, sign journals, or emit authentication codes. The POS and cloud may prepare payloads and relay responses, but they must never forge or cache these sensitive elements.</p>
@@ -1032,7 +1032,7 @@
 </table>
 <p><em>Total COGS targets $10–15 per unit while still supporting audit-grade hardware and tamper detection.</em></p>
 <h2 id="comparative-positioning">Comparative Positioning<a class="headerlink" href="#comparative-positioning" title="Permanent link">¶</a></h2>
-<p>Compared to Italian fiscal memories and other African Electronic Fiscal Devices (EFDs), the KutaPay DEF matches the same sequential counters, Z/X/A reports, and tamper-proof journal but adds a detachable USB-C cable that suits modern tablets and mobile cashiers. Against crypto-focused hardware wallets, it borrows their secure element model (isolating private keys, enforcing monotonic counters) while extending it with a dedicated invoice journal, RTC, and DGI-friendly reporting. These similarities keep certification straightforward while differentiating KutaPay through its tight integration with the offline-first POS, local fiscal service mediator, and DGI sync pipeline.</p>
+<p>Compared to Italian fiscal memories and other African Electronic Fiscal Devices (EFDs), the Bono Pay DEF matches the same sequential counters, Z/X/A reports, and tamper-proof journal but adds a detachable USB-C cable that suits modern tablets and mobile cashiers. Against crypto-focused hardware wallets, it borrows their secure element model (isolating private keys, enforcing monotonic counters) while extending it with a dedicated invoice journal, RTC, and DGI-friendly reporting. These similarities keep certification straightforward while differentiating Bono Pay through its tight integration with the offline-first POS, local fiscal service mediator, and DGI sync pipeline.</p>
 </article>
 </div>
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
