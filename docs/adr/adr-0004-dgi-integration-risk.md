@@ -1,0 +1,10 @@
+### Decision - 2026-02-17
+**Decision**: Treat the lack of concrete DGI MCF/e-MCF API details as a gating risk, keep `spec/infrastructure-dgi-integration-1.md` as a living document marked with `???` for the unknowns, and capture the mitigation plan in this ADR so the team does not proceed with implementation until the required documentation arrives.
+**Context**: `spec/infrastructure-dgi-integration-1.md` currently lists the MCF/e-MCF endpoints, authentication method, request/response schema, offline/retry rules, and device registration flow as unknown. The security review flagged this gap as critical because we cannot send sealed invoices to an authenticated tax authority endpoint or handle replay/error semantics securely without those details.
+**Options**:
+- Wait until the DGI publishes the full API spec before authoring additional design docs or beginning integration work (blocks all downstream tasks).
+- Assume a default RESTful schema and invent authentication/tokens to move forward (too risky and likely non-compliant).
+- Explicitly document the unknowns as gating risk, maintain the `spec/infrastructure-dgi-integration-1.md` spike, and synchronize with the DGI once the official API is provided while noting the risk in the implementation roadmap (preferred).
+**Rationale**: We cannot hedge on the missing details, but we can keep planning momentum by treating this as a tracked risk and not shipping until the DGI provides their schema. This ADR memorializes that decision and points future engineers to the living doc and review findings that prompted the risk.
+**Impact**: Implementation activities dependent on DGI integration (cloud sync agent, audit uploads, roadmap milestones) remain blocked until we obtain the official API. We will update `spec/infrastructure-dgi-integration-1.md` with the real endpoints/auth schema as soon as it is published, and we will revisit this ADR when the documentation arrives.
+**Review**: Reassess when DGI shares the MCF/e-MCF documentation or when the cloud sync spike obtains concrete endpoints; if the documentation still lacks clarity, create follow-up ADR(s) for the missing pieces.

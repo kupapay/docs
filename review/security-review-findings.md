@@ -6,6 +6,8 @@
 
 ### CRITICAL
 - `spec/infrastructure-dgi-integration-1.md` flags that the MCF/e-MCF endpoints, authentication mechanism, request/response schema, offline/retry rules, and device registration flow are all *unknown*. Without these critical details we cannot guarantee that sealed invoices are submitted only to an authenticated DGI endpoint, that replay or spoofed uploads are rejected, or that error/inspection codes are handled consistently. Until the spike supplies concrete endpoint URLs, token formats, and rejection semantics, the DGI integration cannot be implemented securely and full compliance is at risk.
+### Resolution
+- Captured the gating risk in [`docs/adr/adr-0004-dgi-integration-risk.md`](../docs/adr/adr-0004-dgi-integration-risk.md), flagged `spec/infrastructure-dgi-integration-1.md` as a living document, and will treat the lack of DGI API details as a blocker until the official endpoints/auth/schema are provided so the integration can be implemented securely.
 
 ### IMPORTANT
 - `spec/protocol-usb-fiscal-device-1.md` defines `CFG|INIT` as the activation command (`activation_code`, `public_key`) but never explains how the DEF verifies the activation payload’s authenticity. `design/docs/hardware/secure-element.md` states that DGI-signed activation data seeds the RNG, yet the protocol lacks any cryptographic validation step (signature checks, nonce replay protection, certificate verification). An attacker with USB access could re-run `CFG|INIT`, zeroize counters, or clone the device because the spec lets any host present an `activation_code`. The activation workflow must concretely describe how the device proves the activation token was issued by the DGI before accepting new keys.
