@@ -853,7 +853,8 @@ Step 2:
 
 ### TASK-029: POS plugin API reference
 ```
-Status:     READY (after TASK-023)
+Status:     DONE (after TASK-023)
+Completed:  2026-02-17
 Depends:    TASK-023
 Agent:      @specification + @se-technical-writer
 Sources:    spec/architecture-kutapay-system-1.md
