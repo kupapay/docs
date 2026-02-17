@@ -470,7 +470,8 @@ retail pricing strategy, manufacturing considerations.
 
 ### TASK-014: Invoice lifecycle page
 ```
-Status:     READY (after TASK-004)
+Status:     DONE
+Completed:  2026-02-17
 Depends:    TASK-004
 Agent:      @gem-documentation-writer
 Sources:    spec/architecture-kutapay-system-1.md,
