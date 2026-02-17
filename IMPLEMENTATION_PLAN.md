@@ -771,7 +771,8 @@ timeline of regulation adoption, key compliance deadlines.
 
 ### TASK-025: Arrêté summaries page
 ```
-Status:     READY
+Status:     DONE
+Completed:  2026-02-17
 Agent:      manual (compile from existing summaries)
 Sources:    docs/arrete-032-summary.md, docs/arrete-033-summary.md,
             docs/arrete-034-summary.md, docs/arrete-016-2025-summary.md
