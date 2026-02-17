@@ -978,7 +978,8 @@ Duration: 6 months
 
 ### TASK-034: ADR index page
 ```
-Status:     READY (after TASK-004)
+Status:     DONE (after TASK-004)
+Completed:  2026-02-17
 Depends:    TASK-004
 Agent:      manual
 Sources:    docs/adr/*.md
