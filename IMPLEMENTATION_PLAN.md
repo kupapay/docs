@@ -527,7 +527,8 @@ for "which tax group applies?" Include worked examples.
 
 ### TASK-016: Security elements on invoices
 ```
-Status:     READY (after TASK-004)
+Status:     DONE (after TASK-004)
+Completed:  2026-02-17
 Depends:    TASK-004
 Agent:      @gem-documentation-writer
 Sources:    docs/sfe-specifications-v1-summary.md,
