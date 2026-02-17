@@ -901,7 +901,8 @@ Save to design/docs/implementation/roadmap.md
 
 ### TASK-031: Phase 1 (B2B) epic breakdown
 ```
-Status:     READY (after TASK-030)
+Status:     DONE
+Completed:  2026-02-17
 Depends:    TASK-030
 Agent:      /breakdown-epic-arch prompt
 Sources:    spec/*.md, design/docs/implementation/roadmap.md
