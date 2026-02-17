@@ -497,7 +497,8 @@ Include:
 
 ### TASK-015: Tax engine (14 DGI groups)
 ```
-Status:     READY (after TASK-004)
+Status:     DONE (after TASK-004)
+Completed:  2026-02-17
 Depends:    TASK-004
 Agent:      @specification + @gem-documentation-writer
 Sources:    docs/sfe-specifications-v1-summary.md,
