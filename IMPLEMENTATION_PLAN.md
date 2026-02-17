@@ -539,7 +539,8 @@ Create the Web Dashboard design page, applying Odoo POS UX lessons to an invoici
 
 ### TASK-015: Create SDK & libraries page
 ```
-Status:     READY (after TASK-013)
+Status:     DONE
+Completed:  2026-02-17
 Depends:    TASK-013
 Agent:      manual
 Sources:    design/docs-archive/api/pos-plugin.md (preserve payload structure),
