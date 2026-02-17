@@ -6,7 +6,7 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width,initial-scale=1" name="viewport"/>
 <link href="../offline-sync/" rel="prev"/>
-<link href="../../pos/multi-terminal/" rel="next"/>
+<link href="../../platform/multi-user/" rel="next"/>
 <link href="../../assets/images/favicon.png" rel="icon"/>
 <meta content="mkdocs-1.6.1, mkdocs-material-9.7.1" name="generator"/>
 <title>DGI Integration - Bono Pay Technical Design</title>
@@ -190,7 +190,7 @@
 <span class="md-ellipsis">
     
   
-    Hardware
+    Invoicing Platform
   
 
     
@@ -202,17 +202,17 @@
 <span class="md-nav__icon md-icon"></span>
             
   
-    Hardware
+    Invoicing Platform
   
 
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../hardware/usb-device/">
+<a class="md-nav__link" href="../../platform/overview/">
 <span class="md-ellipsis">
     
   
-    USB Fiscal Memory
+    Product Overview
   
 
     
@@ -220,11 +220,11 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../hardware/protocol/">
+<a class="md-nav__link" href="../../platform/api/">
 <span class="md-ellipsis">
     
   
-    USB Protocol (2PC)
+    Invoicing API
   
 
     
@@ -232,11 +232,11 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../hardware/secure-element/">
+<a class="md-nav__link" href="../../platform/dashboard/">
 <span class="md-ellipsis">
     
   
-    Secure Element
+    Web Dashboard
   
 
     
@@ -244,11 +244,11 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../hardware/bom/">
+<a class="md-nav__link" href="../../platform/sdk/">
 <span class="md-ellipsis">
     
   
-    BOM &amp; Manufacturing
+    SDK &amp; Libraries
   
 
     
@@ -427,10 +427,10 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#integration-architecture">
+<a class="md-nav__link" href="#sync-agent-pipeline">
 <span class="md-ellipsis">
       
-        Integration architecture
+        Sync Agent pipeline
       
     </span>
 </a>
@@ -465,7 +465,7 @@
 <span class="md-ellipsis">
     
   
-    POS Application
+    Platform &amp; Integrations
   
 
     
@@ -477,17 +477,17 @@
 <span class="md-nav__icon md-icon"></span>
             
   
-    POS Application
+    Platform &amp; Integrations
   
 
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../pos/multi-terminal/">
+<a class="md-nav__link" href="../../platform/multi-user/">
 <span class="md-ellipsis">
     
   
-    Multi-Terminal
+    Multi-User Access
   
 
     
@@ -495,19 +495,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../pos/ui-ux/">
-<span class="md-ellipsis">
-    
-  
-    UI/UX
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../pos/integrations/">
+<a class="md-nav__link" href="../../platform/integrations/">
 <span class="md-ellipsis">
     
   
@@ -647,7 +635,31 @@
 <span class="md-ellipsis">
     
   
-    0003 - POS Technology Stack
+    0003 - Platform Technology Stack
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../adr/adr-0004/">
+<span class="md-ellipsis">
+    
+  
+    0004 - Cloud Fiscal Signing
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../adr/adr-0005/">
+<span class="md-ellipsis">
+    
+  
+    0005 - Strategic Pivot
   
 
     
@@ -663,7 +675,7 @@
 <span class="md-ellipsis">
     
   
-    Implementation
+    API Reference
   
 
     
@@ -672,6 +684,56 @@
 </label>
 <nav aria-expanded="false" aria-labelledby="__nav_9_label" class="md-nav" data-md-level="1">
 <label class="md-nav__title" for="__nav_9">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    API Reference
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../api/cloud/">
+<span class="md-ellipsis">
+    
+  
+    Cloud API
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../api/invoicing-sdk/">
+<span class="md-ellipsis">
+    
+  
+    Invoicing SDK
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_10" type="checkbox"/>
+<label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Implementation
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_10_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_10">
 <span class="md-nav__icon md-icon"></span>
             
   
@@ -697,7 +759,7 @@
 <span class="md-ellipsis">
     
   
-    Phase 1 - B2B Pilot
+    Phase 1 - Software Invoicing
   
 
     
@@ -709,7 +771,7 @@
 <span class="md-ellipsis">
     
   
-    Phase 2 - Retail
+    Phase 2 - POS &amp; Retail
   
 
     
@@ -721,45 +783,7 @@
 <span class="md-ellipsis">
     
   
-    Phase 3 - Enterprise
-  
-
-    
-  </span>
-</a>
-</li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle" id="__nav_10" type="checkbox"/>
-<label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
-<span class="md-ellipsis">
-    
-  
-    API Reference
-  
-
-    
-  </span>
-<span class="md-nav__icon md-icon"></span>
-</label>
-<nav aria-expanded="false" aria-labelledby="__nav_10_label" class="md-nav" data-md-level="1">
-<label class="md-nav__title" for="__nav_10">
-<span class="md-nav__icon md-icon"></span>
-            
-  
-    API Reference
-  
-
-          </label>
-<ul class="md-nav__list" data-md-scrollfix="">
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../api/usb-device/">
-<span class="md-ellipsis">
-    
-  
-    USB Device API
+    Phase 3 - USB Hardware
   
 
     
@@ -767,23 +791,11 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../api/cloud/">
+<a class="md-nav__link" href="../../implementation/phase-4/">
 <span class="md-ellipsis">
     
   
-    Cloud API
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../api/pos-plugin/">
-<span class="md-ellipsis">
-    
-  
-    POS Plugin API
+    Phase 4 - Enterprise
   
 
     
@@ -826,10 +838,10 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#integration-architecture">
+<a class="md-nav__link" href="#sync-agent-pipeline">
 <span class="md-ellipsis">
       
-        Integration architecture
+        Sync Agent pipeline
       
     </span>
 </a>
@@ -862,25 +874,36 @@
 <h1 id="dgi-integration">DGI Integration<a class="headerlink" href="#dgi-integration" title="Permanent link">¶</a></h1>
 <p>This page captures how the Bono Pay Cloud interfaces with the DGI control modules (MCF / e-MCF) and documents the known obligations versus the remaining unknowns uncovered during the integration spike (<code>spec/infrastructure-dgi-integration-1.md</code>).</p>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">¶</a></h2>
-<p>The DGI enforces a layered chain: the POS/SFE prepares invoices, the trusted DEF secures them, and the control modules (MCF / e-MCF) verify and relay fiscalized data to the DGI backend. Bono Pay Cloud is the synchronization agent: it queues sealed invoices when offline, uploads them to the MCF/e-MCF endpoint when connectivity returns, and stores the fiscal numbers, auth codes, and timestamps produced by those control modules. The infrastructure must be always-on, support fallback hardware, and present audit-ready logs at all times.</p>
+<p>The DGI enforces a layered chain for fiscal compliance in the DRC. In Bono Pay's Phase 1 (Software Invoicing), the <strong>Cloud Signing Service (HSM)</strong> acts as the trusted fiscal authority — it assigns sequential fiscal numbers, signs invoices, generates timestamps and QR codes, and stores everything in the Fiscal Ledger. The <strong>Sync Agent</strong> then uploads sealed invoices to the DGI MCF/e-MCF control modules for central verification and tax surveillance.</p>
+<pre class="mermaid"><code>flowchart LR
+  Client["Client Apps\n(API / Dashboard / SDK)"] --&gt;|canonical payload| Cloud["Bono Pay Cloud\n(Cloud Signing Service)"]
+  Cloud --&gt;|sealed invoice + security elements| Ledger["Fiscal Ledger"]
+  Cloud --&gt;|sealed invoice + metadata| MCF["DGI MCF / e-MCF\ncontrol modules"]
+  MCF --&gt;|acknowledgement| Cloud
+  MCF --&gt;|delivery stream| DGI["DGI Backend\n(central tax authority)"]</code></pre>
+<p>This diagram emphasizes that the Cloud Signing Service <strong>generates</strong> the security elements (fiscal number, auth code, timestamp, QR) — it does not merely relay them. The Sync Agent handles the upstream delivery to the DGI.</p>
+<div class="admonition info">
+<p class="admonition-title">Phase 3 — USB Hardware</p>
+<p>In Phase 3, the USB Fiscal Memory device (DEF) can serve as the trusted signer for merchants needing DEF homologation. The Sync Agent still uploads sealed invoices from the DEF through the cloud to the DGI using the same pipeline.</p>
+</div>
 <h2 id="known-constraints-and-responsibilities">Known constraints and responsibilities<a class="headerlink" href="#known-constraints-and-responsibilities" title="Permanent link">¶</a></h2>
 <ul>
-<li>The MCF/e-MCF modules are the only entities authorized to produce the sequential fiscal number, authentication code, trusted timestamp, and QR payload that make an invoice legally valid.</li>
-<li>Every submission to the control modules must include the canonical payload plus device identifiers (DEF NID, outlet ID, cashier ID) so that the DGI can link the invoice to its originating outlet.</li>
-<li>Offline issuance is permitted, but the Cloud must replay queued invoices to the control modules as soon as connectivity is restored; regulators view uptime as mandatory and require replacement hardware ready if the primary link fails.</li>
-<li>The control modules enforce immutability, continuous compliance, and real-time VAT surveillance (per Arrêté 033), meaning the Cloud must log every retry, failure, and acknowledgement.</li>
-<li>Bono Pay Cloud is also responsible for device registry tasks such as storing activation codes, monitoring device health, and surfacing failure alerts to operators.</li>
+<li>In Phase 1, the <strong>Cloud Signing Service (HSM)</strong> produces the sequential fiscal number, authentication code, trusted timestamp, and QR payload that make an invoice legally valid. In Phase 3, the DEF can assume this role.</li>
+<li>Every submission to the DGI control modules must include the sealed canonical payload plus identifiers (fiscal_authority_id, outlet_id, merchant_nif, cashier_id / api_key_id) so that the DGI can link the invoice to its originating outlet.</li>
+<li>Offline client issuance is permitted (clients queue unsigned drafts locally), but the Cloud must seal them and then upload to the DGI as soon as possible. Regulators view uptime as mandatory and expect contingency plans.</li>
+<li>The DGI control modules enforce immutability, continuous compliance, and real-time VAT surveillance (per Arrêté 033), meaning the Cloud must log every sync attempt, failure, and acknowledgement.</li>
+<li>Bono Pay Cloud is also responsible for merchant/outlet registry tasks: storing activation codes, monitoring outlet health, and surfacing failure alerts to operators.</li>
 </ul>
-<h2 id="integration-architecture">Integration architecture<a class="headerlink" href="#integration-architecture" title="Permanent link">¶</a></h2>
-<p>The following flow captures the responsibilities we control and the trust boundary between Bono Pay Cloud and DGI:</p>
-<pre class="mermaid"><code>flowchart LR
-  POS["POS / SFE"] --&gt;|canonical payload| Cloud["Bono Pay Cloud\n(sync queue + registry)"]
-  Cloud --&gt;|sealed invoice + metadata| MCF["DGI MCF / e-MCF control modules"]
-  MCF --&gt;|security elements (fiscal number, auth code, timestamp)| Cloud
-  MCF --&gt;|delivery stream| DGI["DGI Backend\n(central tax authority)"]
-  Cloud --&gt;|fallback communication| Fallback["Replacement DEF\n(hardware backup)"]
-  Fallback --&gt;|same sync path| MCF</code></pre>
-<p>This diagram emphasizes that the Cloud never generates security elements—it relays them between the POS (or the local fiscal service) and the DGI control modules, while also coordinating fallback hardware when the primary DEF or network link fails.</p>
+<h2 id="sync-agent-pipeline">Sync Agent pipeline<a class="headerlink" href="#sync-agent-pipeline" title="Permanent link">¶</a></h2>
+<p>The Sync Agent runs as a background service within the Bono Pay Cloud:</p>
+<ol>
+<li><strong>Poll the Fiscal Ledger</strong> for newly sealed invoices not yet acknowledged by the DGI.</li>
+<li><strong>Format the DGI submission</strong> with the required security elements and identifiers.</li>
+<li><strong>Upload to the MCF/e-MCF endpoint</strong> via authenticated HTTPS.</li>
+<li><strong>Record the acknowledgement</strong> (or failure) in the Fiscal Ledger and update the invoice's <code>dgi_status</code>.</li>
+<li><strong>Retry with exponential backoff</strong> on transient failures; escalate to FAILED after max retries.</li>
+<li><strong>Surface dashboards and alerts</strong> for operators when uploads are pending or failing.</li>
+</ol>
 <h2 id="unknowns-tracked-as-admonitions">Unknowns (tracked as ??? admonitions)<a class="headerlink" href="#unknowns-tracked-as-admonitions" title="Permanent link">¶</a></h2>
 <details class="warning">
 <summary>MCF/e-MCF API surface still unpublished</summary>
@@ -895,7 +918,7 @@
 <p>The legislation insists every invoice must be reported, but the precise grace period, retry intervals, or thresholds that trigger manual intervention are unknown, so the sync engine must remain configurable until the DGI clarifies.</p>
 </details>
 <h2 id="spike-reference-next-steps">Spike reference &amp; next steps<a class="headerlink" href="#spike-reference-next-steps" title="Permanent link">¶</a></h2>
-<p>Refer to <code>spec/infrastructure-dgi-integration-1.md</code> for the full list of known facts and open questions gathered during this research pass. Update that file (and this page) as soon as the DGI publishes more integration guidance so the Cloud sync agent and device registry can evolve from placeholders to production-ready connectors.</p>
+<p>Refer to <code>spec/infrastructure-dgi-integration-1.md</code> for the full list of known facts and open questions gathered during this research pass. Update that file (and this page) as soon as the DGI publishes more integration guidance so the Sync Agent can evolve from placeholders to production-ready connectors.</p>
 </article>
 </div>
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>

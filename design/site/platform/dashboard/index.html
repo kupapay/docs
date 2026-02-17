@@ -5,11 +5,11 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width,initial-scale=1" name="viewport"/>
-<link href="../protocol/" rel="prev"/>
-<link href="../bom/" rel="next"/>
+<link href="../api/" rel="prev"/>
+<link href="../sdk/" rel="next"/>
 <link href="../../assets/images/favicon.png" rel="icon"/>
 <meta content="mkdocs-1.6.1, mkdocs-material-9.7.1" name="generator"/>
-<title>Secure Element - Bono Pay Technical Design</title>
+<title>Web Dashboard - Bono Pay Technical Design</title>
 <link href="../../assets/stylesheets/main.484c7ddc.min.css" rel="stylesheet"/>
 <link href="../../assets/stylesheets/palette.ab4e12ef.min.css" rel="stylesheet"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
@@ -22,7 +22,7 @@
 <input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
 <label class="md-overlay" for="__drawer"></label>
 <div data-md-component="skip">
-<a class="md-skip" href="#secure-element">
+<a class="md-skip" href="#web-dashboard">
           Skip to content
         </a>
 </div>
@@ -46,7 +46,7 @@
 <div class="md-header__topic" data-md-component="header-topic">
 <span class="md-ellipsis">
             
-              Secure Element
+              Web Dashboard
             
           </span>
 </div>
@@ -190,7 +190,7 @@
 <span class="md-ellipsis">
     
   
-    Hardware
+    Invoicing Platform
   
 
     
@@ -202,17 +202,17 @@
 <span class="md-nav__icon md-icon"></span>
             
   
-    Hardware
+    Invoicing Platform
   
 
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="../usb-device/">
+<a class="md-nav__link" href="../overview/">
 <span class="md-ellipsis">
     
   
-    USB Fiscal Memory
+    Product Overview
   
 
     
@@ -220,11 +220,11 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../protocol/">
+<a class="md-nav__link" href="../api/">
 <span class="md-ellipsis">
     
   
-    USB Protocol (2PC)
+    Invoicing API
   
 
     
@@ -237,7 +237,7 @@
 <span class="md-ellipsis">
     
   
-    Secure Element
+    Web Dashboard
   
 
     
@@ -248,7 +248,7 @@
 <span class="md-ellipsis">
     
   
-    Secure Element
+    Web Dashboard
   
 
     
@@ -261,55 +261,65 @@
     </label>
 <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="#security-review-takeaways">
+<a class="md-nav__link" href="#architecture">
 <span class="md-ellipsis">
       
-        Security review takeaways
+        Architecture
       
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#key-management-lifecycle">
+<a class="md-nav__link" href="#key-screens">
 <span class="md-ellipsis">
       
-        Key management lifecycle
+        Key Screens
+      
+    </span>
+</a>
+<nav aria-label="Key Screens" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#invoice-creation">
+<span class="md-ellipsis">
+      
+        Invoice creation
       
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#anti-cloning-and-tamper-resistance">
+<a class="md-nav__link" href="#invoice-list-search">
 <span class="md-ellipsis">
       
-        Anti-cloning and tamper resistance
+        Invoice list &amp; search
       
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#monotonic-counters-immutable-signing">
+<a class="md-nav__link" href="#client-classification-management">
 <span class="md-ellipsis">
       
-        Monotonic counters &amp; immutable signing
+        Client &amp; classification management
       
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#signing-flow">
+<a class="md-nav__link" href="#reports-reconciliation">
 <span class="md-ellipsis">
       
-        Signing flow
+        Reports &amp; reconciliation
       
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#recovery-and-policy">
+<a class="md-nav__link" href="#settings-access-controls">
 <span class="md-ellipsis">
       
-        Recovery and policy
+        Settings &amp; access controls
       
     </span>
 </a>
@@ -318,11 +328,50 @@
 </nav>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../bom/">
+<a class="md-nav__link" href="#ux-principles">
+<span class="md-ellipsis">
+      
+        UX Principles
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#offline-first-operations">
+<span class="md-ellipsis">
+      
+        Offline-first operations
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#delivery-fiscal-confirmation">
+<span class="md-ellipsis">
+      
+        Delivery &amp; fiscal confirmation
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mermaid-wireframe-flow">
+<span class="md-ellipsis">
+      
+        Mermaid wireframe flow
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../sdk/">
 <span class="md-ellipsis">
     
   
-    BOM &amp; Manufacturing
+    SDK &amp; Libraries
   
 
     
@@ -474,7 +523,7 @@
 <span class="md-ellipsis">
     
   
-    POS Application
+    Platform &amp; Integrations
   
 
     
@@ -486,17 +535,17 @@
 <span class="md-nav__icon md-icon"></span>
             
   
-    POS Application
+    Platform &amp; Integrations
   
 
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../pos/multi-terminal/">
+<a class="md-nav__link" href="../multi-user/">
 <span class="md-ellipsis">
     
   
-    Multi-Terminal
+    Multi-User Access
   
 
     
@@ -504,19 +553,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../pos/ui-ux/">
-<span class="md-ellipsis">
-    
-  
-    UI/UX
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../pos/integrations/">
+<a class="md-nav__link" href="../integrations/">
 <span class="md-ellipsis">
     
   
@@ -656,7 +693,31 @@
 <span class="md-ellipsis">
     
   
-    0003 - POS Technology Stack
+    0003 - Platform Technology Stack
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../adr/adr-0004/">
+<span class="md-ellipsis">
+    
+  
+    0004 - Cloud Fiscal Signing
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../adr/adr-0005/">
+<span class="md-ellipsis">
+    
+  
+    0005 - Strategic Pivot
   
 
     
@@ -672,7 +733,7 @@
 <span class="md-ellipsis">
     
   
-    Implementation
+    API Reference
   
 
     
@@ -681,6 +742,56 @@
 </label>
 <nav aria-expanded="false" aria-labelledby="__nav_9_label" class="md-nav" data-md-level="1">
 <label class="md-nav__title" for="__nav_9">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    API Reference
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../api/cloud/">
+<span class="md-ellipsis">
+    
+  
+    Cloud API
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../api/invoicing-sdk/">
+<span class="md-ellipsis">
+    
+  
+    Invoicing SDK
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_10" type="checkbox"/>
+<label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Implementation
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_10_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_10">
 <span class="md-nav__icon md-icon"></span>
             
   
@@ -706,7 +817,7 @@
 <span class="md-ellipsis">
     
   
-    Phase 1 - B2B Pilot
+    Phase 1 - Software Invoicing
   
 
     
@@ -718,7 +829,7 @@
 <span class="md-ellipsis">
     
   
-    Phase 2 - Retail
+    Phase 2 - POS &amp; Retail
   
 
     
@@ -730,45 +841,7 @@
 <span class="md-ellipsis">
     
   
-    Phase 3 - Enterprise
-  
-
-    
-  </span>
-</a>
-</li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle" id="__nav_10" type="checkbox"/>
-<label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
-<span class="md-ellipsis">
-    
-  
-    API Reference
-  
-
-    
-  </span>
-<span class="md-nav__icon md-icon"></span>
-</label>
-<nav aria-expanded="false" aria-labelledby="__nav_10_label" class="md-nav" data-md-level="1">
-<label class="md-nav__title" for="__nav_10">
-<span class="md-nav__icon md-icon"></span>
-            
-  
-    API Reference
-  
-
-          </label>
-<ul class="md-nav__list" data-md-scrollfix="">
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../api/usb-device/">
-<span class="md-ellipsis">
-    
-  
-    USB Device API
+    Phase 3 - USB Hardware
   
 
     
@@ -776,23 +849,11 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../api/cloud/">
+<a class="md-nav__link" href="../../implementation/phase-4/">
 <span class="md-ellipsis">
     
   
-    Cloud API
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../api/pos-plugin/">
-<span class="md-ellipsis">
-    
-  
-    POS Plugin API
+    Phase 4 - Enterprise
   
 
     
@@ -817,55 +878,104 @@
     </label>
 <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="#security-review-takeaways">
+<a class="md-nav__link" href="#architecture">
 <span class="md-ellipsis">
       
-        Security review takeaways
+        Architecture
       
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#key-management-lifecycle">
+<a class="md-nav__link" href="#key-screens">
 <span class="md-ellipsis">
       
-        Key management lifecycle
+        Key Screens
+      
+    </span>
+</a>
+<nav aria-label="Key Screens" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#invoice-creation">
+<span class="md-ellipsis">
+      
+        Invoice creation
       
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#anti-cloning-and-tamper-resistance">
+<a class="md-nav__link" href="#invoice-list-search">
 <span class="md-ellipsis">
       
-        Anti-cloning and tamper resistance
+        Invoice list &amp; search
       
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#monotonic-counters-immutable-signing">
+<a class="md-nav__link" href="#client-classification-management">
 <span class="md-ellipsis">
       
-        Monotonic counters &amp; immutable signing
+        Client &amp; classification management
       
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#signing-flow">
+<a class="md-nav__link" href="#reports-reconciliation">
 <span class="md-ellipsis">
       
-        Signing flow
+        Reports &amp; reconciliation
       
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#recovery-and-policy">
+<a class="md-nav__link" href="#settings-access-controls">
 <span class="md-ellipsis">
       
-        Recovery and policy
+        Settings &amp; access controls
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#ux-principles">
+<span class="md-ellipsis">
+      
+        UX Principles
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#offline-first-operations">
+<span class="md-ellipsis">
+      
+        Offline-first operations
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#delivery-fiscal-confirmation">
+<span class="md-ellipsis">
+      
+        Delivery &amp; fiscal confirmation
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mermaid-wireframe-flow">
+<span class="md-ellipsis">
+      
+        Mermaid wireframe flow
       
     </span>
 </a>
@@ -877,68 +987,54 @@
 </div>
 <div class="md-content" data-md-component="content">
 <article class="md-content__inner md-typeset">
-<h1 id="secure-element">Secure Element<a class="headerlink" href="#secure-element" title="Permanent link">¶</a></h1>
-<p>The Secure Element embedded within the USB Fiscal Memory device is the heart of the trust boundary.  It is the only component that knows the private key used to sign invoices, the monotonic counters that enforce sequencing, and the tamper sensors that prove the device cannot be manipulated.  All other software (POS, fiscal service, cloud) is explicitly untrusted and only interacts with the SE through the USB protocol defined in <code>spec/protocol-usb-fiscal-device-1.md</code>.</p>
-<p>This page documents the Secure Element's key management and signature algorithm policies for the DRC-compliant invoice flow.</p>
-<h2 id="security-review-takeaways">Security review takeaways<a class="headerlink" href="#security-review-takeaways" title="Permanent link">¶</a></h2>
-<div class="admonition caution">
-<p class="admonition-title">Key lifecycle review</p>
-<p>The security review confirmed that keys must be <strong>generated on-device</strong> rather than injected from the cloud.  Each Secure Element derives its private key during the <code>CFG|INIT</code> activation handshake, using the DGI-provided activation code only to bind the new key to a known device ID.  No private key material ever leaves the sealed chip, preventing remote cloning even if the host is compromised.</p>
+<h1 id="web-dashboard">Web Dashboard<a class="headerlink" href="#web-dashboard" title="Permanent link">¶</a></h1>
+<p>The Bono Pay Web Dashboard is a Progressive Web App layer that sits in the untrusted client zone. It loads in any modern browser, caches product/customer catalogs, and builds canonical payloads that are sent to the Cloud Signing Service (HSM-backed) for sequential fiscal numbering, signature generation, and QR payload creation. Every fiscalized invoice is then mirrored back to the UI for receipts, reports, and DGI sync status, while the UI keeps a secondary queue of uploads that still need confirmation from the cloud.</p>
+<h2 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">¶</a></h2>
+<ul>
+<li><strong>PWA + Service Worker.</strong> The dashboard is a single-page Progressive Web App. This design means the UI assets (HTML, CSS, JS, fonts, icons) are cached by a Service Worker, so even the cheapest Android tablet boots instantly after the first visit.</li>
+<li><strong>IndexedDB cache &amp; queue.</strong> Product catalogs, customer lists, tax group manifests, and queued uploads live in IndexedDB so the UI can search instantly even while offline. The queue stores canonical invoices (deterministic field order) and tracks whether they have been uploaded to the cloud or are waiting for acknowledgement.</li>
+<li><strong>Background sync for canonical payloads.</strong> The UI drafts invoices locally, shows a fiscal ribbon while it sends <code>POST /api/v1/invoices</code> to Bono Pay Cloud, and waits for the HSM-backed Cloud Signing Service to reply with fiscal number, auth code, timestamp, and QR. Only after <code>status: ok</code> arrives does the UI deem the sale complete and enable receipt delivery or sync retries.</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Lessons from Odoo</p>
+<p>We reuse Odoo’s single-screen checkout, IndexedDB caching, and offline resilience but overlay fiscal-status indicators, dual-currency displays, and mobile money-native chips. The dashboard feels familiar to merchants while respecting the trust boundary: the UI never fabricates fiscal numbers or tamper-resistant hashes.</p>
 </div>
-<div class="admonition warning">
-<p class="admonition-title">Signature algorithm review</p>
-<p>The review also evaluated ECDSA P-256 vs Ed25519 for this constrained MCU.  ECDSA P-256 won because the selected secure element family (e.g., ATECC608B/SE050) already accelerates P-256, and DGI inspectors expect a curve that matches existing fiscal certs.  We treat Ed25519 as a future-proof option, but we will not ship it until the tax authority and hardware vendor certify the curve.  This signature algorithm decision is our current baseline, and any future curve must demonstrate vendor support and regulatory approval before adoption.</p>
-</div>
-<h2 id="key-management-lifecycle">Key management lifecycle<a class="headerlink" href="#key-management-lifecycle" title="Permanent link">¶</a></h2>
+<h2 id="key-screens">Key Screens<a class="headerlink" href="#key-screens" title="Permanent link">¶</a></h2>
+<h3 id="invoice-creation">Invoice creation<a class="headerlink" href="#invoice-creation" title="Permanent link">¶</a></h3>
+<p>Single-screen checkout, inspired by Odoo, keeps the product grid, order summary, and numpad visible together. Large tap targets, instant search-as-you-type, barcode scanning, and favorites speed entry. Each line item shows its DGI tax group badge and updates dual-currency totals (CDF + USD) in real time. A mandatory client classification selector (individual, company, commercial individual, professional, embassy) enables the Submit button.</p>
+<h3 id="invoice-list-search">Invoice list &amp; search<a class="headerlink" href="#invoice-list-search" title="Permanent link">¶</a></h3>
+<p>Filters for date range, client NIF, fiscal number, and status (fiscalized / queued / error) help cashiers retrieve past sales. Each row highlights the fiscal number, auth code snippet, QR preview, and a Delivery column that lists emailed, WhatsApp, PDF, or thermal print copies. Queued invoices display a yellow badge until the cloud confirms receipt.</p>
+<h3 id="client-classification-management">Client &amp; classification management<a class="headerlink" href="#client-classification-management" title="Permanent link">¶</a></h3>
+<p>This screen houses DRC client metadata (classification, tax ID, contact information) and lets finance teams update tax group defaults, multi-currency pricing, or mobile money preferences. Every client record is referenced when building canonical payloads that the Cloud Signing Service validates.</p>
+<h3 id="reports-reconciliation">Reports &amp; reconciliation<a class="headerlink" href="#reports-reconciliation" title="Permanent link">¶</a></h3>
+<p>Session dashboards show Z/X/A totals, tax-group breakdowns, offline queue depth, and DGI sync status. When a cashier closes a session, the UI calls <code>POST /api/v1/reports</code> (Z report) and displays the device signature, ledger hash, and audit export links. A “Report ready” badge stays on until DGI acknowledges the batch.</p>
+<h3 id="settings-access-controls">Settings &amp; access controls<a class="headerlink" href="#settings-access-controls" title="Permanent link">¶</a></h3>
+<p>Outlets, API keys, and roles (admin, invoicer, viewer, auditor) are managed here. Each API key is scoped to an outlet, and the UI surfaces the <code>outlet_id</code>, <code>user_id</code>/<code>api_key_id</code>, and <code>source</code> (dashboard, API, SDK, POS) so the Monotonic Counter Manager in Bono Pay Cloud can serialize numbering without conflicts.</p>
+<h2 id="ux-principles">UX Principles<a class="headerlink" href="#ux-principles" title="Permanent link">¶</a></h2>
 <ol>
-<li><strong>Activation.</strong> During provisioning, the POS/fiscal service issues <code>CFG|INIT</code> with the DGI-signed activation payload and the desired <code>device_id</code>.  The Secure Element uses that payload only to seed its internal RNG and bind the generated key pair to the fiscal identity.</li>
-<li><strong>Counter binding.</strong> The monotonic counter resides inside the SE and increments with every <code>TXN|COMMIT</code>.  The counter value is signed along with the invoice hash so auditors can prove no numbers were skipped.</li>
-<li><strong>Certificate chain.</strong> The SE exposes a public certificate that the cloud or DGI can verify; the private key never leaves the device.  A simple challenge-response during <code>QRY|STATUS</code> can prove the device still holds the key.</li>
+<li><strong>Offline-first &amp; responsive.</strong> Service Worker + IndexedDB cache the catalog, assets, and queue so the UI renders instantly on a $50 tablet even when connectivity drops.</li>
+<li><strong>Single-screen workflow.</strong> Product grid → order summary → numpad: no page refreshes required. Instant product search, barcode scans, and favorites keep interactions snappy.</li>
+<li><strong>Minimal typing.</strong> Tap, drag, and numpad entry replace keyboards. Customer selection, classification, and notes remain the only required text inputs.</li>
+<li><strong>Fiscal status ribbon.</strong> A persistent banner reports Device connected/disconnected/error with green/yellow/red states. It shows the latest fiscal number, the last auth code, and any blocking compliance warnings. Receipt printing is disabled until the Ribbon confirms fiscalization.</li>
+<li><strong>Dual-currency totals.</strong> Subtotals, VAT, and grand totals display both CDF and USD so merchants can compare against their reference rate while the canonical payload records every currency field for the Cloud Signing Service.</li>
+<li><strong>Mobile money-first payments.</strong> Payment chips for Airtel Money, M-Pesa, Orange Money, cash, and bank transfer show currency, available balance, and split-payment stacking. Payment icons stay legible even at smaller sizes.</li>
+<li><strong>Localized &amp; accessible.</strong> Language toggles (French / Lingala), high-contrast badges, and text-scaling controls keep the dashboard WCAG-friendly, especially around fiscal status and offline warnings.</li>
 </ol>
-<p>Private key backup is explicitly forbidden.  If the Secure Element is destroyed, the outlet must receive a new device and restart the activation flow.  That policy is enforced by the SE rejecting any attempt to export the key or copy it to another unit.</p>
-<h2 id="anti-cloning-and-tamper-resistance">Anti-cloning and tamper resistance<a class="headerlink" href="#anti-cloning-and-tamper-resistance" title="Permanent link">¶</a></h2>
-<p>The Secure Element arrives in a sealed USB-C, cable-only form factor with no exposed buttons or screens (DISCUSSION.md lines 7343‑7353).  Its packaging, potting compound, and fuses guard against physical tampering:</p>
-<ul>
-<li>Tamper mesh and light sensors detect when the lid is opened and immediately zeroize volatile secrets.</li>
-<li>The SE enforces voltage and clock checks; deviations trigger a lockdown that stops signing until power returns.</li>
-<li>The MCU only sees abstracted SE responses; it cannot read or write private key material, so even compromised firmware cannot clone the device.</li>
-</ul>
+<h2 id="offline-first-operations">Offline-first operations<a class="headerlink" href="#offline-first-operations" title="Permanent link">¶</a></h2>
+<p>Fiscalization always happens before anything else. When connectivity disappears, the invoice remains fiscalized (Cloud Signing Service signed) but the upload to DGI is pending. The offline queue widget sits in the footer and shows “X invoices pending cloud sync.” It is separate from the fiscal status ribbon and only tracks uploads, not fiscalization. If invoices linger for too long, the widget turns amber and surfaces a “Retry upload” action. Once connectivity returns, the Service Worker wakes up, flushes pending payloads, and updates each row’s sync badge.</p>
 <div class="admonition tip">
-<p class="admonition-title">Hardware vs software boundary</p>
-<p>Software responsibilities (UI, syncing, printing, catalog) live outside the sealed box described in the architecture spec.  The Secure Element alone performs invoice issuance, signing, counter management, timestamps, and immutable storage.</p>
+<p class="admonition-title">Offline queue vs. fiscal status</p>
+<p>Fiscal status uses green/yellow/red badges for Connected/Queued/Error states (gas green = real-time signing, yellow = invoice waiting for cloud sync, red = device or network error). The offline queue widget tracks uploads to the cloud and DGI and offers manual retry when necessary.</p>
 </div>
-<h2 id="monotonic-counters-immutable-signing">Monotonic counters &amp; immutable signing<a class="headerlink" href="#monotonic-counters-immutable-signing" title="Permanent link">¶</a></h2>
-<p>Every invoice hash that arrives via <code>TXN|PREPARE</code> is hashed again inside the MCU, then passed to the SE along with the current counter value.  The SE enforces a strict PREPARE → COMMIT cycle:</p>
-<ul>
-<li>PREPARE validates schema and nonce without touching the counter.</li>
-<li>COMMIT increments the counter, appends the entry to the hash-chained journal stored in flash, signs the entry with the private key, and returns the fiscal response (fiscal number, auth code, timestamp, QR).</li>
-</ul>
-<p>The journal entry links to the previous record via <code>prev_hash</code> so auditors can traverse the chain.  Counter increments happen inside the SE, so the host cannot skip any numbers even if it replays COMMIT after power loss.</p>
-<h2 id="signing-flow">Signing flow<a class="headerlink" href="#signing-flow" title="Permanent link">¶</a></h2>
-<pre class="mermaid"><code>sequenceDiagram
-    participant POS
-    participant MCU
-    participant SecureElement as SE
-
-    POS-&gt;&gt;MCU: Send canonical JSON + nonce
-    MCU-&gt;&gt;SE: Hash payload + counter (PREPARE)
-    SE--&gt;&gt;MCU: Nonce approval (no counter change)
-    POS-&gt;&gt;MCU: Request COMMIT with nonce
-    MCU-&gt;&gt;SE: Provide nonce, trigger counter increment
-    SE-&gt;&gt;SE: Increment counter, sign hash, store journal entry
-    SE--&gt;&gt;MCU: Signature + counter + timestamp + QR
-    MCU-&gt;&gt;POS: Fiscal response (fiscal number, auth code, timestamp)</code></pre>
-<p>The diagram captures the in-device hash-and-sign cycle: the MCU hashes the canonical payload and forwards it to the SE, the SE increments the counter, signs the entry, and streams the signed response back for printing and syncing.</p>
-<h2 id="recovery-and-policy">Recovery and policy<a class="headerlink" href="#recovery-and-policy" title="Permanent link">¶</a></h2>
-<ul>
-<li><strong>Clock protection:</strong> The SE requires signed <code>CFG|TIME</code> updates so the RTC cannot roll backward; any rollback attempt rejects new commits.</li>
-<li><strong>No backup:</strong> Private keys and counters never leave the SE; the only recovery is device replacement and reactivation.</li>
-<li><strong>Nonce governance:</strong> Nonces expire quickly (7 seconds in the protocol spec) to thwart replay; failed PREPARE/COMMIT pairs force a new nonce request.</li>
-</ul>
-<div class="admonition danger">
-<p class="admonition-title">Key backup policy</p>
-<p>Backing up the Secure Element private key is disallowed.  Attempting to clone, dump, or export the key will cause the SE to lock and refuse new URIs until reinitialized via <code>CFG|INIT</code>.</p>
-</div>
+<h2 id="delivery-fiscal-confirmation">Delivery &amp; fiscal confirmation<a class="headerlink" href="#delivery-fiscal-confirmation" title="Permanent link">¶</a></h2>
+<p>After the Cloud Signing Service replies, the UI shows a success toast with the fiscal number, auth code, timestamp, and QR preview. Receipt delivery options include email, WhatsApp share, PDF download, and browser print (thermal print via printer APIs). The dashboard also stores the ledger hash and DGI sync status for audit requests and exposes <code>POST /api/v1/reports</code> links (Z, X, A, audit export) so auditors can download sealed data without touching the USB device.</p>
+<h2 id="mermaid-wireframe-flow">Mermaid wireframe flow<a class="headerlink" href="#mermaid-wireframe-flow" title="Permanent link">¶</a></h2>
+<pre class="mermaid"><code>flowchart LR
+    "Dashboard" --&gt; "Create Invoice"
+    "Create Invoice" --&gt; "Add Items + Tax"
+    "Add Items + Tax" --&gt; "Submit to Bono Pay Cloud"
+    "Submit to Bono Pay Cloud" --&gt; "Cloud Signing Service (HSM)"
+    "Cloud Signing Service (HSM)" --&gt; "Receipt Delivery (email/WhatsApp/PDF/print)"</code></pre>
 </article>
 </div>
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>

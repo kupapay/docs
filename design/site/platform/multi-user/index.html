@@ -5,11 +5,11 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width,initial-scale=1" name="viewport"/>
-<link href="../usb-device/" rel="prev"/>
-<link href="../secure-element/" rel="next"/>
+<link href="../../cloud/dgi-integration/" rel="prev"/>
+<link href="../integrations/" rel="next"/>
 <link href="../../assets/images/favicon.png" rel="icon"/>
 <meta content="mkdocs-1.6.1, mkdocs-material-9.7.1" name="generator"/>
-<title>USB Protocol (2PC) - Bono Pay Technical Design</title>
+<title>Multi-User Access - Bono Pay Technical Design</title>
 <link href="../../assets/stylesheets/main.484c7ddc.min.css" rel="stylesheet"/>
 <link href="../../assets/stylesheets/palette.ab4e12ef.min.css" rel="stylesheet"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
@@ -22,7 +22,7 @@
 <input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
 <label class="md-overlay" for="__drawer"></label>
 <div data-md-component="skip">
-<a class="md-skip" href="#usb-fiscal-device-protocol">
+<a class="md-skip" href="#multi-user-access-control">
           Skip to content
         </a>
 </div>
@@ -46,7 +46,7 @@
 <div class="md-header__topic" data-md-component="header-topic">
 <span class="md-ellipsis">
             
-              USB Protocol (2PC)
+              Multi-User Access
             
           </span>
 </div>
@@ -184,155 +184,35 @@
 </ul>
 </nav>
 </li>
-<li class="md-nav__item md-nav__item--active md-nav__item--nested">
-<input checked="" class="md-nav__toggle md-toggle" id="__nav_3" type="checkbox"/>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_3" type="checkbox"/>
 <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
 <span class="md-ellipsis">
     
   
-    Hardware
+    Invoicing Platform
   
 
     
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
-<nav aria-expanded="true" aria-labelledby="__nav_3_label" class="md-nav" data-md-level="1">
+<nav aria-expanded="false" aria-labelledby="__nav_3_label" class="md-nav" data-md-level="1">
 <label class="md-nav__title" for="__nav_3">
 <span class="md-nav__icon md-icon"></span>
             
   
-    Hardware
+    Invoicing Platform
   
 
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="../usb-device/">
+<a class="md-nav__link" href="../overview/">
 <span class="md-ellipsis">
     
   
-    USB Fiscal Memory
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item md-nav__item--active">
-<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
-<label class="md-nav__link md-nav__link--active" for="__toc">
-<span class="md-ellipsis">
-    
-  
-    USB Protocol (2PC)
-  
-
-    
-  </span>
-<span class="md-nav__icon md-icon"></span>
-</label>
-<a class="md-nav__link md-nav__link--active" href="./">
-<span class="md-ellipsis">
-    
-  
-    USB Protocol (2PC)
-  
-
-    
-  </span>
-</a>
-<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
-<label class="md-nav__title" for="__toc">
-<span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#command-families">
-<span class="md-ellipsis">
-      
-        Command families
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#canonical-payload-checklist">
-<span class="md-ellipsis">
-      
-        Canonical payload checklist
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#sequence-diagrams">
-<span class="md-ellipsis">
-      
-        Sequence diagrams
-      
-    </span>
-</a>
-<nav aria-label="Sequence diagrams" class="md-nav">
-<ul class="md-nav__list">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#happy-path-prepare-commit">
-<span class="md-ellipsis">
-      
-        Happy path (PREPARE → COMMIT)
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#error-path-schema-or-policy-violations">
-<span class="md-ellipsis">
-      
-        Error path (schema or policy violations)
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#power-loss-recovery">
-<span class="md-ellipsis">
-      
-        Power-loss recovery
-      
-    </span>
-</a>
-</li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#failure-handling-and-rules">
-<span class="md-ellipsis">
-      
-        Failure handling and rules
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#additional-resources">
-<span class="md-ellipsis">
-      
-        Additional resources
-      
-    </span>
-</a>
-</li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../secure-element/">
-<span class="md-ellipsis">
-    
-  
-    Secure Element
+    Product Overview
   
 
     
@@ -340,11 +220,35 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../bom/">
+<a class="md-nav__link" href="../api/">
 <span class="md-ellipsis">
     
   
-    BOM &amp; Manufacturing
+    Invoicing API
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../dashboard/">
+<span class="md-ellipsis">
+    
+  
+    Web Dashboard
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../sdk/">
+<span class="md-ellipsis">
+    
+  
+    SDK &amp; Libraries
   
 
     
@@ -490,55 +394,126 @@
 </ul>
 </nav>
 </li>
-<li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle" id="__nav_6" type="checkbox"/>
+<li class="md-nav__item md-nav__item--active md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_6" type="checkbox"/>
 <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
 <span class="md-ellipsis">
     
   
-    POS Application
+    Platform &amp; Integrations
   
 
     
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
-<nav aria-expanded="false" aria-labelledby="__nav_6_label" class="md-nav" data-md-level="1">
+<nav aria-expanded="true" aria-labelledby="__nav_6_label" class="md-nav" data-md-level="1">
 <label class="md-nav__title" for="__nav_6">
 <span class="md-nav__icon md-icon"></span>
             
   
-    POS Application
+    Platform &amp; Integrations
   
 
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../pos/multi-terminal/">
+<li class="md-nav__item md-nav__item--active">
+<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+<label class="md-nav__link md-nav__link--active" for="__toc">
 <span class="md-ellipsis">
     
   
-    Multi-Terminal
+    Multi-User Access
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<a class="md-nav__link md-nav__link--active" href="./">
+<span class="md-ellipsis">
+    
+  
+    Multi-User Access
   
 
     
   </span>
 </a>
-</li>
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../pos/ui-ux/">
+<a class="md-nav__link" href="#identity-model">
 <span class="md-ellipsis">
-    
-  
-    UI/UX
-  
-
-    
-  </span>
+      
+        Identity model
+      
+    </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../pos/integrations/">
+<a class="md-nav__link" href="#roles-and-permissions">
+<span class="md-ellipsis">
+      
+        Roles and permissions
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#fiscal-numbering-under-concurrency">
+<span class="md-ellipsis">
+      
+        Fiscal numbering under concurrency
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#invoice-tagging">
+<span class="md-ellipsis">
+      
+        Invoice tagging
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#api-key-management">
+<span class="md-ellipsis">
+      
+        API key management
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#audit-trail">
+<span class="md-ellipsis">
+      
+        Audit trail
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#session-management">
+<span class="md-ellipsis">
+      
+        Session management
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../integrations/">
 <span class="md-ellipsis">
     
   
@@ -678,7 +653,31 @@
 <span class="md-ellipsis">
     
   
-    0003 - POS Technology Stack
+    0003 - Platform Technology Stack
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../adr/adr-0004/">
+<span class="md-ellipsis">
+    
+  
+    0004 - Cloud Fiscal Signing
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../adr/adr-0005/">
+<span class="md-ellipsis">
+    
+  
+    0005 - Strategic Pivot
   
 
     
@@ -694,7 +693,7 @@
 <span class="md-ellipsis">
     
   
-    Implementation
+    API Reference
   
 
     
@@ -703,6 +702,56 @@
 </label>
 <nav aria-expanded="false" aria-labelledby="__nav_9_label" class="md-nav" data-md-level="1">
 <label class="md-nav__title" for="__nav_9">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    API Reference
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../api/cloud/">
+<span class="md-ellipsis">
+    
+  
+    Cloud API
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../api/invoicing-sdk/">
+<span class="md-ellipsis">
+    
+  
+    Invoicing SDK
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_10" type="checkbox"/>
+<label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Implementation
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_10_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_10">
 <span class="md-nav__icon md-icon"></span>
             
   
@@ -728,7 +777,7 @@
 <span class="md-ellipsis">
     
   
-    Phase 1 - B2B Pilot
+    Phase 1 - Software Invoicing
   
 
     
@@ -740,7 +789,7 @@
 <span class="md-ellipsis">
     
   
-    Phase 2 - Retail
+    Phase 2 - POS &amp; Retail
   
 
     
@@ -752,45 +801,7 @@
 <span class="md-ellipsis">
     
   
-    Phase 3 - Enterprise
-  
-
-    
-  </span>
-</a>
-</li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle" id="__nav_10" type="checkbox"/>
-<label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
-<span class="md-ellipsis">
-    
-  
-    API Reference
-  
-
-    
-  </span>
-<span class="md-nav__icon md-icon"></span>
-</label>
-<nav aria-expanded="false" aria-labelledby="__nav_10_label" class="md-nav" data-md-level="1">
-<label class="md-nav__title" for="__nav_10">
-<span class="md-nav__icon md-icon"></span>
-            
-  
-    API Reference
-  
-
-          </label>
-<ul class="md-nav__list" data-md-scrollfix="">
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../api/usb-device/">
-<span class="md-ellipsis">
-    
-  
-    USB Device API
+    Phase 3 - USB Hardware
   
 
     
@@ -798,23 +809,11 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../api/cloud/">
+<a class="md-nav__link" href="../../implementation/phase-4/">
 <span class="md-ellipsis">
     
   
-    Cloud API
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../api/pos-plugin/">
-<span class="md-ellipsis">
-    
-  
-    POS Plugin API
+    Phase 4 - Enterprise
   
 
     
@@ -839,77 +838,64 @@
     </label>
 <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="#command-families">
+<a class="md-nav__link" href="#identity-model">
 <span class="md-ellipsis">
       
-        Command families
+        Identity model
       
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#canonical-payload-checklist">
+<a class="md-nav__link" href="#roles-and-permissions">
 <span class="md-ellipsis">
       
-        Canonical payload checklist
+        Roles and permissions
       
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#sequence-diagrams">
+<a class="md-nav__link" href="#fiscal-numbering-under-concurrency">
 <span class="md-ellipsis">
       
-        Sequence diagrams
-      
-    </span>
-</a>
-<nav aria-label="Sequence diagrams" class="md-nav">
-<ul class="md-nav__list">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#happy-path-prepare-commit">
-<span class="md-ellipsis">
-      
-        Happy path (PREPARE → COMMIT)
+        Fiscal numbering under concurrency
       
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#error-path-schema-or-policy-violations">
+<a class="md-nav__link" href="#invoice-tagging">
 <span class="md-ellipsis">
       
-        Error path (schema or policy violations)
+        Invoice tagging
       
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#power-loss-recovery">
+<a class="md-nav__link" href="#api-key-management">
 <span class="md-ellipsis">
       
-        Power-loss recovery
-      
-    </span>
-</a>
-</li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#failure-handling-and-rules">
-<span class="md-ellipsis">
-      
-        Failure handling and rules
+        API key management
       
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#additional-resources">
+<a class="md-nav__link" href="#audit-trail">
 <span class="md-ellipsis">
       
-        Additional resources
+        Audit trail
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#session-management">
+<span class="md-ellipsis">
+      
+        Session management
       
     </span>
 </a>
@@ -921,112 +907,171 @@
 </div>
 <div class="md-content" data-md-component="content">
 <article class="md-content__inner md-typeset">
-<h1 id="usb-fiscal-device-protocol">USB Fiscal Device Protocol<a class="headerlink" href="#usb-fiscal-device-protocol" title="Permanent link">¶</a></h1>
-<p>This page summarizes the <strong>TXN / QRY / RPT / ADM / CFG</strong> commands that flow between the untrusted POS/fiscal service cluster and the trusted USB Fiscal Memory device. The full machine-readable definition lives in the protocol specification (<code>spec/protocol-usb-fiscal-device-1.md</code> in the project root), and ADR-0001 explains why the two-phase handshake is the only compliant option (<a href="../../adr/adr-0001/">read it here</a>).</p>
-<div class="admonition warning">
-<p class="admonition-title">The DEF is the only fiscal authority</p>
-<p>ADR-0001 mandates that no receipt may reach a customer unless the DEF has fully committed it (PREPARE → COMMIT → signed response). The POS must never print or queue a receipt before receiving the COMMIT response and verifying the <code>invoice_seq</code>, <code>auth_code</code>, and device timestamp.</p>
-</div>
-<h2 id="command-families">Command families<a class="headerlink" href="#command-families" title="Permanent link">¶</a></h2>
+<h1 id="multi-user-access-control">Multi-User Access Control<a class="headerlink" href="#multi-user-access-control" title="Permanent link">¶</a></h1>
+<p>Bono Pay supports multiple users, API keys, and roles within a single merchant account. Each outlet can have many concurrent users (cashiers, managers, API integrators) submitting invoices through the API, web dashboard, or SDK — while the <strong>Monotonic Counter Manager</strong> in the Cloud Signing Service guarantees serialized fiscal numbering per outlet.</p>
+<h2 id="identity-model">Identity model<a class="headerlink" href="#identity-model" title="Permanent link">¶</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    Merchant["Merchant (NIF)"] --&gt; Outlet1["Outlet A"]
+    Merchant --&gt; Outlet2["Outlet B"]
+    Outlet1 --&gt; User1["User: Cashier 1\n(dashboard login)"]
+    Outlet1 --&gt; User2["User: Cashier 2\n(dashboard login)"]
+    Outlet1 --&gt; Key1["API Key: ERP Integration\n(server-to-server)"]
+    Outlet2 --&gt; User3["User: Manager\n(dashboard login)"]
+    Outlet2 --&gt; Key2["API Key: Mobile App\n(SDK)"]</code></pre>
 <table>
 <thead>
 <tr>
-<th>Family</th>
-<th>Primary commands</th>
-<th>Role</th>
+<th>Entity</th>
+<th>Description</th>
+<th>Identifier</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><strong>Transaction (TXN)</strong></td>
-<td><code>TXN|PREPARE</code>, <code>TXN|COMMIT</code></td>
-<td>Nonce-based 2PC that validates and signs canonical invoices before exposing the security elements.</td>
+<td><strong>Merchant</strong></td>
+<td>The legal entity registered with the DGI. Owns one or more outlets.</td>
+<td><code>merchant_nif</code></td>
 </tr>
 <tr>
-<td><strong>Query (QRY)</strong></td>
-<td><code>QRY|STATUS</code>, <code>QRY|LOG &lt;seq&gt;</code></td>
-<td>Health checks, recovery after power loss or crashes, and audit lookups.</td>
+<td><strong>Outlet</strong></td>
+<td>A physical or logical business location. Each outlet has its own fiscal counter.</td>
+<td><code>outlet_id</code></td>
 </tr>
 <tr>
-<td><strong>Reports (RPT)</strong></td>
-<td><code>RPT|Z</code>, <code>RPT|X</code>, <code>RPT|A</code></td>
-<td>Z (daily closure), X (periodic snapshot), and A (article-level) reports generated in-device.</td>
+<td><strong>User</strong></td>
+<td>A human who logs into the web dashboard. Assigned a role per outlet.</td>
+<td><code>user_id</code></td>
 </tr>
 <tr>
-<td><strong>Admin (ADM)</strong></td>
-<td><code>ADM|DUMPLOG</code>, <code>ADM|RESET</code></td>
-<td>Exporting the hash‑chained journal and resetting counters under DGI authorization.</td>
-</tr>
-<tr>
-<td><strong>Configuration (CFG)</strong></td>
-<td><code>CFG|TIME</code>, <code>CFG|INIT</code></td>
-<td>Clock synchronization, device activation, and key provisioning.</td>
+<td><strong>API Key</strong></td>
+<td>A programmatic credential for server-to-server or SDK access. Scoped to an outlet.</td>
+<td><code>api_key_id</code></td>
 </tr>
 </tbody>
 </table>
-<h2 id="canonical-payload-checklist">Canonical payload checklist<a class="headerlink" href="#canonical-payload-checklist" title="Permanent link">¶</a></h2>
-<p>Every <code>TXN|PREPARE</code> payload <strong>must</strong> follow the order in the protocol specification (<code>spec/protocol-usb-fiscal-device-1.md</code>). Include:</p>
+<h2 id="roles-and-permissions">Roles and permissions<a class="headerlink" href="#roles-and-permissions" title="Permanent link">¶</a></h2>
+<table>
+<thead>
+<tr>
+<th>Role</th>
+<th style="text-align: center;">Create invoices</th>
+<th style="text-align: center;">View invoices</th>
+<th style="text-align: center;">Generate reports</th>
+<th style="text-align: center;">Manage users/keys</th>
+<th style="text-align: center;">Manage outlet settings</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Cashier</strong></td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">Own only</td>
+<td style="text-align: center;">❌</td>
+<td style="text-align: center;">❌</td>
+<td style="text-align: center;">❌</td>
+</tr>
+<tr>
+<td><strong>Supervisor</strong></td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">All in outlet</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">❌</td>
+<td style="text-align: center;">❌</td>
+</tr>
+<tr>
+<td><strong>Manager</strong></td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">All in outlet</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">✅</td>
+</tr>
+<tr>
+<td><strong>Owner</strong></td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">All outlets</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">✅</td>
+</tr>
+<tr>
+<td><strong>API Key</strong></td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">Scoped</td>
+<td style="text-align: center;">Scoped</td>
+<td style="text-align: center;">❌</td>
+<td style="text-align: center;">❌</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Principle of least privilege</p>
+<p>Users and API keys default to the most restrictive permissions. Elevated roles must be explicitly granted by an Owner or Manager.</p>
+</div>
+<h2 id="fiscal-numbering-under-concurrency">Fiscal numbering under concurrency<a class="headerlink" href="#fiscal-numbering-under-concurrency" title="Permanent link">¶</a></h2>
+<p>When multiple users or API keys submit invoices to the same outlet simultaneously, the <strong>Monotonic Counter Manager</strong> serializes them:</p>
+<ol>
+<li>Each invoice request enters a per-outlet queue inside the Cloud Signing Service.</li>
+<li>The counter increments atomically under serializable database isolation — no gaps, no duplicates.</li>
+<li>The sealed response includes the assigned <code>fiscal_number</code> and the <code>user_id</code> or <code>api_key_id</code> that submitted the payload, providing full traceability.</li>
+</ol>
+<pre class="mermaid"><code>sequenceDiagram
+    participant C1 as Cashier 1
+    participant C2 as Cashier 2
+    participant API as API Gateway
+    participant HSM as Cloud Signing Service
+    participant Counter as Monotonic Counter
+
+    C1-&gt;&gt;API: POST /invoices (payload A)
+    C2-&gt;&gt;API: POST /invoices (payload B)
+    API-&gt;&gt;HSM: Enqueue payload A
+    API-&gt;&gt;HSM: Enqueue payload B
+    HSM-&gt;&gt;Counter: Acquire next fiscal number (serialized)
+    Counter--&gt;&gt;HSM: fiscal_number = 101
+    HSM--&gt;&gt;API: Sealed response A (fiscal_number: 101)
+    HSM-&gt;&gt;Counter: Acquire next fiscal number
+    Counter--&gt;&gt;HSM: fiscal_number = 102
+    HSM--&gt;&gt;API: Sealed response B (fiscal_number: 102)
+    API--&gt;&gt;C1: Invoice sealed (101)
+    API--&gt;&gt;C2: Invoice sealed (102)</code></pre>
+<h2 id="invoice-tagging">Invoice tagging<a class="headerlink" href="#invoice-tagging" title="Permanent link">¶</a></h2>
+<p>Every sealed invoice carries metadata identifying who submitted it:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"fiscal_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"BONO-OUTLET42-101"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"merchant_nif"</span><span class="p">:</span><span class="w"> </span><span class="s2">"123456789"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"outlet_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"OUTLET-42"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"submitted_by"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"user"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"USR-007"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"role"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cashier"</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">"source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dashboard"</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>For API key submissions, <code>submitted_by</code> contains <code>"type": "api_key"</code> and the key ID. The <code>source</code> field indicates the channel: <code>dashboard</code>, <code>api</code>, or <code>sdk</code>.</p>
+<h2 id="api-key-management">API key management<a class="headerlink" href="#api-key-management" title="Permanent link">¶</a></h2>
 <ul>
-<li>Merchant metadata (<code>merchant_nif</code>, outlet/terminal/cashier IDs, invoice type).</li>
-<li>ISO 8601 timestamp that matches the device RTC.</li>
-<li>Client + classification block (Individual, Company, Commercial Individual, Professional, Embassy).</li>
-<li>Item list with code/description, quantity, unit price, and tax group.</li>
-<li>Tax group breakdown (code, rate, base, amount) for all 14 DGI tax groups.</li>
-<li>Totals object (<code>subtotal</code>, <code>total_vat</code>, <code>total</code>, <code>currency</code>).</li>
-<li>Payments array describing each instrument/method.</li>
+<li><strong>Creation:</strong> Owners and Managers create API keys scoped to a specific outlet via the dashboard or API.</li>
+<li><strong>Rotation:</strong> Keys can be rotated without downtime — the old key remains valid for a configurable grace period (default: 24 hours).</li>
+<li><strong>Revocation:</strong> Immediate revocation is available. Revoked keys return <code>401 Unauthorized</code>.</li>
+<li><strong>Scoping:</strong> Each API key specifies which operations it can perform (e.g., create invoices only, or create + view reports).</li>
 </ul>
-<p>Duplicating this order guarantees deterministic hashes and keeps signatures reproducible per Section 5.2 of the DISCUSSION document.</p>
-<h2 id="sequence-diagrams">Sequence diagrams<a class="headerlink" href="#sequence-diagrams" title="Permanent link">¶</a></h2>
-<h3 id="happy-path-prepare-commit">Happy path (PREPARE → COMMIT)<a class="headerlink" href="#happy-path-prepare-commit" title="Permanent link">¶</a></h3>
-<pre class="mermaid"><code>sequenceDiagram
-    participant POS
-    participant FiscalService
-    participant Device
-    POS-&gt;&gt;FiscalService: TXN|PREPARE + canonical invoice
-    FiscalService-&gt;&gt;Device: PREPARE payload
-    Device--&gt;&gt;FiscalService: nonce + "ready to commit"
-    FiscalService-&gt;&gt;Device: TXN|COMMIT { "nonce": "…" }
-    Device--&gt;&gt;FiscalService: fiscal response (invoice_seq, auth_code, QR)
-    FiscalService--&gt;&gt;POS: Receipt data + security elements</code></pre>
-<h3 id="error-path-schema-or-policy-violations">Error path (schema or policy violations)<a class="headerlink" href="#error-path-schema-or-policy-violations" title="Permanent link">¶</a></h3>
-<pre class="mermaid"><code>sequenceDiagram
-    participant POS
-    participant FiscalService
-    participant Device
-    POS-&gt;&gt;FiscalService: TXN|PREPARE (malformed payload)
-    FiscalService-&gt;&gt;Device: PREPARE
-    Device--&gt;&gt;FiscalService: ERR SCHEMA_INVALID
-    FiscalService--&gt;&gt;POS: Alert cashier; show resolver UI
-    POS-&gt;&gt;FiscalService: TXN|PREPARE (canon payload retried)</code></pre>
-<h3 id="power-loss-recovery">Power-loss recovery<a class="headerlink" href="#power-loss-recovery" title="Permanent link">¶</a></h3>
-<pre class="mermaid"><code>sequenceDiagram
-    participant POS
-    participant FiscalService
-    participant Device
-    POS-&gt;&gt;FiscalService: TXN|PREPARE
-    FiscalService-&gt;&gt;Device: PREPARE
-    Device--&gt;&gt;FiscalService: nonce
-    FiscalService-&gt;&gt;Device: TXN|COMMIT
-    Device---x Device: power loss during COMMIT
-    POS-&gt;&gt;FiscalService: QRY|STATUS
-    FiscalService-&gt;&gt;Device: STATUS
-    Device--&gt;&gt;FiscalService: next_invoice_seq still 105
-    FiscalService-&gt;&gt;Device: QRY|LOG 105
-    Device--&gt;&gt;FiscalService: log_entry (or "not found")</code></pre>
-<h2 id="failure-handling-and-rules">Failure handling and rules<a class="headerlink" href="#failure-handling-and-rules" title="Permanent link">¶</a></h2>
-<div class="admonition caution">
-<p class="admonition-title">Nonces must never be reused</p>
-<p>Per ADR-0001, every COMMIT must carry the nonce issued by PREPARE. An invalid nonce yields <code>INVALID_NONCE</code> and a nonce that outlives its TTL yields <code>NONCE_EXPIRED</code>. The POS must restart the invoice flow (i.e., send a new <code>TXN|PREPARE</code> with the same canonical payload) rather than trying to reuse the old nonce.</p>
-</div>
-<p>Device errors (<code>SCHEMA_INVALID</code>, <code>STORAGE_FULL</code>, <code>CLOCK_ROLLBACK_DETECTED</code>, <code>DEVICE_REVOKED</code>) always return <code>status: "ERR"</code> with a <code>code</code> field. The POS displays contextual guidance and only retries when the error signal indicates a temporary condition (<code>DEVICE_BUSY</code>, <code>STORAGE_FULL</code> after freeing space, <code>SCHEMA_INVALID</code> after user correction).</p>
-<div class="admonition warning">
-<p class="admonition-title">No un-fiscalized receipt</p>
-<p>If the POS loses the fiscal response (COMMIT success but crash before printing), it must recover by querying <code>QRY|LOG &lt;seq&gt;</code> and reprint the missing ticket. Printing without a fiscal response violates the DRC mandate and is detectable by auditors (see ADR-0001, Section 5).</p>
-</div>
-<h2 id="additional-resources">Additional resources<a class="headerlink" href="#additional-resources" title="Permanent link">¶</a></h2>
+<h2 id="audit-trail">Audit trail<a class="headerlink" href="#audit-trail" title="Permanent link">¶</a></h2>
+<p>All user and API key actions are logged with:</p>
 <ul>
-<li>Protocol specification — <code>spec/protocol-usb-fiscal-device-1.md</code> (project root)</li>
-<li><a href="../../adr/adr-0001/">ADR-0001: Two-phase commit</a></li>
+<li><code>user_id</code> or <code>api_key_id</code></li>
+<li>Action performed (create_invoice, view_report, manage_user, etc.)</li>
+<li>Timestamp</li>
+<li>Outlet context</li>
+<li>IP address / user agent</li>
+</ul>
+<p>Audit logs are available via the dashboard (Manager/Owner) and through the <code>/api/v1/audit/actions</code> endpoint.</p>
+<h2 id="session-management">Session management<a class="headerlink" href="#session-management" title="Permanent link">¶</a></h2>
+<ul>
+<li>Dashboard sessions use secure cookies with <code>HttpOnly</code>, <code>Secure</code>, and <code>SameSite=Strict</code> attributes.</li>
+<li>Session tokens are rotated on login to prevent session fixation.</li>
+<li>Idle sessions expire after 30 minutes (configurable per merchant).</li>
+<li>API keys do not use sessions — they authenticate via <code>Authorization: Bearer &lt;api_key&gt;</code> on every request.</li>
 </ul>
 </article>
 </div>

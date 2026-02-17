@@ -9,10 +9,10 @@
       
       
       
-        <link rel="prev" href="../secure-element/">
+        <link rel="prev" href="../adr-0004/">
       
       
-        <link rel="next" href="../../fiscal/invoice-lifecycle/">
+        <link rel="next" href="../../api/cloud/">
       
       
         
@@ -23,7 +23,7 @@
     
     
       
-        <title>BOM & Manufacturing - Bono Pay Technical Design</title>
+        <title>0005 - Strategic Pivot - Bono Pay Technical Design</title>
       
     
     
@@ -72,7 +72,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#bill-of-materials-bom-manufacturing" class="md-skip">
+        <a href="#adr-0005-strategic-pivot-api-first-invoicing-platform" class="md-skip">
           Skip to content
         </a>
       
@@ -108,7 +108,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              BOM & Manufacturing
+              0005 - Strategic Pivot
             
           </span>
         </div>
@@ -394,20 +394,18 @@
       
   
   
-    
   
   
-  
     
     
     
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
         
           
           <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
@@ -417,7 +415,7 @@
   <span class="md-ellipsis">
     
   
-    Hardware
+    Invoicing Platform
   
 
     
@@ -428,12 +426,12 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
             
   
-    Hardware
+    Invoicing Platform
   
 
           </label>
@@ -446,14 +444,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../usb-device/" class="md-nav__link">
+      <a href="../../platform/overview/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    USB Fiscal Memory
+    Product Overview
   
 
     
@@ -474,14 +472,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../protocol/" class="md-nav__link">
+      <a href="../../platform/api/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    USB Protocol (2PC)
+    Invoicing API
   
 
     
@@ -502,14 +500,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../secure-element/" class="md-nav__link">
+      <a href="../../platform/dashboard/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Secure Element
+    Web Dashboard
   
 
     
@@ -527,44 +525,17 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    BOM & Manufacturing
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../platform/sdk/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    BOM & Manufacturing
+    SDK & Libraries
   
 
     
@@ -573,76 +544,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#component-cost-breakdown" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Component cost breakdown
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#total-cogs-pricing-approach" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Total COGS &amp; pricing approach
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Total COGS &amp; pricing approach">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#sensitivity-analysis" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Sensitivity analysis
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#manufacturing-considerations" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Manufacturing considerations
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -984,7 +885,7 @@
   <span class="md-ellipsis">
     
   
-    POS Application
+    Platform & Integrations
   
 
     
@@ -1000,7 +901,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    POS Application
+    Platform & Integrations
   
 
           </label>
@@ -1013,14 +914,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../pos/multi-terminal/" class="md-nav__link">
+      <a href="../../platform/multi-user/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Multi-Terminal
+    Multi-User Access
   
 
     
@@ -1041,35 +942,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../pos/ui-ux/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    UI/UX
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../pos/integrations/" class="md-nav__link">
+      <a href="../../platform/integrations/" class="md-nav__link">
         
   
   
@@ -1239,18 +1112,20 @@
       
   
   
+    
   
   
+  
     
     
     
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" checked>
         
           
           <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
@@ -1271,7 +1146,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_8">
             <span class="md-nav__icon md-icon"></span>
             
@@ -1289,7 +1164,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../adr/" class="md-nav__link">
+      <a href="../" class="md-nav__link">
         
   
   
@@ -1317,7 +1192,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../adr/adr-0001/" class="md-nav__link">
+      <a href="../adr-0001/" class="md-nav__link">
         
   
   
@@ -1345,7 +1220,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../adr/adr-0002/" class="md-nav__link">
+      <a href="../adr-0002/" class="md-nav__link">
         
   
   
@@ -1373,14 +1248,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../adr/adr-0003/" class="md-nav__link">
+      <a href="../adr-0003/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    0003 - POS Technology Stack
+    0003 - Platform Technology Stack
   
 
     
@@ -1389,6 +1264,175 @@
   
 
       </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adr-0004/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0004 - Cloud Fiscal Signing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0005 - Strategic Pivot
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0005 - Strategic Pivot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Status
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Context
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#options" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Options
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decision
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#consequences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Consequences
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#review" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Review
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1426,7 +1470,7 @@
   <span class="md-ellipsis">
     
   
-    Implementation
+    API Reference
   
 
     
@@ -1439,6 +1483,116 @@
         
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/cloud/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cloud API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/invoicing-sdk/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Invoicing SDK
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Implementation
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1490,7 +1644,7 @@
   <span class="md-ellipsis">
     
   
-    Phase 1 - B2B Pilot
+    Phase 1 - Software Invoicing
   
 
     
@@ -1518,7 +1672,7 @@
   <span class="md-ellipsis">
     
   
-    Phase 2 - Retail
+    Phase 2 - POS & Retail
   
 
     
@@ -1546,89 +1700,7 @@
   <span class="md-ellipsis">
     
   
-    Phase 3 - Enterprise
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    
-    
-    
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
-        
-          
-          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    API Reference
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_10">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    API Reference
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../api/usb-device/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    USB Device API
+    Phase 3 - USB Hardware
   
 
     
@@ -1649,42 +1721,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../api/cloud/" class="md-nav__link">
+      <a href="../../implementation/phase-4/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Cloud API
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../api/pos-plugin/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    POS Plugin API
+    Phase 4 - Enterprise
   
 
     
@@ -1732,10 +1776,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#component-cost-breakdown" class="md-nav__link">
+  <a href="#status" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Component cost breakdown
+        Status
       
     </span>
   </a>
@@ -1743,38 +1787,54 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#total-cogs-pricing-approach" class="md-nav__link">
+  <a href="#context" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Total COGS &amp; pricing approach
+        Context
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Total COGS &amp; pricing approach">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#sensitivity-analysis" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Sensitivity analysis
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#manufacturing-considerations" class="md-nav__link">
+  <a href="#options" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Manufacturing considerations
+        Options
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decision
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#consequences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Consequences
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#review" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Review
       
     </span>
   </a>
@@ -1798,127 +1858,93 @@
 
 
 
-<h1 id="bill-of-materials-bom-manufacturing">Bill of Materials (BOM) &amp; Manufacturing<a class="headerlink" href="#bill-of-materials-bom-manufacturing" title="Permanent link">&para;</a></h1>
-<p>This page captures the hardware cost structure for the USB Fiscal Memory device and the manufacturing steps required to keep the unit within the $10–15 COGS target while delivering the security required by the DRC regulators.</p>
-<h2 id="component-cost-breakdown">Component cost breakdown<a class="headerlink" href="#component-cost-breakdown" title="Permanent link">&para;</a></h2>
+<h1 id="adr-0005-strategic-pivot-api-first-invoicing-platform">ADR-0005: Strategic Pivot — API-First Invoicing Platform<a class="headerlink" href="#adr-0005-strategic-pivot-api-first-invoicing-platform" title="Permanent link">&para;</a></h1>
+<h2 id="status">Status<a class="headerlink" href="#status" title="Permanent link">&para;</a></h2>
+<p>Accepted</p>
+<h2 id="context">Context<a class="headerlink" href="#context" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Bono Pay was originally designed as a POS-hardware-first product: a Progressive Web App paired with a USB Fiscal Memory device (DEF) at every point of sale. The USB device was the trusted fiscal authority, signing invoices locally via the PREPARE → COMMIT protocol. The cloud layer existed primarily to sync sealed invoices to the DGI.</li>
+<li>After initial design work (42-task implementation plan, UX wireframes, hardware specifications, protocol definitions), the team concluded that the hardware-first approach created an unacceptable time-to-market delay:<ul>
+<li>USB firmware development, secure element integration, and DGI homologation require 9–12 months before any merchant can issue a single fiscal invoice.</li>
+<li>Per-device BOM cost ($10–15) and physical deployment logistics create barriers for the initial pilot.</li>
+<li>The Phase 1 target segment (B2B service companies, wholesalers, schools) generates invoices from accounting software and web interfaces — they do not operate POS terminals and have no use for USB hardware.</li>
+</ul>
+</li>
+<li>Competitor analysis shows that similar fiscal compliance platforms in other markets (Rwanda's EBM, Kenya's TIMS) have succeeded with cloud-first approaches, adding hardware options later for specific retail segments.</li>
+</ul>
+<h2 id="options">Options<a class="headerlink" href="#options" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>Pivot to API-first invoicing platform with phased hardware introduction (selected)</strong></li>
+<li>Phase 1: Cloud Signing Service (HSM) as the trusted fiscal authority. REST API + web dashboard + SDKs for B2B pilot.</li>
+<li>Phase 2: Add POS SDK and mobile money for retail segment. POS terminals are API consumers, not USB mediators.</li>
+<li>Phase 3: Introduce USB Fiscal Memory device (DEF) as an optional alternative signer for merchants requiring DGI hardware homologation.</li>
+<li>Phase 4: Enterprise features — ERP connectors, fleet management, analytics.</li>
+<li>Pros: Fastest path to market (3 months to Phase 1 pilot). Addresses the largest segment first (B2B). Cloud HSM delivers the same five security elements without hardware. USB hardware remains available for merchants that need it.</li>
+<li>
+<p>Cons: No offline fiscalization until Phase 3. Requires cloud infrastructure investment from day one.</p>
+</li>
+<li>
+<p><strong>Continue with hardware-first approach (original plan)</strong></p>
+</li>
+<li>Pros: Offline fiscalization from day one. Full DGI hardware compliance.</li>
+<li>
+<p>Cons: 9–12 month delay. Hardware supply chain risk. Misaligned with Phase 1 target segment. Higher upfront capital required.</p>
+</li>
+<li>
+<p><strong>Hybrid: ship cloud and hardware in parallel</strong></p>
+</li>
+<li>Pros: Both segments addressed simultaneously.</li>
+<li>Cons: Doubles the team's focus and development surface. Risk of shipping neither well. Same hardware timeline constraints apply.</li>
+</ol>
+<h2 id="decision">Decision<a class="headerlink" href="#decision" title="Permanent link">&para;</a></h2>
+<p>Pivot Bono Pay from a POS-hardware-first product to an <strong>API-first fiscal invoicing platform</strong> (think Stripe Invoices for DRC). The phasing is:</p>
 <table>
 <thead>
 <tr>
-<th>Component</th>
-<th>Example Part</th>
-<th>Qty</th>
-<th>Unit Cost (USD)</th>
-<th>Notes</th>
+<th>Phase</th>
+<th>Name</th>
+<th>Duration</th>
+<th>Trust anchor</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Secure MCU</td>
-<td>STM32L4 / NXP Kinetis (Cortex‑M4/M33)</td>
 <td>1</td>
-<td>$3.00–5.00</td>
-<td>Handles USB CDC communication, JSON parsing, signing orchestration, and counter logic.</td>
+<td>Software Invoicing</td>
+<td>3 months</td>
+<td>Cloud Signing Service (HSM)</td>
 </tr>
 <tr>
-<td>Secure Element</td>
-<td>Microchip ATECC608B / NXP SE050</td>
-<td>1</td>
-<td>$1.00–2.00</td>
-<td>Stores private keys, enforces monotonic counters, performs ECC signatures.</td>
+<td>2</td>
+<td>POS &amp; Retail</td>
+<td>3 months</td>
+<td>Cloud Signing Service (HSM)</td>
 </tr>
 <tr>
-<td>External Flash</td>
-<td>8‑16 Mbit SPI Flash</td>
-<td>1</td>
-<td>$0.50–1.00</td>
-<td>Optional journal extension when MCU flash is insufficient; protects log longevity.</td>
+<td>3</td>
+<td>USB Hardware</td>
+<td>6 months</td>
+<td>Cloud HSM + optional DEF</td>
 </tr>
 <tr>
-<td>RTC + Crystal</td>
-<td>MCU RTC with 32.768 kHz crystal or dedicated RTC IC</td>
-<td>1</td>
-<td>~$0.20</td>
-<td>Provides trusted timestamp; add ~$0.50 if battery-backed RTC required for full offline guarantee.</td>
-</tr>
-<tr>
-<td>USB interface</td>
-<td>USB‑C receptacle + ESD protection diodes</td>
-<td>1</td>
-<td>~$0.70</td>
-<td>USB‑C female, protection components, and charging circuitry keep the device compliant with host ports.</td>
-</tr>
-<tr>
-<td>Power regulation</td>
-<td>Buck/LDO + supercap (optional)</td>
-<td>1</td>
-<td>~$0.80</td>
-<td>Regulates USB power, supplies RTC backup, and protects against dirty 5 V rails.</td>
-</tr>
-<tr>
-<td>Indicator LED</td>
-<td>SMD LED + resistor</td>
-<td>1</td>
-<td>$0.05</td>
-<td>Communicates device health, sync status, and fiscalization success.</td>
-</tr>
-<tr>
-<td>PCB</td>
-<td>4‑layer PCB with controlled impedance</td>
-<td>1</td>
-<td>~$0.50</td>
-<td>Ensures solid grounding for USB security and EMI; includes tamper sensing traces.</td>
-</tr>
-<tr>
-<td>Enclosure &amp; tamper</td>
-<td>Injection molded plastic / machining + seals</td>
-<td>1</td>
-<td>$0.50–1.00</td>
-<td>Durable casing with tamper‑evident screws or potting to defend the secure element.</td>
-</tr>
-<tr>
-<td>Assembly &amp; testing</td>
-<td>SMT + firmware flashing + QA</td>
-<td>1</td>
-<td>$1.00–2.00</td>
-<td>Includes firmware programming, burn‑in, signature validation, and QA logs.</td>
-</tr>
-<tr>
-<td>Contingency &amp; logistics</td>
-<td>Freight, customs, certificates</td>
-<td>—</td>
-<td>~$0.50</td>
-<td>Covers shipping, certifications, and regulatory paperwork.</td>
+<td>4</td>
+<td>Enterprise &amp; Integrations</td>
+<td>6 months</td>
+<td>Cloud HSM + optional DEF</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Estimated materials + manufacturing:</strong> ~$10–15 per device (materials + assembly + testing + logistics). This leaves room for margin, support, and certification costs.</p>
-<h2 id="total-cogs-pricing-approach">Total COGS &amp; pricing approach<a class="headerlink" href="#total-cogs-pricing-approach" title="Permanent link">&para;</a></h2>
-<p>Bono Pay targets a $10–15 COGS for the fiscal device, which enables a retail/wholesale price in the $50–100 range (per the regulatory appendix) while accounting for logistics, certification, and support. The markup funds:</p>
+<p>The Cloud Signing Service (HSM) is the primary fiscal authority from Phase 1 onward. The USB Fiscal Memory device becomes an optional trust anchor in Phase 3, not a prerequisite. All hardware design documents are preserved in <code>docs-archive/hardware/</code> for Phase 3 reference.</p>
+<h2 id="consequences">Consequences<a class="headerlink" href="#consequences" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Merchant onboarding and activation tooling.</li>
-<li>Device registration with DGI and firmware validation.</li>
-<li>Support services for field deployment (helpdesk, monitoring).</li>
+<li><strong>Architecture:</strong> The cloud is the trusted half; client apps are untrusted. The Cloud Signing Service, Fiscal Ledger, and Monotonic Counter Manager are the core fiscal components. The USB device proxy is deferred to Phase 3.</li>
+<li><strong>Documentation:</strong> All existing docs are rewritten for the cloud-first model. POS-specific docs (<code>pos/multi-terminal.md</code>, <code>pos/ui-ux.md</code>, <code>pos/integrations.md</code>, <code>api/pos-plugin.md</code>) are archived to <code>docs-archive/</code>. ADR-0003 is revised from "POS Technology Stack" to "Platform Technology Stack."</li>
+<li><strong>Product identity:</strong> Bono Pay is positioned as fiscal invoicing infrastructure (like Stripe Invoices), not a POS system. Marketing, sales, and documentation reflect this identity.</li>
+<li><strong>Risk:</strong> If the DGI mandates hardware-based fiscal signing for all merchants before Phase 3, the USB development timeline must be accelerated. The cloud-first architecture is designed to accommodate the DEF as a drop-in alternative signer without rearchitecture.</li>
+<li><strong>Team focus:</strong> Phase 1 development focuses entirely on cloud infrastructure, REST API, web dashboard, and SDKs. No hardware or firmware work until Phase 3.</li>
 </ul>
-<h3 id="sensitivity-analysis">Sensitivity analysis<a class="headerlink" href="#sensitivity-analysis" title="Permanent link">&para;</a></h3>
-<ul>
-<li><strong>Secure Element cost doubles:</strong> If the SE price jumps to $4 (e.g., switching to an SE050 or offering extra tamper protection), the BOM climbs to ~$11.8–17.0, pressuring the price unless we offset via lower margins or operational efficiencies.</li>
-<li><strong>Microcontroller volatility:</strong> A MCU surge to $6.50 increases the upper bound above $16; mitigating actions include supplier contracts or redesigning firmware for alternative MCU families.</li>
-<li><strong>Assembly/test labor spikes:</strong> A $0.50 rise in assembly pushes COGS ~0.5 higher; automation and batch programming reduce this risk.</li>
-</ul>
-<p>Use these scenarios when negotiating with contract manufacturers and to decide whether optional components (e.g., supercap, enclosure upgrades) are worth including in every unit or offered as premium upgrades.</p>
-<h2 id="manufacturing-considerations">Manufacturing considerations<a class="headerlink" href="#manufacturing-considerations" title="Permanent link">&para;</a></h2>
-<p>Adhering to the trust boundary and regulator expectations requires more than parts pricing:</p>
-<ol>
-<li><strong>Quality assurance:</strong> Each device must pass counter increment tests, signature verification, and memory dump checks before shipment. Maintain traceability records in the production log to satisfy audits.</li>
-<li><strong>Tamper protection:</strong> The enclosure should favor tamper‑evident screws, potting, or seals so any physical intrusion invalidates the device; log this observation in the QA report.</li>
-<li><strong>Firmware control:</strong> Firmware updates occur rarely; deliver signed firmware image packages and enforce signature checks, keeping older versions for rollback if DGI rules change unexpectedly.</li>
-<li><strong>Device activation:</strong> Devices remain inert until associated with a merchant and registered with DGI. Activation includes key provisioning (either pre‑loaded keys or DGI certificate exchange) and printing the device ID on the casing for audit.</li>
-<li><strong>Logistics:</strong> Batch shipments to DRC must consider customs clearance for cryptographic hardware. Keep track of serial numbers, firmware versions, and DGI registration status to expedite homologation.</li>
-</ol>
-<div class="admonition caution">
-<p class="admonition-title">Caution</p>
-<p>Keep the $10–15 COGS goal visible during negotiations. Small increases in any component multiply across thousands of units, which can push the device past affordability thresholds mandated by the DRC market and regulators.</p>
-</div>
+<h2 id="review">Review<a class="headerlink" href="#review" title="Permanent link">&para;</a></h2>
+<p>Reevaluate if: (1) Phase 1 pilot feedback reveals that the target segment requires offline fiscalization, (2) the DGI publishes regulations mandating hardware-only fiscal signing, or (3) a competitor captures the B2B segment before Bono Pay reaches market.</p>
 
 
 

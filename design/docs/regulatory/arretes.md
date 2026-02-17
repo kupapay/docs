@@ -8,6 +8,9 @@ Bono Pay lives inside the tightly regulated world of the Facture Normalisée man
 
 Each tab below distills one arrêté with the latest implications for Bono Pay. Cross-links point to related orders so reviewers see how governance, operational rules, commercialization, and amendments intersect.
 
+!!! info "Phased compliance"
+    Bono Pay addresses these regulations in phases: **Phase 1** (Software Invoicing) uses the Cloud Signing Service (HSM) as the trusted fiscal authority. **Phase 3** introduces the USB Fiscal Memory device (DEF) for merchants requiring hardware homologation. The regulatory obligations remain constant across phases — only the trusted signer changes.
+
 === "Arrêté 032 — Governance"
 
 #### Arrêté n°032/2023 — Governance of the reform {: #arrete-032}
@@ -44,9 +47,9 @@ This is the core operational law. It forces every VAT-registered merchant to iss
 - Arrêté 016/2025 (see [below](#arrete-016-2025)) softens supplier scarcity but leaves the obligation to fiscalize every sale unchanged.
 
 **Bono Pay implications**
-- Device behavior (PREPARE/COMMIT, reports, offline sync) must map 1:1 to the operational flows mandated here.
-- Offline-first issuance is a legal requirement—not a convenience—so documentation must highlight queueing, retries, and fallback indicators.
-- Device registration, deactivation, and failure reporting need automation so DGI inspectors see the same data the law demands.
+- In Phase 1, the Cloud Signing Service (HSM) fulfills the DEF role via software. In Phase 3, the USB device provides hardware-level compliance.
+- Offline-first behavior is a legal requirement — not a convenience — so client applications must queue unsigned drafts and submit them once the cloud is reachable.
+- Outlet registration, activation, and failure reporting need automation so DGI inspectors see the same data the law demands.
 
 === "Arrêté 034 — Commercialization and market design"
 

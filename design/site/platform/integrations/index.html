@@ -5,11 +5,11 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width,initial-scale=1" name="viewport"/>
-<link href="../../architecture/data-flow/" rel="prev"/>
-<link href="../protocol/" rel="next"/>
+<link href="../multi-user/" rel="prev"/>
+<link href="../../regulatory/legal-framework/" rel="next"/>
 <link href="../../assets/images/favicon.png" rel="icon"/>
 <meta content="mkdocs-1.6.1, mkdocs-material-9.7.1" name="generator"/>
-<title>USB Fiscal Memory - Bono Pay Technical Design</title>
+<title>Integrations - Bono Pay Technical Design</title>
 <link href="../../assets/stylesheets/main.484c7ddc.min.css" rel="stylesheet"/>
 <link href="../../assets/stylesheets/palette.ab4e12ef.min.css" rel="stylesheet"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
@@ -22,7 +22,7 @@
 <input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
 <label class="md-overlay" for="__drawer"></label>
 <div data-md-component="skip">
-<a class="md-skip" href="#usb-fiscal-memory-device">
+<a class="md-skip" href="#integrations">
           Skip to content
         </a>
 </div>
@@ -46,7 +46,7 @@
 <div class="md-header__topic" data-md-component="header-topic">
 <span class="md-ellipsis">
             
-              USB Fiscal Memory
+              Integrations
             
           </span>
 </div>
@@ -184,143 +184,35 @@
 </ul>
 </nav>
 </li>
-<li class="md-nav__item md-nav__item--active md-nav__item--nested">
-<input checked="" class="md-nav__toggle md-toggle" id="__nav_3" type="checkbox"/>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_3" type="checkbox"/>
 <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
 <span class="md-ellipsis">
     
   
-    Hardware
+    Invoicing Platform
   
 
     
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
-<nav aria-expanded="true" aria-labelledby="__nav_3_label" class="md-nav" data-md-level="1">
+<nav aria-expanded="false" aria-labelledby="__nav_3_label" class="md-nav" data-md-level="1">
 <label class="md-nav__title" for="__nav_3">
 <span class="md-nav__icon md-icon"></span>
             
   
-    Hardware
+    Invoicing Platform
   
 
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
-<li class="md-nav__item md-nav__item--active">
-<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
-<label class="md-nav__link md-nav__link--active" for="__toc">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../overview/">
 <span class="md-ellipsis">
     
   
-    USB Fiscal Memory
-  
-
-    
-  </span>
-<span class="md-nav__icon md-icon"></span>
-</label>
-<a class="md-nav__link md-nav__link--active" href="./">
-<span class="md-ellipsis">
-    
-  
-    USB Fiscal Memory
-  
-
-    
-  </span>
-</a>
-<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
-<label class="md-nav__title" for="__toc">
-<span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#purpose-and-form-factor">
-<span class="md-ellipsis">
-      
-        Purpose and Form Factor
-      
-    </span>
-</a>
-<nav aria-label="Purpose and Form Factor" class="md-nav">
-<ul class="md-nav__list">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#indicators-and-tamper-responses">
-<span class="md-ellipsis">
-      
-        Indicators and Tamper Responses
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#environmental-hardening">
-<span class="md-ellipsis">
-      
-        Environmental Hardening
-      
-    </span>
-</a>
-</li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#functional-responsibilities">
-<span class="md-ellipsis">
-      
-        Functional Responsibilities
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#internal-architecture-block-diagram">
-<span class="md-ellipsis">
-      
-        Internal Architecture Block Diagram
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#operations-reports">
-<span class="md-ellipsis">
-      
-        Operations &amp; Reports
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#bom-manufacturing">
-<span class="md-ellipsis">
-      
-        BOM &amp; Manufacturing
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#comparative-positioning">
-<span class="md-ellipsis">
-      
-        Comparative Positioning
-      
-    </span>
-</a>
-</li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../protocol/">
-<span class="md-ellipsis">
-    
-  
-    USB Protocol (2PC)
+    Product Overview
   
 
     
@@ -328,11 +220,11 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../secure-element/">
+<a class="md-nav__link" href="../api/">
 <span class="md-ellipsis">
     
   
-    Secure Element
+    Invoicing API
   
 
     
@@ -340,11 +232,23 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../bom/">
+<a class="md-nav__link" href="../dashboard/">
 <span class="md-ellipsis">
     
   
-    BOM &amp; Manufacturing
+    Web Dashboard
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../sdk/">
+<span class="md-ellipsis">
+    
+  
+    SDK &amp; Libraries
   
 
     
@@ -490,55 +394,55 @@
 </ul>
 </nav>
 </li>
-<li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle" id="__nav_6" type="checkbox"/>
+<li class="md-nav__item md-nav__item--active md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_6" type="checkbox"/>
 <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
 <span class="md-ellipsis">
     
   
-    POS Application
+    Platform &amp; Integrations
   
 
     
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
-<nav aria-expanded="false" aria-labelledby="__nav_6_label" class="md-nav" data-md-level="1">
+<nav aria-expanded="true" aria-labelledby="__nav_6_label" class="md-nav" data-md-level="1">
 <label class="md-nav__title" for="__nav_6">
 <span class="md-nav__icon md-icon"></span>
             
   
-    POS Application
+    Platform &amp; Integrations
   
 
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../pos/multi-terminal/">
+<a class="md-nav__link" href="../multi-user/">
 <span class="md-ellipsis">
     
   
-    Multi-Terminal
+    Multi-User Access
   
 
     
   </span>
 </a>
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../pos/ui-ux/">
+<li class="md-nav__item md-nav__item--active">
+<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+<label class="md-nav__link md-nav__link--active" for="__toc">
 <span class="md-ellipsis">
     
   
-    UI/UX
+    Integrations
   
 
     
   </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../pos/integrations/">
+<span class="md-nav__icon md-icon"></span>
+</label>
+<a class="md-nav__link md-nav__link--active" href="./">
 <span class="md-ellipsis">
     
   
@@ -548,6 +452,121 @@
     
   </span>
 </a>
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#integration-tiers">
+<span class="md-ellipsis">
+      
+        Integration tiers
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#rest-api-integration">
+<span class="md-ellipsis">
+      
+        REST API integration
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#webhook-events">
+<span class="md-ellipsis">
+      
+        Webhook events
+      
+    </span>
+</a>
+<nav aria-label="Webhook events" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#webhook-configuration">
+<span class="md-ellipsis">
+      
+        Webhook configuration
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#erp-connectors-phase-4">
+<span class="md-ellipsis">
+      
+        ERP connectors (Phase 4)
+      
+    </span>
+</a>
+<nav aria-label="ERP connectors (Phase 4)" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#sap-s4hana">
+<span class="md-ellipsis">
+      
+        SAP S/4HANA
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#odoo">
+<span class="md-ellipsis">
+      
+        Odoo
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#custom-erp">
+<span class="md-ellipsis">
+      
+        Custom ERP
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mobile-money-integration-phase-2">
+<span class="md-ellipsis">
+      
+        Mobile money integration (Phase 2)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#pos-integration-phase-2">
+<span class="md-ellipsis">
+      
+        POS integration (Phase 2)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#security-considerations">
+<span class="md-ellipsis">
+      
+        Security considerations
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
 </li>
 </ul>
 </nav>
@@ -678,7 +697,31 @@
 <span class="md-ellipsis">
     
   
-    0003 - POS Technology Stack
+    0003 - Platform Technology Stack
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../adr/adr-0004/">
+<span class="md-ellipsis">
+    
+  
+    0004 - Cloud Fiscal Signing
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../adr/adr-0005/">
+<span class="md-ellipsis">
+    
+  
+    0005 - Strategic Pivot
   
 
     
@@ -694,7 +737,7 @@
 <span class="md-ellipsis">
     
   
-    Implementation
+    API Reference
   
 
     
@@ -703,6 +746,56 @@
 </label>
 <nav aria-expanded="false" aria-labelledby="__nav_9_label" class="md-nav" data-md-level="1">
 <label class="md-nav__title" for="__nav_9">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    API Reference
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../api/cloud/">
+<span class="md-ellipsis">
+    
+  
+    Cloud API
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../api/invoicing-sdk/">
+<span class="md-ellipsis">
+    
+  
+    Invoicing SDK
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_10" type="checkbox"/>
+<label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Implementation
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_10_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_10">
 <span class="md-nav__icon md-icon"></span>
             
   
@@ -728,7 +821,7 @@
 <span class="md-ellipsis">
     
   
-    Phase 1 - B2B Pilot
+    Phase 1 - Software Invoicing
   
 
     
@@ -740,7 +833,7 @@
 <span class="md-ellipsis">
     
   
-    Phase 2 - Retail
+    Phase 2 - POS &amp; Retail
   
 
     
@@ -752,45 +845,7 @@
 <span class="md-ellipsis">
     
   
-    Phase 3 - Enterprise
-  
-
-    
-  </span>
-</a>
-</li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle" id="__nav_10" type="checkbox"/>
-<label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
-<span class="md-ellipsis">
-    
-  
-    API Reference
-  
-
-    
-  </span>
-<span class="md-nav__icon md-icon"></span>
-</label>
-<nav aria-expanded="false" aria-labelledby="__nav_10_label" class="md-nav" data-md-level="1">
-<label class="md-nav__title" for="__nav_10">
-<span class="md-nav__icon md-icon"></span>
-            
-  
-    API Reference
-  
-
-          </label>
-<ul class="md-nav__list" data-md-scrollfix="">
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../api/usb-device/">
-<span class="md-ellipsis">
-    
-  
-    USB Device API
+    Phase 3 - USB Hardware
   
 
     
@@ -798,23 +853,11 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../api/cloud/">
+<a class="md-nav__link" href="../../implementation/phase-4/">
 <span class="md-ellipsis">
     
   
-    Cloud API
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../api/pos-plugin/">
-<span class="md-ellipsis">
-    
-  
-    POS Plugin API
+    Phase 4 - Enterprise
   
 
     
@@ -839,29 +882,38 @@
     </label>
 <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="#purpose-and-form-factor">
+<a class="md-nav__link" href="#integration-tiers">
 <span class="md-ellipsis">
       
-        Purpose and Form Factor
-      
-    </span>
-</a>
-<nav aria-label="Purpose and Form Factor" class="md-nav">
-<ul class="md-nav__list">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#indicators-and-tamper-responses">
-<span class="md-ellipsis">
-      
-        Indicators and Tamper Responses
+        Integration tiers
       
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#environmental-hardening">
+<a class="md-nav__link" href="#rest-api-integration">
 <span class="md-ellipsis">
       
-        Environmental Hardening
+        REST API integration
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#webhook-events">
+<span class="md-ellipsis">
+      
+        Webhook events
+      
+    </span>
+</a>
+<nav aria-label="Webhook events" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#webhook-configuration">
+<span class="md-ellipsis">
+      
+        Webhook configuration
       
     </span>
 </a>
@@ -870,46 +922,68 @@
 </nav>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#functional-responsibilities">
+<a class="md-nav__link" href="#erp-connectors-phase-4">
 <span class="md-ellipsis">
       
-        Functional Responsibilities
+        ERP connectors (Phase 4)
+      
+    </span>
+</a>
+<nav aria-label="ERP connectors (Phase 4)" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#sap-s4hana">
+<span class="md-ellipsis">
+      
+        SAP S/4HANA
       
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#internal-architecture-block-diagram">
+<a class="md-nav__link" href="#odoo">
 <span class="md-ellipsis">
       
-        Internal Architecture Block Diagram
+        Odoo
       
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#operations-reports">
+<a class="md-nav__link" href="#custom-erp">
 <span class="md-ellipsis">
       
-        Operations &amp; Reports
+        Custom ERP
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mobile-money-integration-phase-2">
+<span class="md-ellipsis">
+      
+        Mobile money integration (Phase 2)
       
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#bom-manufacturing">
+<a class="md-nav__link" href="#pos-integration-phase-2">
 <span class="md-ellipsis">
       
-        BOM &amp; Manufacturing
+        POS integration (Phase 2)
       
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#comparative-positioning">
+<a class="md-nav__link" href="#security-considerations">
 <span class="md-ellipsis">
       
-        Comparative Positioning
+        Security considerations
       
     </span>
 </a>
@@ -921,118 +995,225 @@
 </div>
 <div class="md-content" data-md-component="content">
 <article class="md-content__inner md-typeset">
-<h1 id="usb-fiscal-memory-device">USB Fiscal Memory Device<a class="headerlink" href="#usb-fiscal-memory-device" title="Permanent link">¶</a></h1>
-<p>Bono Pay's USB Fiscal Memory device is the trusted anchor of the fiscal compliance stack. It sits inside the trust boundary, listens to canonical payloads from the untrusted POS, and emits sealed fiscal responses that the POS prints and the cloud eventually uploads to the DGI. Every fiscalized invoice flows through this hardware so it alone controls counters, timestamps, signatures, and the immutable journal.</p>
-<div class="admonition warning">
-<p class="admonition-title">Trusted boundary</p>
-<p>Only the USB Fiscal Memory device may increment counters, sign journals, or emit authentication codes. The POS and cloud may prepare payloads and relay responses, but they must never forge or cache these sensitive elements.</p>
-</div>
-<h2 id="purpose-and-form-factor">Purpose and Form Factor<a class="headerlink" href="#purpose-and-form-factor" title="Permanent link">¶</a></h2>
-<p>The device is a compact, matte-black module roughly the size of a key fob, with a single USB-C female port on one end and a removable cable that lets merchants plug into phones, tablets, or PCs without stressing the enclosure. A subtle lock icon and a recessed blue LED speak to its security-focused purpose while staying unobtrusive in retail or mobile scenarios. Its sealed housing resists dust, drops, and the tropical heat common in the DRC, and the detachable cable lets the wiring absorb flex while the module stays solid.</p>
-<h3 id="indicators-and-tamper-responses">Indicators and Tamper Responses<a class="headerlink" href="#indicators-and-tamper-responses" title="Permanent link">¶</a></h3>
-<p>A single blue LED communicates operational states: steady when ready, blinking during PREPARE/COMMIT exchanges, amber when storage is nearing capacity, and red when a tamper or fatal error is detected. Internal tamper detection (e.g., magnetic switches or tamper-evident seals) forces the firmware into a safe state, alerts the POS with an error code, and refuses to fiscalize until servicing restores integrity. The LED and tamper logic keep the device from silently issuing invoices under suspicious conditions.</p>
-<h3 id="environmental-hardening">Environmental Hardening<a class="headerlink" href="#environmental-hardening" title="Permanent link">¶</a></h3>
-<p>The hardware is designed for dusty marketplaces, humid kiosks, and unreliable power. It runs inside an industrial-grade plastic or aluminum shell, protects electronics with potting or conformal coatings, and uses power-conditioning circuitry so brief surges do not corrupt the flash journal. Firmware guards against clock rollback by refusing to issue new entries until the onboard RTC (backed by a coin-cell or supercap) shows steady progression, and the flash storage is kept transactional so brownouts either complete or roll back cleanly.</p>
-<h2 id="functional-responsibilities">Functional Responsibilities<a class="headerlink" href="#functional-responsibilities" title="Permanent link">¶</a></h2>
-<ul>
-<li><strong>Maintain monotonic counters</strong> for every invoice type (sales, advances, credit notes, exports). The counter cannot decrement, roll back, or skip numbers, and it powers the sequential fiscal number printed on receipts.</li>
-<li><strong>Log every fiscal event</strong> in flash with hash chaining so auditors can prove immutability even when the POS is offline. The log contains invoice metadata, tax breakdowns, and references to the prior entry so tampering is detectable.</li>
-<li><strong>Apply trusted timestamps</strong> using the onboard RTC and cross-checks, ensuring each invoice record carries a chronological time even if the POS clock is manipulated.</li>
-<li><strong>Generate cryptographic authentication codes</strong> by hashing invoice details (canonical payload) and signing them inside the secure element (ATECC608/SE050). The resulting code is returned to the POS, printed, and embedded in the QR.</li>
-<li><strong>Store sealed responses</strong> until the POS confirms and prints a receipt. Responses include device ID, fiscal number, auth code, and status so the merchant never prints without a fiscalized invoice.</li>
-<li><strong>Produce reports</strong> (Z, X, A, audit export) directly from the secure journal, exporting daily closures or article-level detail on demand without involving the POS.</li>
-<li><strong>Operate offline</strong> without cloud or DGI connectivity, continuing PREPARE → COMMIT flows and buffering audit data for later sync. It only refuses invoices when flash is full, tamper is detected, or policy forbids issuance (e.g., clock rollback).</li>
-<li><strong>Emit failure states</strong> through error codes and the LED so the POS can notify cashiers and halt fiscalization rather than issuing non-compliant receipts.</li>
-</ul>
-<h2 id="internal-architecture-block-diagram">Internal Architecture Block Diagram<a class="headerlink" href="#internal-architecture-block-diagram" title="Permanent link">¶</a></h2>
-<pre class="mermaid"><code>graph LR
-    MCU([MCU &lt;br&gt;STM32L4 / Cortex-M4])
-    SE([Secure Element &lt;br&gt;ATECC608B / SE050])
-    Flash([Flash Storage])
-    RTC([RTC / Battery-backed])
-    USB([USB-C Connector])
-    MCU &lt;--&gt; SE
-    SE &lt;--&gt; Flash
-    Flash &lt;--&gt; RTC
-    RTC &lt;--&gt; USB
-    MCU --&gt; USB</code></pre>
-<p>The MCU orchestrates the PREPARE/COMMIT handshake, drives the LED/tamper GPIOs, and hands sensitive signing operations to the secure element. Flash preserves the hash-chained journal, the RTC anchors time, and the USB-C connector exposes the transactional USB CDC interface to the fiscal service mediator. All firmware paths route through this chain so the device remains a single source of truth.</p>
-<h2 id="operations-reports">Operations &amp; Reports<a class="headerlink" href="#operations-reports" title="Permanent link">¶</a></h2>
-<p>The DEF reports Z (daily closure), X (periodic/session summary), A (per-article detail), and audit exports straight from the hash-chained log, ensuring every report entry shares the same security elements as invoices. During power losses or timeouts, the PREPARE/COMMIT exchange either completes or rolls back, preventing phantom invoices. Error codes like "memory full" or "tamper" are surfaced to the POS, which halts further fiscalization and displays the LED state until maintenance resolves the issue. Because the device keeps a unique DEF ID (DEF NID) in every record, auditors can trace each invoice back to the precise hardware unit even when multiple POS terminals share the same device.</p>
-<h2 id="bom-manufacturing">BOM &amp; Manufacturing<a class="headerlink" href="#bom-manufacturing" title="Permanent link">¶</a></h2>
-<p>Target COGS stays within the $10–15 range by relying on commodity yet certified components and a minimalist enclosure. The table below captures the high-level parts list and their purpose:</p>
+<h1 id="integrations">Integrations<a class="headerlink" href="#integrations" title="Permanent link">¶</a></h1>
+<p>Bono Pay is designed as an <strong>API-first invoicing platform</strong> — every feature available in the web dashboard is also available through the REST API and SDKs. This page describes the integration tiers, partner connectors, and webhook system that allow external systems to consume sealed fiscal invoices, reports, and compliance events.</p>
+<h2 id="integration-tiers">Integration tiers<a class="headerlink" href="#integration-tiers" title="Permanent link">¶</a></h2>
+<pre class="mermaid"><code>flowchart LR
+    subgraph Tier1["Tier 1 — REST API"]
+        API["Bono Pay REST API\n(invoices, reports, audit)"]
+    end
+    subgraph Tier2["Tier 2 — SDKs"]
+        JS["JavaScript SDK"]
+        PY["Python SDK"]
+    end
+    subgraph Tier3["Tier 3 — Webhooks"]
+        WH["Webhook delivery\n(signed payloads)"]
+    end
+    subgraph Tier4["Tier 4 — ERP Connectors"]
+        SAP["SAP S/4HANA"]
+        Odoo["Odoo"]
+        Custom["Custom ERP"]
+    end
+    API --&gt; JS
+    API --&gt; PY
+    API --&gt; WH
+    WH --&gt; SAP
+    WH --&gt; Odoo
+    WH --&gt; Custom</code></pre>
 <table>
 <thead>
 <tr>
-<th>Component</th>
-<th>Example Part</th>
+<th>Tier</th>
 <th>Description</th>
-<th>Unit Cost (USD)</th>
+<th>Phase</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Tier 1 — REST API</strong></td>
+<td>Direct HTTPS calls to the Bono Pay Cloud API. Full access to invoice creation, status queries, report generation, and audit exports.</td>
+<td>Phase 1</td>
+</tr>
+<tr>
+<td><strong>Tier 2 — SDKs</strong></td>
+<td>Official client libraries (JavaScript, Python) that wrap the REST API with offline queuing, retry logic, and type-safe models.</td>
+<td>Phase 1</td>
+</tr>
+<tr>
+<td><strong>Tier 3 — Webhooks</strong></td>
+<td>Event-driven notifications pushed to customer endpoints when invoices are sealed, reports are generated, or sync errors occur. Payloads are signed for verification.</td>
+<td>Phase 2</td>
+</tr>
+<tr>
+<td><strong>Tier 4 — ERP Connectors</strong></td>
+<td>Pre-built connectors for SAP S/4HANA and Odoo that map Bono Pay's 14 tax groups to ERP tax codes, sync sealed invoices, and push acknowledgement receipts.</td>
+<td>Phase 4</td>
+</tr>
+</tbody>
+</table>
+<h2 id="rest-api-integration">REST API integration<a class="headerlink" href="#rest-api-integration" title="Permanent link">¶</a></h2>
+<p>The REST API is the foundation for all integrations. Key capabilities:</p>
+<table>
+<thead>
+<tr>
+<th>Endpoint</th>
+<th>Method</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/api/v1/invoices</code></td>
+<td>POST</td>
+<td>Submit a canonical payload for fiscalization</td>
+</tr>
+<tr>
+<td><code>/api/v1/invoices/{fiscal_number}</code></td>
+<td>GET</td>
+<td>Retrieve a sealed invoice</td>
+</tr>
+<tr>
+<td><code>/api/v1/invoices/batch</code></td>
+<td>POST</td>
+<td>Submit multiple payloads in one request</td>
+</tr>
+<tr>
+<td><code>/api/v1/reports</code></td>
+<td>POST</td>
+<td>Generate Z/X/A reports</td>
+</tr>
+<tr>
+<td><code>/api/v1/audit/export</code></td>
+<td>GET</td>
+<td>Download hash-chained journal exports</td>
+</tr>
+<tr>
+<td><code>/api/v1/outlets/{outlet_id}/status</code></td>
+<td>GET</td>
+<td>Check outlet sync health and counter</td>
+</tr>
+</tbody>
+</table>
+<p>All endpoints require TLS 1.3+, <code>Authorization: Bearer &lt;api_key&gt;</code>, and return JSON responses. See the <a href="../../api/cloud/">Cloud API Reference</a> for full request/response schemas.</p>
+<h2 id="webhook-events">Webhook events<a class="headerlink" href="#webhook-events" title="Permanent link">¶</a></h2>
+<p>Webhooks notify external systems of fiscal events in near real-time. Each webhook delivery includes:</p>
+<ul>
+<li><strong>Signed payload</strong> — HMAC-SHA256 signature in the <code>X-Bono-Signature</code> header, computed with the webhook secret.</li>
+<li><strong>Event type</strong> — identifies what happened (see table below).</li>
+<li><strong>Idempotency key</strong> — prevents duplicate processing on the receiver side.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Event</th>
+<th>Trigger</th>
+<th>Payload highlights</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>invoice.sealed</code></td>
+<td>Cloud Signing Service seals an invoice</td>
+<td><code>fiscal_number</code>, <code>auth_code</code>, <code>timestamp</code>, <code>outlet_id</code></td>
+</tr>
+<tr>
+<td><code>invoice.sync.success</code></td>
+<td>DGI acknowledges the invoice</td>
+<td><code>fiscal_number</code>, <code>dgi_status</code>, <code>acknowledged_at</code></td>
+</tr>
+<tr>
+<td><code>invoice.sync.failed</code></td>
+<td>DGI upload fails after max retries</td>
+<td><code>fiscal_number</code>, <code>error</code>, <code>retry_count</code></td>
+</tr>
+<tr>
+<td><code>report.generated</code></td>
+<td>Z/X/A report is ready</td>
+<td><code>report_id</code>, <code>type</code>, <code>download_url</code></td>
+</tr>
+<tr>
+<td><code>outlet.offline_alert</code></td>
+<td>Client drafts exceed grace period</td>
+<td><code>outlet_id</code>, <code>draft_count</code>, <code>oldest_draft_age</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="webhook-configuration">Webhook configuration<a class="headerlink" href="#webhook-configuration" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="err">POST</span><span class="w"> </span><span class="err">/api/v</span><span class="mi">1</span><span class="err">/webhooks</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="nt">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://erp.example.com/bono-events"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"events"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"invoice.sealed"</span><span class="p">,</span><span class="w"> </span><span class="s2">"report.generated"</span><span class="p">],</span>
+<span class="w">  </span><span class="nt">"secret"</span><span class="p">:</span><span class="w"> </span><span class="s2">"whsec_..."</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"active"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="p">}</span>
+</code></pre></div>
+<h2 id="erp-connectors-phase-4">ERP connectors (Phase 4)<a class="headerlink" href="#erp-connectors-phase-4" title="Permanent link">¶</a></h2>
+<p>Pre-built connectors for enterprise systems:</p>
+<h3 id="sap-s4hana">SAP S/4HANA<a class="headerlink" href="#sap-s4hana" title="Permanent link">¶</a></h3>
+<ul>
+<li>Ingest sealed invoices via IDoc or OData.</li>
+<li>Map TG01–TG14 to SAP tax codes automatically.</li>
+<li>Push journal entries to FI/CO modules.</li>
+<li>Reconcile fiscal reports with SAP cash management.</li>
+</ul>
+<h3 id="odoo">Odoo<a class="headerlink" href="#odoo" title="Permanent link">¶</a></h3>
+<ul>
+<li>Sync sealed invoices to Odoo's <code>account.move</code> model.</li>
+<li>Map tax groups to Odoo fiscal positions.</li>
+<li>Auto-generate Odoo payment entries from Bono Pay payment data.</li>
+<li>Dashboard widget showing DGI sync status.</li>
+</ul>
+<h3 id="custom-erp">Custom ERP<a class="headerlink" href="#custom-erp" title="Permanent link">¶</a></h3>
+<ul>
+<li>Use the webhook API (Tier 3) to receive events.</li>
+<li>Use the REST API (Tier 1) to pull invoices and reports on demand.</li>
+<li>Reference the canonical payload schema in <code>spec/schema-tax-engine-1.md</code> for field mapping.</li>
+</ul>
+<h2 id="mobile-money-integration-phase-2">Mobile money integration (Phase 2)<a class="headerlink" href="#mobile-money-integration-phase-2" title="Permanent link">¶</a></h2>
+<p>Bono Pay supports mobile money as a payment method within invoices:</p>
+<table>
+<thead>
+<tr>
+<th>Provider</th>
+<th>Integration method</th>
 <th>Notes</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Secure MCU</td>
-<td>STM32L4 / NXP Kinetis</td>
-<td>Controls the PREPARE/COMMIT flow, orchestrates peripherals, and runs watchdog-backed firmware</td>
-<td>3.00–5.00</td>
-<td>ARM Cortex-M4/M33 with crypto accelerators</td>
+<td>M-Pesa</td>
+<td>API callback</td>
+<td>Payment confirmation triggers invoice submission</td>
 </tr>
 <tr>
-<td>Secure Element</td>
-<td>ATECC608B / SE050</td>
-<td>Stores private keys, performs ECDSA (or EdDSA) signing, enforces tamper/protection policies</td>
-<td>1.00–2.00</td>
-<td>Certified for FIPS/CC; no private key leaks</td>
+<td>Airtel Money</td>
+<td>API callback</td>
+<td>Same flow as M-Pesa</td>
 </tr>
 <tr>
-<td>Flash Storage</td>
-<td>SPI NOR Flash (4–16 MB)</td>
-<td>Hash-chained journal, report logs, firmware rollback</td>
-<td>0.50–1.50</td>
-<td>Fast writes with transactional support</td>
-</tr>
-<tr>
-<td>RTC</td>
-<td>DS3231 / integrated RTC</td>
-<td>Trusted timestamp source with battery/supercap backup</td>
-<td>0.50–0.75</td>
-<td>Prevents time rollback abuse</td>
-</tr>
-<tr>
-<td>USB Interface</td>
-<td>USB-C connector, power conditioning</td>
-<td>10 Gbps-capable port with ESD protection and surge filtering</td>
-<td>0.50–1.00</td>
-<td>Provides the only external I/O</td>
-</tr>
-<tr>
-<td>Indicators &amp; Sensors</td>
-<td>LED + tamper switch</td>
-<td>Single status LED plus tamper detection switches/magnets</td>
-<td>0.25–0.40</td>
-<td>LED shows ready/error states; tamper forces safe mode</td>
-</tr>
-<tr>
-<td>Mechanical &amp; PCB</td>
-<td>4-layer PCB, enclosure, detachable cable</td>
-<td>Rugged board and housing with molded USB-C cable (or reinforced jack)</td>
-<td>2.00–3.00</td>
-<td>Includes EMI shielding, conformal coat, tooling</td>
-</tr>
-<tr>
-<td>Misc.</td>
-<td>Assembly, calibration</td>
-<td>Factory assembly, security laser etching, verification</td>
-<td>0.50–1.00</td>
-<td>Includes serialization of DEF NID</td>
+<td>Orange Money</td>
+<td>API callback</td>
+<td>Same flow as M-Pesa</td>
 </tr>
 </tbody>
 </table>
-<p><em>Total COGS targets $10–15 per unit while still supporting audit-grade hardware and tamper detection.</em></p>
-<h2 id="comparative-positioning">Comparative Positioning<a class="headerlink" href="#comparative-positioning" title="Permanent link">¶</a></h2>
-<p>Compared to Italian fiscal memories and other African Electronic Fiscal Devices (EFDs), the Bono Pay DEF matches the same sequential counters, Z/X/A reports, and tamper-proof journal but adds a detachable USB-C cable that suits modern tablets and mobile cashiers. Against crypto-focused hardware wallets, it borrows their secure element model (isolating private keys, enforcing monotonic counters) while extending it with a dedicated invoice journal, RTC, and DGI-friendly reporting. These similarities keep certification straightforward while differentiating Bono Pay through its tight integration with the offline-first POS, local fiscal service mediator, and DGI sync pipeline.</p>
+<p>Mobile money payments are recorded in the invoice's <code>payments</code> array with <code>method: "mobile_money"</code> and the provider reference. The payment status does not affect fiscalization — invoices can be sealed before or after payment confirmation.</p>
+<h2 id="pos-integration-phase-2">POS integration (Phase 2)<a class="headerlink" href="#pos-integration-phase-2" title="Permanent link">¶</a></h2>
+<p>In Phase 2, point-of-sale systems connect to Bono Pay as API consumers:</p>
+<ul>
+<li>POS terminals submit canonical payloads via the REST API or SDK.</li>
+<li>The POS SDK handles offline queuing, retry logic, and receipt rendering.</li>
+<li>Multi-terminal outlets share a single fiscal counter via the Monotonic Counter Manager.</li>
+<li>See <a href="../multi-user/">Multi-User Access Control</a> for details on terminal/user identity.</li>
+</ul>
+<h2 id="security-considerations">Security considerations<a class="headerlink" href="#security-considerations" title="Permanent link">¶</a></h2>
+<ul>
+<li>All integrations authenticate via API keys scoped to specific outlets and permissions.</li>
+<li>Webhook payloads are signed with HMAC-SHA256; receivers must verify the signature before processing.</li>
+<li>ERP connectors use OAuth 2.0 or certificate-based authentication for the ERP side.</li>
+<li>API keys can be rotated and revoked without downtime.</li>
+<li>Rate limiting protects the API from abuse (default: 100 req/s per API key).</li>
+</ul>
 </article>
 </div>
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>

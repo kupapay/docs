@@ -1,57 +1,103 @@
-# Phase 3 — Enterprise
+# Phase 3 — USB Hardware (DEF Homologation)
 
-Phase 3 expands the Bono Pay platform beyond the pilot and retail deployments by preparing for a **6‑month enterprise launch** where **1,000+ outlets** (multi-branch retailers, logistics fleets, franchise networks) rely on our fiscal stack for compliance, analytics, and interoperability. The work inherits everything from Phases 1 and 2 (PREPARE → COMMIT trust boundary, multi-terminal orchestration, offline sync, cloud automation, and compliance tooling) and adds enterprise-grade integration, fleet/dashboards, and analytics so large customers can connect ERPs, consume webhooks, and manage thousands of devices without violating the trust boundary.
+Phase 3 introduces the **USB Fiscal Memory device (DEF)** as an optional trust anchor for merchants who need full hardware homologation with the DGI. The Cloud Signing Service remains first-class — the DEF is an alternative signer that can replace or augment the cloud HSM for specific outlets. This 6-month phase (September 2026 – February 2027) delivers the firmware, dual-mode signing architecture, and DGI certification.
 
 ## Objectives
 
-- **Scope:** Extend Phase 1+2 deliverables to support distributed enterprise fleets with ERP connectors, webhook API, fleet management controls, multi-branch dashboards, and advanced analytics.
-- **Target:** 1,000+ merchant locations spread across multiple branches or regions, synchronized via the cloud sync agent and dashboard, where every invoice still carries the hardware-generated fiscal number, security hashes, and report outputs.
-- **Duration:** 6 months (September 2026 through February 2027) with monthly milestones for integrations, fleet roll‑outs, analytics, compliance automation, and resilience/observability improvements.
-- **Reference artifacts:** `spec/architecture-kutapay-system-1.md`, `spec/design-cloud-api-1.md`, `spec/design-pos-plugin-api-1.md`, `spec/process-fiscal-reports-1.md`, `spec/schema-tax-engine-1.md`, `spec/protocol-usb-fiscal-device-1.md`, `design/docs/cloud/architecture.md`, `design/docs/cloud/offline-sync.md`, `design/docs/pos/integrations.md`, `design/docs/fiscal/reports.md`, `design/docs/pos/multi-terminal.md`.
+- **Scope:** USB Fiscal Memory firmware, dual-mode signing (Cloud HSM or DEF), device provisioning, and DGI hardware certification.
+- **Target:** Merchants requiring DEF homologation; cloud-only merchants remain unaffected.
+- **Duration:** 6 months with monthly milestones.
+
+## Dual-mode signing architecture
+
+```mermaid
+flowchart LR
+    Client["Client App"] --> API["Bono Pay Cloud API"]
+    API --> Router{"Signing\nmode?"}
+    Router -->|Cloud mode| HSM["Cloud Signing Service (HSM)"]
+    Router -->|DEF mode| Proxy["USB Device Proxy"]
+    Proxy --> DEF["USB Fiscal Memory\n(DEF)"]
+    HSM --> Ledger["Fiscal Ledger"]
+    DEF --> Ledger
+    Ledger --> Sync["Sync Agent"]
+    Sync --> DGI["DGI MCF / e-MCF"]
+```
+
+Each outlet is configured with a signing mode (`cloud` or `def`). The API routes canonically identical payloads to the appropriate signer. Both signers produce the same five security elements and write to the same Fiscal Ledger, ensuring reports, audit exports, and DGI uploads are uniform regardless of signing mode.
 
 ## Epics
 
-1. **Enterprise integration fabric (ERP connectors + webhook API)**
-   - **Description:** Build a catalog of ERP connectors and a webhook-based API layer so enterprise finance teams can automatically pull sealed invoices, reconcile fiscal reports, and integrate with core ERP workflows while honoring the trust boundary.
-   - **Acceptance criteria:**
-     - ERP connectors for at least two platforms (e.g., SAP S/4HANA and Odoo) that ingest sealed invoices, map TG01–TG14 tax groups, and push acknowledgement receipts back to the fiscal service.
-     - A webhook API that streams fiscal events (invoice sealed, report generated, sync failure) to customer endpoints using signed payloads that mirror `spec/design-cloud-api-1.md`.
-     - Connectors and webhooks expose canonical metadata (fiscal number, device ID, branch ID, reporting hashes) so CFOs can reconcile with their ERP-ledgers.
-   - **Dependencies:** `design/docs/pos/integrations.md`, `spec/design-pos-plugin-api-1.md`, `spec/design-cloud-api-1.md`, `kutapay_technical_design.md` integration priorities, `.github/copilot-instructions.md` (security/integration guidance).
-   - **Estimated effort:** 5 weeks to build connectors + 2 weeks to instrument webhook delivery, retries, and documentation.
+### 1. USB Fiscal Memory firmware
 
-2. **Multi-branch fleet management & dashboard**
-   - **Description:** Enable Bono Pay Cloud to operate and monitor thousands of outlets: device registration, fleet-wide health, configuration drift alerts, and short/long-lived dashboard views (per-branch + consolidated).
-   - **Acceptance criteria:**
-     - Dashboard surfaces device health (from `/devices/{device_id}/health`), queue depth, pending DGI uploads, and branch-level sync status with drilldowns to multi-terminal POS IDs.
-     - Fleet management workflow for onboarding/replacing a DEF per outlet, including revoke/regenerate flows tied to `spec/protocol-usb-fiscal-device-1.md` and `spec/design-cloud-api-1.md`.
-     - Integration with the offline sync state machine (`design/docs/cloud/offline-sync.md`) so operators know when uploads are pending and can trigger retries per branch.
-   - **Dependencies:** `design/docs/cloud/architecture.md`, `design/docs/cloud/offline-sync.md`, `spec/design-cloud-api-1.md`, `spec/infrastructure-dgi-integration-1.md`, `design/docs/implementation/roadmap.md`, `memory-bank/context-map.md`.
-   - **Estimated effort:** 4 weeks to implement dashboard/front-end + 2 weeks for fleet automation and playbooks.
+**Description:** Develop the firmware for the USB Fiscal Memory device that implements the PREPARE/COMMIT protocol, monotonic counter, ECDSA signing via the secure element, hash-chained journal, and Z report generation.
 
-3. **Advanced analytics & compliance reporting at scale**
-   - **Description:** Offer advanced analytics (branch trends, tax-group heatmaps, anomaly detection) built on the immutable journal plus automation for Z/X/A/audit exports so auditors can trust the data without manual requests.
-   - **Acceptance criteria:**
-     - Analytics feeds derived from `spec/process-fiscal-reports-1.md` that highlight branch-level totals per TG01–TG14, differences between manual and automated exports, and queue aging.
-     - Automated report publication hooks that push Z/X/A exports and audit chunks to DGI channels with notification webhooks and retention policies.
-     - Tax engine validation (per `spec/schema-tax-engine-1.md`) ensures analytics respect client classification rules, rounding, and manifest versions.
-   - **Dependencies:** `spec/process-fiscal-reports-1.md`, `design/docs/fiscal/reports.md`, `spec/schema-tax-engine-1.md`, `design/docs/cloud/dgi-integration.md`.
-   - **Estimated effort:** 3 weeks for analytics pipelines + 2 weeks for report automation and audit exports.
+**Acceptance criteria:**
 
-4. **Enterprise-grade resiliency & trust boundary compliance**
-   - **Description:** Harden the firmware/service stack and guidance so the expanded fleet never loosens the trust boundary (no new paths for the POS to write fiscal numbers or tamper with journals) while delivering enterprise SLAs.
-   - **Acceptance criteria:**
-     - Firmware/service automation that enforces PREPARE/COMMIT (per `spec/protocol-usb-fiscal-device-1.md`) even under network partitions or rollback scenarios, plus documented recovery instructions.
-     - Enterprise incident runbooks covering power/fiber outages, nonce exhaustion, and multi-terminal collisions, referencing `design/docs/hardware/secure-element.md` and `design/docs/architecture/trust-boundary.md`.
-     - Monitoring & alerts for audit log integrity (hash chains, sequential counters) with auto-remediation if anomalies appear.
-   - **Dependencies:** `design/docs/hardware/secure-element.md`, `design/docs/architecture/trust-boundary.md`, `spec/protocol-usb-fiscal-device-1.md`, `docs/adr/adr-0002-signature-algorithm.md` (once written), `design/docs/pos/multi-terminal.md`.
-   - **Estimated effort:** 4 weeks of hardening plus 2 weeks of documentation/testing.
+- PREPARE validates the canonical payload schema and returns a nonce without incrementing counters.
+- COMMIT atomically increments the fiscal number, signs the payload, generates the timestamp and QR code, and appends to the hash-chained journal.
+- Firmware generates Z reports from the local journal with sequence ranges, per-tax-group totals, and journal hashes.
+- Power-loss recovery: interrupted COMMIT does not produce orphan fiscal numbers.
 
-5. **Operational excellence & change control**
-   - **Description:** Institutionalize change control, scalability, and support practices so enterprise customers can roll out new branches, update tax rules, and respond to DGI changes without breaking existing invoices.
-   - **Acceptance criteria:**
-     - Branch onboarding/outage playbooks tied to `design/docs/cloud/architecture.md` and `design/docs/implementation/phase-2.md`, covering device provisioning, ERP connector configuration, and compliance checklists.
-     - Change control process for tax manifest updates, firmware releases, and webhook API changes with regression testing against `spec/schema-tax-engine-1.md` and `spec/process-fiscal-reports-1.md`.
-     - Enterprise support KPIs (MTTR for device replacement, SLA for DGI upload, audit readiness) documented and tracked via the dashboard.
-   - **Dependencies:** `design/docs/implementation/roadmap.md`, `memory-bank/context-map.md`, `design/docs/cloud/architecture.md`, `spec/schema-tax-engine-1.md`, `design/docs/pos/ui-ux.md`.
-   - **Estimated effort:** 4 weeks for playbooks + 2 weeks for automation and KPI reporting.
+**Estimated effort:** 8 weeks of firmware development + 2 weeks of hardware-in-the-loop testing.
+**Dependencies:** Hardware docs in `docs-archive/hardware/`, `spec/protocol-usb-fiscal-device-1.md`.
+
+### 2. USB Device Proxy service
+
+**Description:** Build a local daemon/service that bridges the Cloud API to the USB device via USB CDC. The proxy receives canonical payloads from the cloud, executes PREPARE/COMMIT on the DEF, and returns the sealed response.
+
+**Acceptance criteria:**
+
+- Proxy exposes a local REST/IPC interface that the Cloud API calls when the outlet is in DEF mode.
+- Handles USB CDC framing, nonce lifecycle, and retry logic.
+- Reports device health (counter, firmware version, free memory) back to the cloud for dashboard display.
+- Auto-starts at boot; reconnects on USB disconnect.
+
+**Estimated effort:** 3 weeks.
+**Dependencies:** `spec/protocol-usb-fiscal-device-1.md`.
+
+### 3. Device provisioning & certificate management
+
+**Description:** Build the provisioning workflow that registers a DEF with the Cloud, binds it to an outlet, provisions its signing certificate, and manages key rotation.
+
+**Acceptance criteria:**
+
+- Cloud registry tracks DEF serial, activation token, certificate, and firmware version per outlet.
+- Activation flow binds a DEF to exactly one outlet (one-to-one mapping).
+- Certificate rotation and revocation flows are documented and automated.
+- Dashboard shows device status, certificate expiry, and firmware version.
+
+**Estimated effort:** 2 weeks.
+**Dependencies:** `design/docs/cloud/architecture.md`.
+
+### 4. Dual-mode integration & testing
+
+**Description:** Ensure that Cloud HSM and DEF signers produce interchangeable sealed responses and that reports, audit exports, and DGI uploads work identically regardless of signing mode.
+
+**Acceptance criteria:**
+
+- Same canonical payload produces structurally identical sealed responses from both signers (differing only in `fiscal_authority_id` and signature bytes).
+- Fiscal Ledger, reports, and audit exports are agnostic to signing source.
+- Switching an outlet from cloud to DEF mode (or vice versa) is seamless — counter continuity is maintained.
+
+**Estimated effort:** 2 weeks for integration testing.
+
+### 5. DGI hardware homologation
+
+**Description:** Prepare and submit the DEF for DGI homologation, including documentation, test evidence, and physical device submission.
+
+**Acceptance criteria:**
+
+- Homologation dossier includes: firmware specifications, security element generation proof, audit trail samples, Z/X/A report samples, and power-loss recovery evidence.
+- DEF passes DGI technical committee review.
+- Contingency plan: merchants can operate in cloud mode while homologation is pending.
+
+**Estimated effort:** 4 weeks for documentation + 4 weeks for DGI review cycle.
+**Dependencies:** `design/docs/regulatory/legal-framework.md`, `design/docs/regulatory/arretes.md`.
+
+## Risks
+
+!!! warning "Phase 3 Risks"
+    - USB hardware BOM ($10–15 target) may be difficult to achieve with secure MCU, SE, flash, and RTC. Supply chain issues could delay production.
+    - DGI homologation timelines are unpredictable. Cloud mode serves as the fallback.
+    - Maintaining two signing paths increases testing surface area. Invest in automated dual-mode regression tests.
+    - Field deployment of hardware in DRC conditions (power instability, heat, humidity) requires ruggedized design and extensive field testing.

@@ -1,10 +1,10 @@
 # Implementation Roadmap
 
 ## Overview
-This document lays out the phased rollout for Bono Pay’s fiscal compliance platform, beginning with a tightly scoped B2B pilot, scaling through retail and restaurant multi-terminal deployments, and culminating in an enterprise-grade offering with ERP/webhook integrations and analytics. Each phase has a fixed duration (Phase 1 & Phase 2 are three months each, Phase 3 spans six months) and builds on the architecture, hardware, and fiscal-engine work captured earlier in the technical design docs.
+
+This document lays out the phased rollout for Bono Pay's fiscal invoicing platform, beginning with a software-first B2B pilot, scaling through POS and retail integrations, adding optional USB hardware for merchants that need DEF homologation, and culminating in enterprise-grade connectors and analytics. Each phase builds on the architecture, cloud signing, and fiscal engine work captured throughout these docs.
 
 ## Timeline
-The Gantt chart below visualizes the overlapping deliverables, dependencies, and validation checkpoints that keep the rollout on schedule.
 
 ```mermaid
 gantt
@@ -12,80 +12,97 @@ gantt
     dateFormat  YYYY-MM-DD
     axisFormat  %b %d
 
-    section Phase 1 — B2B Pilot (3 months)
-    USB firmware + PREPARE/COMMIT validation :crit, 2026-03-01, 90d
-    Single-terminal POS & fiscal service MVP :active, 2026-03-01, 90d
-    Manual DGI compliance tooling : 2026-04-01, 60d
-    Pilot homologation & client onboarding : 2026-05-01, 60d
+    section Phase 1 — Software Invoicing (3 months)
+    Cloud Signing Service + Fiscal Ledger MVP :crit, 2026-03-01, 90d
+    REST API + Tax Engine (14 DGI groups) :active, 2026-03-01, 90d
+    Web Dashboard MVP : 2026-03-15, 75d
+    JavaScript and Python SDK : 2026-04-01, 60d
+    B2B pilot — 10 clients : 2026-05-01, 30d
 
-    section Phase 2 — Retail & Restaurants (3 months)
-    Multi-terminal mediator + fiscal queue : 2026-06-01, 90d
-    Cloud sync + automatic DGI upload : 2026-06-15, 75d
-    Full report suite (Z/X/A) & audit export readiness : 2026-07-01, 60d
-    Mobile-waiter experience + UI polish : 2026-07-15, 45d
+    section Phase 2 — POS and Retail (3 months)
+    POS SDK + multi-terminal support : 2026-06-01, 90d
+    Offline queue hardening : 2026-06-15, 60d
+    Mobile money integration : 2026-07-01, 60d
+    Webhook event system : 2026-07-15, 45d
+    Retail pilot — 100 outlets : 2026-08-01, 30d
 
-    section Phase 3 — Enterprise (6 months)
-    ERP connectors + webhook API : 2026-09-01, 150d
-    Fleet management + multi-branch dashboard : 2026-10-01, 150d
-    Advanced analytics & compliance automation : 2026-11-01, 120d
+    section Phase 3 — USB Hardware (6 months)
+    USB Fiscal Memory firmware : 2026-09-01, 120d
+    DEF homologation prep : 2026-10-01, 90d
+    Cloud + DEF dual-mode signing : 2026-11-01, 90d
+    DGI hardware certification : 2027-01-01, 60d
+
+    section Phase 4 — Enterprise (6 months)
+    ERP connectors — SAP and Odoo : 2027-03-01, 120d
+    Fleet management dashboard : 2027-04-01, 90d
+    Advanced analytics : 2027-05-01, 90d
+    Multi-country expansion research : 2027-06-01, 60d
 ```
 
-## Phase 1 — B2B Pilot
+## Phase 1 — Software Invoicing
 
-### Milestones
-- Finish USB Fiscal Memory firmware that implements the PREPARE → COMMIT cycle, immutable journal, and report generation.
-- Deliver the single-terminal POS + fiscal service bundle with canonical payload serializer, tax engine UI, and receipt printer integration.
-- Ship manual DGI compliance tooling (CSV export, audit dump, Z/X/A report generation) to support homologation.
-- Onboard the first 10 pilot clients (service companies, wholesalers, schools) and validate the offline-first behavior together with the cloud sync queue.
+The foundation phase. Delivers the API-first invoicing platform with cloud fiscal signing, the tax engine, web dashboard, and SDKs. Target: 10 B2B pilot clients (service companies, wholesalers, schools).
 
-### Dependencies
-- Architecture overview/trust boundary docs (design/docs/architecture/*) and spec/architecture-kutapay-system-1.md to prove the zones of trust before device deployment.
-- Hardware pages (design/docs/hardware/*.md) and the USB device protocol to fix the BOM, power/performance targets, and cable/RTC constraints.
-- Fiscal engine docs (design/docs/fiscal/*) so billing flows, security elements, and reports align with the canonical payload expectations.
+**Key deliverables:**
 
-### Risks
-!!! warning "Phase 1 Risks"
-    - The DGI MCF/e-MCF API remains undefined, so the pilot’s compliance tooling may need rework once the official spec lands.
-    - Hitting the $10–15 BOM target while integrating secure MCU, SE, flash, and RTC hardware is tight; supply chain or yield issues could delay deployment.
-    - Field testing in DRC conditions could expose unexpected offline/latency behavior before the cloud queue matures.
+- Cloud Signing Service (HSM) + Monotonic Counter Manager + Fiscal Ledger
+- REST API with full invoice lifecycle (create, void, refund, credit note)
+- Tax Engine enforcing all 14 DGI tax groups + client classification
+- Web Dashboard for invoice management, reports, and outlet administration
+- JavaScript and Python SDKs with offline queue support
+- Z/X/A reports and audit export from the Fiscal Ledger
+- Manual DGI compliance tooling (CSV/audit dump) until MCF/e-MCF API lands
 
-## Phase 2 — Retail & Restaurants
+See [Phase 1 detail](phase-1.md) for epics, acceptance criteria, and dependencies.
 
-### Milestones
-- Enable the multi-terminal mediator service so many POS terminals can queue payloads against a single outlet-level USB device.
-- Launch the cloud sync stack with deferred upload, retry logic, and automatic DGI upload once connectivity returns.
-- Expand the reporting suite to include X and A reports, audit export hooks, and dashboard drilldowns.
-- Polish the mobile-waiter UX, multi-language indicators, and notifications for offline status and device disconnect events.
+## Phase 2 — POS & Retail
 
-### Dependencies
-- Completion of Phase 1 deliverables so the baseline hardware + POS + compliance tooling has been proven in production pilots.
-- Cloud architecture, offline-sync, and DGI integration docs (design/docs/cloud/*.md) that describe sync states, conflict resolution, and unknowns that surfaced in the spike.
-- POS UX and multi-terminal design docs to guide the mediator UI, LAN discovery, and concurrency handling.
+Extends the platform to physical retail by adding POS SDK integration, multi-terminal support, mobile money payments, and the webhook event system. Target: 100 retail outlets.
 
-### Risks
-!!! warning "Phase 2 Risks"
-    - Ensuring sequential fiscal numbers when dozens of terminals write to one device stresses the mediator and the hash-chained journal; race conditions must be fully exercised.
-    - The offline cache/sync queue must survive long outages (48–72h) without data loss or duplicate uploads, especially over unreliable networks.
-    - DGI readiness and regulatory approvals for auto-uploading sealed invoices could arrive late, requiring feature toggles or manual overrides.
+**Key deliverables:**
 
-## Phase 3 — Enterprise
+- POS SDK that wraps the Cloud API with receipt rendering and offline queue
+- Multi-terminal concurrency via the existing Monotonic Counter Manager
+- Mobile money integration (M-Pesa, Airtel Money, Orange Money)
+- Webhook API for real-time event streaming to external systems
+- Enhanced dashboard with shift management and supervisor views
+- Observability and alerting for fleet operations
 
-### Milestones
-- Build ERP connectors, webhook endpoints, and webhook validation for SAP/Odoo partners so enterprise clients can sync to their ecosystems.
-- Deliver fleet management and multi-branch dashboards for centralized monitoring, device health, and audit trails.
-- Implement advanced analytics, automated alerting, and audit export automation for regulatory reviews.
+See [Phase 2 detail](phase-2.md) for epics, acceptance criteria, and dependencies.
 
-### Dependencies
-- Full completion of Phases 1 & 2 so hardware, POS, sync, and reporting layers are stable.
-- API reference docs (design/docs/api/*.md) to describe device and cloud endpoints as ownership shifts to partner integrators.
-- Roadmap and implementation guidance from previous phases so enterprise teams inherit tested automation and risk mitigations.
+## Phase 3 — USB Hardware
 
-### Risks
-!!! warning "Phase 3 Risks"
-    - ERP and webhook integrations add API surface area that must safely handle high-volume invoice uploads and retries.
-    - Multi-branch fleets amplify monitoring, firmware upgrade, and provisioning complexity—lacking tooling here could stall adoption.
-    - Unforeseen regulatory changes (e.g., signature algorithm shifts or new DGI fields) during this six-month phase could require re-validation.
+Introduces the USB Fiscal Memory device (DEF) as an optional trust anchor for merchants who need full DEF homologation. The cloud remains first-class; the DEF is an alternative signer.
+
+**Key deliverables:**
+
+- USB Fiscal Memory firmware (PREPARE/COMMIT protocol, immutable journal)
+- Dual-mode architecture: Cloud HSM or DEF can sign invoices per outlet
+- Device provisioning, activation, and certificate management
+- Cloud sync for DEF-signed invoices (same Sync Agent pipeline)
+- DGI hardware homologation and certification
+
+See [Phase 3 detail](phase-3.md) for epics, acceptance criteria, and dependencies.
+
+## Phase 4 — Enterprise & Scale
+
+Enterprise-grade integrations, fleet management, and analytics for large-scale deployments with 1,000+ outlets.
+
+**Key deliverables:**
+
+- ERP connectors (SAP S/4HANA, Odoo) with tax group mapping
+- Fleet management dashboard for multi-branch monitoring
+- Advanced analytics (tax-group heatmaps, anomaly detection, trend analysis)
+- Automated compliance reporting and audit export scheduling
+- Multi-country expansion research (regulatory analysis for neighboring markets)
+
+See [Phase 4 detail](phase-4.md) for epics, acceptance criteria, and dependencies.
 
 ## Monitoring & Validation
 
-Maintain a rolling review cadence after each phase completes, using the security and architecture review findings (review/*.md) plus monthly sync audits to confirm the roadmap remains aligned with DGI requirements and hardware realities.
+Maintain a rolling review cadence after each phase completes:
+
+- **Monthly sync audits** — Verify Fiscal Ledger integrity, DGI upload success rates, and counter continuity.
+- **Quarterly security reviews** — Audit HSM key rotation, API key usage, and access control compliance.
+- **Phase gate reviews** — Before advancing to the next phase, validate all acceptance criteria, run `mkdocs build --strict`, and confirm regulatory alignment.
+- **DGI checkpoint** — As the MCF/e-MCF API details emerge, update the Sync Agent and DGI integration docs accordingly.

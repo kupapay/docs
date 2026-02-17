@@ -5,11 +5,11 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width,initial-scale=1" name="viewport"/>
-<link href="../../cloud/dgi-integration/" rel="prev"/>
-<link href="../ui-ux/" rel="next"/>
+<link href="../../architecture/data-flow/" rel="prev"/>
+<link href="../api/" rel="next"/>
 <link href="../../assets/images/favicon.png" rel="icon"/>
 <meta content="mkdocs-1.6.1, mkdocs-material-9.7.1" name="generator"/>
-<title>Multi-Terminal - Bono Pay Technical Design</title>
+<title>Product Overview - Bono Pay Technical Design</title>
 <link href="../../assets/stylesheets/main.484c7ddc.min.css" rel="stylesheet"/>
 <link href="../../assets/stylesheets/palette.ab4e12ef.min.css" rel="stylesheet"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
@@ -22,7 +22,7 @@
 <input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
 <label class="md-overlay" for="__drawer"></label>
 <div data-md-component="skip">
-<a class="md-skip" href="#multi-terminal-orchestration">
+<a class="md-skip" href="#platform-overview">
           Skip to content
         </a>
 </div>
@@ -46,7 +46,7 @@
 <div class="md-header__topic" data-md-component="header-topic">
 <span class="md-ellipsis">
             
-              Multi-Terminal
+              Product Overview
             
           </span>
 </div>
@@ -184,35 +184,139 @@
 </ul>
 </nav>
 </li>
-<li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle" id="__nav_3" type="checkbox"/>
+<li class="md-nav__item md-nav__item--active md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_3" type="checkbox"/>
 <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
 <span class="md-ellipsis">
     
   
-    Hardware
+    Invoicing Platform
   
 
     
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
-<nav aria-expanded="false" aria-labelledby="__nav_3_label" class="md-nav" data-md-level="1">
+<nav aria-expanded="true" aria-labelledby="__nav_3_label" class="md-nav" data-md-level="1">
 <label class="md-nav__title" for="__nav_3">
 <span class="md-nav__icon md-icon"></span>
             
   
-    Hardware
+    Invoicing Platform
   
 
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../hardware/usb-device/">
+<li class="md-nav__item md-nav__item--active">
+<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+<label class="md-nav__link md-nav__link--active" for="__toc">
 <span class="md-ellipsis">
     
   
-    USB Fiscal Memory
+    Product Overview
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<a class="md-nav__link md-nav__link--active" href="./">
+<span class="md-ellipsis">
+    
+  
+    Product Overview
+  
+
+    
+  </span>
+</a>
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#what-is-bono-pay">
+<span class="md-ellipsis">
+      
+        What is Bono Pay?
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#how-bono-pay-works">
+<span class="md-ellipsis">
+      
+        How Bono Pay works
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#platform-flow">
+<span class="md-ellipsis">
+      
+        Platform Flow
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#design-principles">
+<span class="md-ellipsis">
+      
+        Design principles
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#target-users">
+<span class="md-ellipsis">
+      
+        Target users
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#security-compliance">
+<span class="md-ellipsis">
+      
+        Security &amp; compliance
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#delivery-reporting">
+<span class="md-ellipsis">
+      
+        Delivery &amp; reporting
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#phasing-summary">
+<span class="md-ellipsis">
+      
+        Phasing summary
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../api/">
+<span class="md-ellipsis">
+    
+  
+    Invoicing API
   
 
     
@@ -220,11 +324,11 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../hardware/protocol/">
+<a class="md-nav__link" href="../dashboard/">
 <span class="md-ellipsis">
     
   
-    USB Protocol (2PC)
+    Web Dashboard
   
 
     
@@ -232,23 +336,11 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../hardware/secure-element/">
+<a class="md-nav__link" href="../sdk/">
 <span class="md-ellipsis">
     
   
-    Secure Element
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../hardware/bom/">
-<span class="md-ellipsis">
-    
-  
-    BOM &amp; Manufacturing
+    SDK &amp; Libraries
   
 
     
@@ -394,130 +486,35 @@
 </ul>
 </nav>
 </li>
-<li class="md-nav__item md-nav__item--active md-nav__item--nested">
-<input checked="" class="md-nav__toggle md-toggle" id="__nav_6" type="checkbox"/>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_6" type="checkbox"/>
 <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
 <span class="md-ellipsis">
     
   
-    POS Application
+    Platform &amp; Integrations
   
 
     
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
-<nav aria-expanded="true" aria-labelledby="__nav_6_label" class="md-nav" data-md-level="1">
+<nav aria-expanded="false" aria-labelledby="__nav_6_label" class="md-nav" data-md-level="1">
 <label class="md-nav__title" for="__nav_6">
 <span class="md-nav__icon md-icon"></span>
             
   
-    POS Application
+    Platform &amp; Integrations
   
 
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
-<li class="md-nav__item md-nav__item--active">
-<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
-<label class="md-nav__link md-nav__link--active" for="__toc">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../multi-user/">
 <span class="md-ellipsis">
     
   
-    Multi-Terminal
-  
-
-    
-  </span>
-<span class="md-nav__icon md-icon"></span>
-</label>
-<a class="md-nav__link md-nav__link--active" href="./">
-<span class="md-ellipsis">
-    
-  
-    Multi-Terminal
-  
-
-    
-  </span>
-</a>
-<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
-<label class="md-nav__title" for="__toc">
-<span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#core-principles">
-<span class="md-ellipsis">
-      
-        Core principles
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#local-fiscal-service-mediator">
-<span class="md-ellipsis">
-      
-        Local fiscal service mediator
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#payload-metadata-concurrency">
-<span class="md-ellipsis">
-      
-        Payload metadata &amp; concurrency
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#single-terminal-deployment">
-<span class="md-ellipsis">
-      
-        Single-terminal deployment
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#retail-10-lanes">
-<span class="md-ellipsis">
-      
-        Retail: 10 lanes
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#restaurant-mobile-waiters">
-<span class="md-ellipsis">
-      
-        Restaurant: mobile waiters
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#failure-modes-and-monitoring">
-<span class="md-ellipsis">
-      
-        Failure modes and monitoring
-      
-    </span>
-</a>
-</li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../ui-ux/">
-<span class="md-ellipsis">
-    
-  
-    UI/UX
+    Multi-User Access
   
 
     
@@ -665,7 +662,31 @@
 <span class="md-ellipsis">
     
   
-    0003 - POS Technology Stack
+    0003 - Platform Technology Stack
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../adr/adr-0004/">
+<span class="md-ellipsis">
+    
+  
+    0004 - Cloud Fiscal Signing
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../adr/adr-0005/">
+<span class="md-ellipsis">
+    
+  
+    0005 - Strategic Pivot
   
 
     
@@ -681,7 +702,7 @@
 <span class="md-ellipsis">
     
   
-    Implementation
+    API Reference
   
 
     
@@ -690,6 +711,56 @@
 </label>
 <nav aria-expanded="false" aria-labelledby="__nav_9_label" class="md-nav" data-md-level="1">
 <label class="md-nav__title" for="__nav_9">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    API Reference
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../api/cloud/">
+<span class="md-ellipsis">
+    
+  
+    Cloud API
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../api/invoicing-sdk/">
+<span class="md-ellipsis">
+    
+  
+    Invoicing SDK
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_10" type="checkbox"/>
+<label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Implementation
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_10_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_10">
 <span class="md-nav__icon md-icon"></span>
             
   
@@ -715,7 +786,7 @@
 <span class="md-ellipsis">
     
   
-    Phase 1 - B2B Pilot
+    Phase 1 - Software Invoicing
   
 
     
@@ -727,7 +798,7 @@
 <span class="md-ellipsis">
     
   
-    Phase 2 - Retail
+    Phase 2 - POS &amp; Retail
   
 
     
@@ -739,45 +810,7 @@
 <span class="md-ellipsis">
     
   
-    Phase 3 - Enterprise
-  
-
-    
-  </span>
-</a>
-</li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle" id="__nav_10" type="checkbox"/>
-<label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
-<span class="md-ellipsis">
-    
-  
-    API Reference
-  
-
-    
-  </span>
-<span class="md-nav__icon md-icon"></span>
-</label>
-<nav aria-expanded="false" aria-labelledby="__nav_10_label" class="md-nav" data-md-level="1">
-<label class="md-nav__title" for="__nav_10">
-<span class="md-nav__icon md-icon"></span>
-            
-  
-    API Reference
-  
-
-          </label>
-<ul class="md-nav__list" data-md-scrollfix="">
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../api/usb-device/">
-<span class="md-ellipsis">
-    
-  
-    USB Device API
+    Phase 3 - USB Hardware
   
 
     
@@ -785,23 +818,11 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../api/cloud/">
+<a class="md-nav__link" href="../../implementation/phase-4/">
 <span class="md-ellipsis">
     
   
-    Cloud API
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../api/pos-plugin/">
-<span class="md-ellipsis">
-    
-  
-    POS Plugin API
+    Phase 4 - Enterprise
   
 
     
@@ -826,64 +847,73 @@
     </label>
 <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="#core-principles">
+<a class="md-nav__link" href="#what-is-bono-pay">
 <span class="md-ellipsis">
       
-        Core principles
+        What is Bono Pay?
       
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#local-fiscal-service-mediator">
+<a class="md-nav__link" href="#how-bono-pay-works">
 <span class="md-ellipsis">
       
-        Local fiscal service mediator
+        How Bono Pay works
       
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#payload-metadata-concurrency">
+<a class="md-nav__link" href="#platform-flow">
 <span class="md-ellipsis">
       
-        Payload metadata &amp; concurrency
+        Platform Flow
       
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#single-terminal-deployment">
+<a class="md-nav__link" href="#design-principles">
 <span class="md-ellipsis">
       
-        Single-terminal deployment
+        Design principles
       
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#retail-10-lanes">
+<a class="md-nav__link" href="#target-users">
 <span class="md-ellipsis">
       
-        Retail: 10 lanes
+        Target users
       
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#restaurant-mobile-waiters">
+<a class="md-nav__link" href="#security-compliance">
 <span class="md-ellipsis">
       
-        Restaurant: mobile waiters
+        Security &amp; compliance
       
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#failure-modes-and-monitoring">
+<a class="md-nav__link" href="#delivery-reporting">
 <span class="md-ellipsis">
       
-        Failure modes and monitoring
+        Delivery &amp; reporting
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#phasing-summary">
+<span class="md-ellipsis">
+      
+        Phasing summary
       
     </span>
 </a>
@@ -895,111 +925,49 @@
 </div>
 <div class="md-content" data-md-component="content">
 <article class="md-content__inner md-typeset">
-<h1 id="multi-terminal-orchestration">Multi-terminal orchestration<a class="headerlink" href="#multi-terminal-orchestration" title="Permanent link">¶</a></h1>
-<p>Bono Pay keeps <strong>one trusted USB Fiscal Memory device per outlet</strong>, so when multiple POS terminals share the same retail counter or restaurant floor, a local fiscal service mediates every interaction. This page explains how that mediator keeps the trust boundary intact while coordinating concurrent terminals, starving the device only one canonical PREPARE/COMMIT stream at a time, and delivering auditable invoices with the required metadata.</p>
-<h2 id="core-principles">Core principles<a class="headerlink" href="#core-principles" title="Permanent link">¶</a></h2>
-<ul>
-<li><strong>One device per outlet, not per cashier:</strong> every outlet advertises a single DEF NID and a single monotonic counter. Multiple POS stations rely on that device’s serial number for reporting and audit.</li>
-<li><strong>Canonical payloads include traceability fields:</strong> every request carries <code>outlet_id</code>, <code>pos_terminal_id</code>, and <code>cashier_id</code> plus the usual merchant, client, items, and tax-engine data so auditors can reconstruct where each fiscal number originated.</li>
-<li><strong>Local fiscal service acts as the queue:</strong> POS terminals never talk directly to the DEF in a multi-terminal setup; they always send their canonical JSON to the mediator, which serializes PREPARE/COMMIT requests, respects nonce-based 2PC, and forwards only one in-flight command to the device at a time.</li>
-<li><strong>Trust boundary enforcement:</strong> the device remains the only producer of fiscal numbers, device IDs, signatures, timestamps, and QR codes; the mediator merely relays responses back to the originating terminal.</li>
-</ul>
-<div class="admonition warning">
-<p class="admonition-title">Trust boundary reminder</p>
-<p>The DEF never exposes private keys, counters, or auth codes to the POS layer. Even though multiple terminals share a device, <strong>no terminal may fabricate security elements</strong> or bypass the queueing mediator.</p>
-</div>
-<h2 id="local-fiscal-service-mediator">Local fiscal service mediator<a class="headerlink" href="#local-fiscal-service-mediator" title="Permanent link">¶</a></h2>
-<p>The mediator runs inside the outlet’s LAN (or on the same host if it is the POS). It maintains:</p>
+<h1 id="platform-overview">Platform Overview<a class="headerlink" href="#platform-overview" title="Permanent link">¶</a></h1>
+<h2 id="what-is-bono-pay">What is Bono Pay?<a class="headerlink" href="#what-is-bono-pay" title="Permanent link">¶</a></h2>
+<p>Bono Pay is fiscal invoicing infrastructure for the DRC—think Stripe Invoices for compliance teams that need canonical payloads, trusted fiscal numbers, and HSM-backed signing without shipping any hardware.</p>
+<h2 id="how-bono-pay-works">How Bono Pay works<a class="headerlink" href="#how-bono-pay-works" title="Permanent link">¶</a></h2>
 <ol>
-<li>A <strong>request queue</strong> that orders PREPARE commands across terminals and stores the payload ID until COMMIT completes.</li>
-<li>A <strong>nonce tracker</strong> that pairs each PREPARE with the matching COMMIT and retries failed exchanges.</li>
-<li>A <strong>concurrency locker</strong> so that simultaneous POS sessions cannot step on each other and cause duplicate fiscal numbers.</li>
-<li>A <strong>network router</strong>—POS terminals connect over Wi-Fi or Ethernet (single lane, 10-lane retail, or waiter tablets), while the mediator uses USB CDC to talk to the DEF.</li>
+<li>Client apps (web dashboard, REST API consumers, and SDKs) prepare canonical JSON invoices with deterministic field ordering (<code>merchant_id</code>, <code>outlet_id</code>, <code>pos_terminal_id</code>, <code>cashier_id</code>, <code>client</code>, <code>items</code>, <code>tax_groups</code>, <code>totals</code>, <code>payments</code>, <code>timestamp</code>) and queue drafts in IndexedDB/SQLite when offline.</li>
+<li>The Invoicing API validates schema, enforces the 14 DGI tax groups and client classifications (Individual, Company, CommercialIndividual, Professional, Embassy), applies rounding rules, and forwards the sanitized payload to the Cloud Signing Service.</li>
+<li>The Cloud Signing Service (HSM) requests the next sequential fiscal number from the Monotonic Counter Manager, signs the payload, timestamps the event, generates the QR payload, and anchors the sealed invoice inside the append-only Fiscal Ledger while the Report Generator refreshes Z/X/A/audit summaries.</li>
+<li>The sealed invoice (fiscal number, auth code, timestamp, QR, fiscal authority ID, ledger hash) flows back to the caller so receipts can be delivered via email, WhatsApp, PDF, or thermal print; ledger entries are also accessible to auditors and API consumers.</li>
+<li>The Sync Agent ships the sealed payload to the DGI’s MCF/e-MCF control modules, tracks the <code>dgi_status</code> (<code>queued</code>, <code>synced</code>, <code>failed</code>), and surfaces acknowledgments through dashboards, webhooks, and SDK callbacks.</li>
 </ol>
-<p>Every payload forwarded to the DEF already includes <code>outlet_id</code>, <code>pos_terminal_id</code>, and <code>cashier_id</code> so that:</p>
+<h2 id="platform-flow">Platform Flow<a class="headerlink" href="#platform-flow" title="Permanent link">¶</a></h2>
+<pre class="mermaid"><code>flowchart LR
+  "API / Dashboard" --&gt; "Bono Pay Cloud (Invoicing API + Cloud Signing Service (HSM))"
+  "SDKs &amp; Integrations" --&gt; "Bono Pay Cloud (Invoicing API + Cloud Signing Service (HSM))"
+  "Bono Pay Cloud (Invoicing API + Cloud Signing Service (HSM))" --&gt; "Sealed Invoice (Fiscal Ledger &amp; Report Generator)"
+  "Sealed Invoice (Fiscal Ledger &amp; Report Generator)" --&gt; "Email / WhatsApp / PDF / Print"
+  "Sealed Invoice (Fiscal Ledger &amp; Report Generator)" --&gt; "Sync Agent (MCF/e-MCF)"</code></pre>
+<h2 id="design-principles">Design principles<a class="headerlink" href="#design-principles" title="Permanent link">¶</a></h2>
 <ul>
-<li>the device’s ledger shows exactly which terminal requested each fiscal number,</li>
-<li>audits or compliance reports can tie violations back to a person,</li>
-<li>offline sync can queue by terminal and preserve sequencing when uploading to the cloud/DGI.</li>
+<li><strong>Cloud-first trust boundary:</strong> The Cloud Signing Service (HSM) is the only authority for fiscal numbers, auth codes, timestamps, and QR payloads; client apps never fabricate or mutate security elements.</li>
+<li><strong>Offline resilience:</strong> Inspired by the Odoo lessons, the PWA caches catalogs and customers in IndexedDB, keeps service workers alive, shows fiscal device status badges, and flushes IndexedDB/SQLite queues only after the canonical payload is sealed.</li>
+<li><strong>Deterministic canonical payloads:</strong> Field ordering, tax group metadata, and payment records are never reshuffled so the Fiscal Ledger and QR payloads remain verifiable.</li>
+<li><strong>Multi-user, multi-tenant scale:</strong> Each invoice tags <code>outlet_id</code>, <code>pos_terminal_id</code>, <code>cashier_id</code>, and API key scopes so the Monotonic Counter Manager serializes numbering per outlet while roles and quotas protect tenants.</li>
+<li><strong>Mobile money + multi-currency support:</strong> Airtel Money, M-Pesa, Orange Money, and USD/CDF split payments are front and center so traders and schools can use cash and mobile instruments simultaneously.</li>
 </ul>
-<h2 id="payload-metadata-concurrency">Payload metadata &amp; concurrency<a class="headerlink" href="#payload-metadata-concurrency" title="Permanent link">¶</a></h2>
-<p>The DAO ensures that every PREPARE/COMMIT pair is tagged with the terminal hierarchy and that the nonce-based two-phase commit from <code>spec/architecture-kutapay-system-1.md</code> resolves races:</p>
+<h2 id="target-users">Target users<a class="headerlink" href="#target-users" title="Permanent link">¶</a></h2>
 <ul>
-<li>When a PREPARE succeeds, the mediator issues the nonce to the requesting terminal and notes the <code>pos_terminal_id</code>.</li>
-<li>If multiple PREPAREs arrive, the mediator buffers them and forwards the next one only after the current COMMIT returns (or fails).</li>
-<li>The DEF increments its monotonic counter only inside COMMIT, guaranteeing <strong>whoever finishes first gets the next fiscal number</strong>; the mediator prevents two terminals from hitting COMMIT simultaneously.</li>
-<li>Rejected PREPAREs immediately bubble an error back to the originating terminal so the cashier can retry rather than issuing a receipt without fiscalization.</li>
+<li>Finance teams and comptrollers who need sealed invoices, Z/X/A/audit reports, and instant receipts (email, WhatsApp, PDF, print) without managing hardware.</li>
+<li>Developers building integrations, SDKs, ERP connectors, or webhook consumers who expect Stripe-like payloads, rate limits, and deterministic behavior.</li>
+<li>POS vendors and retailers preparing for Phase 2 multi-terminal deployment with local fiscal services that mediate access to the cloud signer.</li>
+<li>Auditors, regulators, and the DGI who demand append-only ledgers, canonical security elements, and verified QR codes for every invoice.</li>
 </ul>
-<p>Additional safeguards:</p>
-<ul>
-<li>The payload includes cashier identifiers so rollback or refund requests can show who initiated them.</li>
-<li>The mediator tracks audit timestamps and attaches them to the queued entry so offline uploads preserve time order.</li>
-</ul>
-<h2 id="single-terminal-deployment">Single-terminal deployment<a class="headerlink" href="#single-terminal-deployment" title="Permanent link">¶</a></h2>
-<p>In a single-terminal outlet the mediator can be embedded in the POS app, but the same flow still applies: canonical payload → queued PREPARE → DEF → fiscal response → receipt/queue. The diagram below depicts the minimal deployment.</p>
-<pre class="mermaid"><code>graph LR
-    POS["POS terminal (single lane)"]
-    FISCAL["Local fiscal service (embedded)"]
-    USB["USB Fiscal Memory device"]
-    CLOUD["Bono Pay Cloud / Sync Agent"]
-    DGI["DGI / MCF endpoint"]
-
-    POS --&gt;|canonical payload| FISCAL
-    FISCAL --&gt;|PREPARE/COMMIT| USB
-    USB --&gt;|fiscal response| FISCAL
-    FISCAL --&gt;|receipt + sealed invoice| POS
-    FISCAL --&gt;|queued sealed invoice| CLOUD
-    CLOUD --&gt;|upload| DGI</code></pre>
-<h2 id="retail-10-lanes">Retail: 10 lanes<a class="headerlink" href="#retail-10-lanes" title="Permanent link">¶</a></h2>
-<p>Large retailers run up to ten checkout lanes behind a single outlet-level device. POS lanes connect over the same LAN/Wi-Fi to the fiscal service mediator, which serializes every invoice, enforces nonce matching, and ensures queue fairness so that each lane knows when it can send the next PREPARE. The mediator also labels the payloads with <code>pos_terminal_id</code> and <code>lane_number</code> so auditors will know which lane produced each fiscal number.</p>
-<pre class="mermaid"><code>graph TD
-    subgraph POS Area
-        POS1["Lane 1 POS"]
-        POS2["Lane 2 POS"]
-        POS3["Lane 10 POS"]
-    end
-    FISCAL["Local fiscal service (retail mediator)"]
-    USB["USB Fiscal Memory device"]
-    CLOUD["Bono Pay Cloud"]
-    DGI["DGI / MCF"]
-
-    POS1 --&gt;|canonical payload| FISCAL
-    POS2 --&gt;|canonical payload| FISCAL
-    POS3 --&gt;|canonical payload| FISCAL
-    FISCAL --&gt;|serialized PREPARE/COMMIT| USB
-    USB --&gt;|fiscal response| FISCAL
-    FISCAL --&gt;|sealed invoice| CLOUD
-    CLOUD --&gt;|upload| DGI</code></pre>
-<h2 id="restaurant-mobile-waiters">Restaurant: mobile waiters<a class="headerlink" href="#restaurant-mobile-waiters" title="Permanent link">¶</a></h2>
-<p>Restaurants and food halls often deploy mobile waiter tablets that connect back to the same mediator over Wi-Fi, Bluetooth tethering, or a local hub. Each waiter is a POS terminal with unique <code>pos_terminal_id</code> and <code>cashier_id</code>. The mediator keeps a sliding window of active terminals, forwards PREPARE requests one at a time, and ensures that voids/refunds linked to a table retain the correct fiscal references. Since waiters frequently move, the mediator also tracks connection health and retries PREPAREs when a tablet roams out of range before committing.</p>
-<pre class="mermaid"><code>graph LR
-    Waiter1["Waiter Tablet 1"]
-    Waiter2["Waiter Tablet 2"]
-    Waiter3["Waiter Tablet N"]
-    HUB["Local fiscal service hub"]
-    USB["USB Fiscal Memory device"]
-    CLOUD["Bono Pay Cloud"]
-    DGI["DGI / MCF"]
-
-    Waiter1 --&gt;|canonical payload| HUB
-    Waiter2 --&gt;|canonical payload| HUB
-    Waiter3 --&gt;|canonical payload| HUB
-    HUB --&gt;|PREPARE/COMMIT queue| USB
-    USB --&gt;|fiscal response| HUB
-    HUB --&gt;|sealed invoice| CLOUD
-    CLOUD --&gt;|upload| DGI</code></pre>
-<h2 id="failure-modes-and-monitoring">Failure modes and monitoring<a class="headerlink" href="#failure-modes-and-monitoring" title="Permanent link">¶</a></h2>
-<p>The mediator exposes health endpoints so operations teams can see:</p>
+<h2 id="security-compliance">Security &amp; compliance<a class="headerlink" href="#security-compliance" title="Permanent link">¶</a></h2>
+<p>Bono Pay satisfies the SFE specifications: all five invoice types plus the 14 DGI tax groups run through the tax engine, client classification is mandatory, and every sealed invoice includes the fiscal number, fiscal authority ID, cryptographic auth code, trusted timestamp, and QR payload produced by the Cloud Signing Service (HSM). The Fiscal Ledger remains append-only, the Report Generator emits Z/X/A/audit exports, and voids/refunds become new fiscal events instead of deletions.</p>
+<h2 id="delivery-reporting">Delivery &amp; reporting<a class="headerlink" href="#delivery-reporting" title="Permanent link">¶</a></h2>
+<p>Receipt delivery is multi-channel (email, WhatsApp, PDF, thermal print) and always includes the fiscal number plus QR payload while the ledger and Report Generator power Z, X, A, and audit export data for inspectors and finance teams. Offline-first clients queue invoices locally, surface queue depth indicators, and retry until Bono Pay Cloud seals the payload. The Sync Agent handles DGI integration (MCF/e-MCF) so authorized invoices and ledger hashes reach the ministry even when connectivity is intermittent.</p>
+<h2 id="phasing-summary">Phasing summary<a class="headerlink" href="#phasing-summary" title="Permanent link">¶</a></h2>
 <ol>
-<li>Which terminal is currently holding the PREPARE/COMMIT lock.</li>
-<li>How many requests are queued and their statuses.</li>
-<li>Last good fiscal number returned by the DEF (this is the single source of truth for sequencing; terminals must not guess the next number).</li>
+<li><strong>Phase 1 — Software Invoicing (current):</strong> Cloud Signing Service (HSM) is the trusted authority, the Invoicing API/web dashboard/SDK ecosystem produce canonical payloads, and sealed invoices stream to delivery channels while the Sync Agent uploads to the DGI.</li>
+<li><strong>Phase 2 — POS &amp; Retail:</strong> Multi-terminal POS apps reuse the same cloud fiscal signer, add local fiscal services for shared USB devices, and keep the offline/PWA lessons (service worker, IndexedDB, fiscal status badges) for tablets and phones.</li>
+<li><strong>Phase 3 — USB Hardware (optional):</strong> The archived USB Fiscal Memory device can become an optional trust anchor for DEF-homologated outlets; its documentation lives in <code>design/docs-archive/hardware/</code> while the cloud still mirrors every sealed event for reporting and audits.</li>
 </ol>
-<p>If the device reports an error (memory full, tamper, power loss), the mediator alerts each terminal so the cashier can halt checkouts rather than issuing un-fiscalized receipts. When connectivity returns after offline operation, the mediator continues uploading queued sealed invoices to the cloud/DGI in arrival order.</p>
-<div class="admonition tip">
-<p class="admonition-title">Why the mediator matters</p>
-<p>Without the mediator, terminals would compete for the same USB channel and risk slipping outside the trust boundary—this single service keeps the two-phase commit deterministic, tracks terminal IDs, and preserves the sequential fiscal numbers the regulators demand.</p>
-</div>
 </article>
 </div>
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>

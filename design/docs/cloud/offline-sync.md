@@ -1,61 +1,88 @@
 # Offline-First Sync Design
 
-Every invoice issued in the DRC must survive the most hostile networks. `spec/architecture-kutapay-system-1.md` makes this explicit: the USB Fiscal Memory device continues accepting `PREPARE → COMMIT` requests locally when the cloud or DGI are unreachable, and the queued sealed invoices must be uploaded in arrival order once connectivity returns. The offline queue is therefore the single source of truth for deferred transmissions, audit trails, and the compensating controls that keep the audit chain intact.
+Every invoice issued in the DRC must survive the most hostile networks. Bono Pay's architecture addresses this with a **client-side offline queue**: when the cloud is unreachable, client applications (web dashboard, API consumers, SDK integrators) queue unsigned canonical payloads locally (IndexedDB for web, SQLite for native/SDK) and submit them in order once connectivity returns. **Fiscalization only happens when the Cloud Signing Service (HSM) processes the request** — offline payloads are drafts, not fiscal events.
 
-## Sync queue architecture
-
-Invoices enter the offline queue after the DEF commits them. Each entry stores the sealed canonical payload plus its security elements (`fiscal_number`, `device_id`, `auth_code`, `timestamp`, QR) so nothing outside the DEF can rewrite history. The queue keys the items by the device’s monotonic counter and the host-provided arrival timestamp so the system always uploads in the same order the DEF sealed them. While queued, every invoice record includes:
-
-- **canonical payload hash** – detects duplicates across reconnect attempts.
-- **device_id + fiscal_number** – ties it back to the trusted source of truth.
-- **host metadata** (outlet_id, pos_terminal_id, cashier_id) – supplies traceability for multi-terminal scenarios.
-- **sync position** – the queue slot referenced by the sync state machine (PENDING_SYNC, RETRY, etc.).
-
-!!! warning "Offline issuance is not a compliance loophole"
-    Offline is allowed; suspicious offline is not. The queue must never drop, reorder, or compact invoices before the DGI acknowledges receipt, because the law treats delays as audit data that must be logged and reviewed (`DISCUSSION.md`, lines 1479‑1485 & 4730‑4748). The system should emit alerts when invoices linger past the configured grace period (e.g., 24 hours) so field teams can investigate before auditors do.
-
-## Retry logic and conflict resolution
-
-Uploading a sealed invoice is orthogonal to issuance. The DEF is the only authority that prints, signs, and increments counters (`spec/architecture-kutapay-system-1.md`), so retransmissions never mutate fiscal data—they simply replay the previously generated sealed response. The sync service therefore prioritizes idempotent retries with exponential backoff: the queue marks every attempt with a retry count, waits before re-entering `UPLOADING`, and escalates the invoice to `FAILED` only after the `max_retries` threshold so operators can intervene.
-
-Transmission itself can be host-mediated (Model A) or DEF-mediated (Model B), but issuance happens inside the trusted zone alone (`DISCUSSION.md`, lines 4750‑4769). To avoid race conditions, the queue coordinator serializes attempts by ensuring only one uploader speaks to the DGI at a time per outlet. Any duplicate fingerprint detected during retries is logged as a `RETRY` transition, never as a new fiscal event, preserving the “voids/refunds are new events” rule.
-
-## Grace period & audit logging
-
-The DGI expects “guaranteed eventual transmission,” not best-effort bestoers (`DISCUSSION.md`, lines 141‑170). As soon as the POS or the DEF regains connectivity, the queue flushes invoices in arrival order and records the delay reason (network outage, host swap, GSM handover). Each sync attempt appends an audit record that includes the out-of-band delay duration, the host that triggered the retry, and the resulting status (ACKNOWLEDGED, RETRY, FAILED). These logs are part of the “transmission delays are logged and auditable” requirement, so regulators can prove no invoice vanished during long offline spells.
-
-Grace periods should be configurable per deployment, but the default should align with DRC regulators’ intolerance for extended “suspicious offline” windows. When the queue detects that a document has lingered longer than the grace period, it surfaces a `FAILED` state (pending manual recovery) and raises a compliance alarm. This encourages field teams to either re‑establish GSM/Internet links or plug the DEF into a temporary host, keeping the issuance order intact while honoring the audit timeline.
-
-## POS UI offline indicators
-
-The POS UI mirrors the queue state machine. Every invoice shows a badge that switches between:
-
-1. **Offline** – queued in `PENDING_SYNC`; the device has fiscalized but the cloud has not confirmed delivery.
-2. **Uploading** – a sync worker has picked the invoice and is waiting for the DGI acknowledgment.
-3. **Synced** – DGI acknowledged receipt (ACKNOWLEDGED); the invoice is safe to archive locally.
-4. **Retrying / Failed** – the daemon is retrying due to a transient error or waiting for manual recovery after `FAILED`.
-
-These indicators also drive other UI elements such as network status chips (green for connected, amber for limited connectivity, red for extended offline) and action buttons (“Resend now”, “Pack & ship journal”) to honor `DISCUSSION.md`’s suggestion that offline is acceptable but must be observable. Use telemetry (queue depth, max delay) to highlight outlets that are approaching the alert thresholds.
-
-### Invoice sync state machine
+## Offline model overview
 
 ```mermaid
 stateDiagram-v2
-    [*] --> PENDING_SYNC
-    PENDING_SYNC --> UPLOADING : network available
-    UPLOADING --> ACKNOWLEDGED : DGI acknowledged
-    UPLOADING --> RETRY : temporary error
-    RETRY --> UPLOADING : backoff timer expires
-    RETRY --> FAILED : max retries exceeded
-    FAILED --> RETRY : manual resume
-    ACKNOWLEDGED --> [*]
+    [*] --> DRAFT : Client creates invoice (offline)
+    DRAFT --> QUEUED : Saved to local queue
+    QUEUED --> SUBMITTING : Connectivity restored
+    SUBMITTING --> SEALED : Cloud Signing Service signs
+    SUBMITTING --> RETRY : Network error
+    RETRY --> SUBMITTING : Backoff timer expires
+    RETRY --> FAILED : Max retries exceeded
+    FAILED --> RETRY : Manual resume
+    SEALED --> [*]
 ```
+
+!!! warning "Offline issuance is not a compliance loophole"
+    Offline is allowed because merchants cannot halt commerce during connectivity outages. However, the locally queued payload is an **unsigned draft** — it carries no fiscal number, signature, or timestamp. The Cloud Signing Service must seal it before it becomes a fiscal event. The system emits alerts when drafts linger past the configured grace period (e.g., 24 hours) so field teams can investigate before auditors do.
+
+## Client-side queue architecture
+
+Each client application maintains a local queue of unsigned canonical payloads. Each entry stores:
+
+- **canonical payload** — the full invoice payload in deterministic field order (merchant_nif, outlet_id, items, tax_groups, totals, payments, timestamp).
+- **payload hash** — detects duplicates across reconnect attempts and prevents double-submission.
+- **client metadata** (outlet_id, user_id / api_key_id, source) — supplies traceability for multi-user scenarios.
+- **queue position** — the local slot referenced by the sync state machine (QUEUED, SUBMITTING, RETRY, etc.).
+- **created_at** — client-side timestamp for grace period monitoring (not used for fiscal purposes).
+
+### Storage backends
+
+| Client type | Storage | Notes |
+|-------------|---------|-------|
+| Web Dashboard | IndexedDB + Service Worker | Service Worker intercepts `POST /invoices` when offline, stores the payload in IndexedDB, and replays when online. |
+| REST API consumer | Caller's responsibility | API clients should implement their own retry queue. The SDK provides a built-in queue. |
+| SDK (JavaScript/Python) | SQLite / IndexedDB | Built-in `OfflineQueue` class manages storage, ordering, and submission. |
+
+## Submission flow
+
+When connectivity returns, the client's sync worker submits queued payloads **in creation order** to the Bono Pay Cloud API:
+
+1. **Pick the oldest QUEUED entry** and transition it to SUBMITTING.
+2. **POST the canonical payload** to `/api/v1/invoices` with the API key / bearer token.
+3. **On success (201):** The Cloud Signing Service returns the sealed response (fiscal_number, auth_code, timestamp, qr_payload). Store the sealed response locally, transition to SEALED, and move to the next entry.
+4. **On transient failure (5xx, timeout):** Transition to RETRY with exponential backoff (initial: 5s, max: 5min, jitter: ±20%). After `max_retries` (default: 10), transition to FAILED and raise an alert.
+5. **On validation failure (4xx):** Log the error, transition to FAILED, and surface the validation error to the user. Do not retry — the payload needs correction.
+
+!!! tip "Idempotency"
+    Each submission includes the `payload_hash` in an `Idempotency-Key` header. If the cloud has already sealed this exact payload (e.g., after a network timeout where the server processed the request but the client didn't receive the response), it returns the existing sealed response instead of creating a duplicate fiscal event.
+
+## Grace period & audit logging
+
+The DGI expects "guaranteed eventual transmission," not best-effort delivery. As soon as a client regains connectivity, the queue flushes payloads in order and records the delay reason (network outage, user session expired, app backgrounded). Each submission attempt appends an audit record that includes:
+
+- Out-of-band delay duration
+- The client/user that triggered the retry
+- Resulting status (SEALED, RETRY, FAILED)
+
+These logs are part of the "transmission delays are logged and auditable" requirement, so regulators can prove no invoice vanished during long offline spells.
+
+Grace periods should be configurable per deployment, but the default should align with DRC regulators' intolerance for extended "suspicious offline" windows. When the queue detects that a draft has lingered longer than the grace period, it surfaces a warning in the UI and raises a compliance alarm through the cloud dashboard.
+
+## Client UI offline indicators
+
+Client applications should mirror the queue state in the UI. Every draft/invoice shows a badge:
+
+1. **Draft** (gray) — queued in local storage; not yet submitted to the cloud. No fiscal number.
+2. **Submitting** (amber) — the sync worker is sending the payload to the Cloud Signing Service.
+3. **Sealed** (green) — the Cloud Signing Service returned the fiscal response. The invoice is now a fiscal event.
+4. **Retrying** (orange) — transient error; the sync worker will retry after backoff.
+5. **Failed** (red) — submission failed after max retries or validation error. Requires manual intervention.
+
+These indicators also drive network status chips (green/amber/red) and action buttons ("Retry now", "Edit and resubmit") to honor the principle that offline is acceptable but must be observable.
 
 ## Bandwidth and scheduling optimizations
 
-Low-bandwidth deployments benefit from batching and compression. Group invoices by outlet and exchange them as a single envelope with a manifest that the DGI can verify (`DISCUSSION.md`, lines 1479‑1485 & 4730‑4758). Attach a lightweight delta payload for invoices that the cloud already knows about, and drop unnecessary staging artifacts after the ACKNOWLEDGED state so the queue stays compact.
+Low-bandwidth deployments benefit from batching and compression:
 
-The sync daemon should also respect “suspicious offline is not” by throttling reconnection storms and avoiding burst uploads during peak GSM charges. Spread retries over the grace period, apply jitter to backoff timers, and never attempt a sync while another upload for the same fiscal number is in-flight.
+- **Batch submissions:** Group queued payloads by outlet and submit them as a batch envelope to `/api/v1/invoices/batch`. The cloud processes each payload individually but returns all sealed responses in one HTTP response.
+- **Compression:** Use gzip/Brotli for request/response bodies to reduce bandwidth.
+- **Throttling:** Spread submissions over the grace period to avoid burst uploads during peak GSM charges. Apply jitter to backoff timers.
+- **Deduplication:** The `payload_hash` + `Idempotency-Key` mechanism prevents duplicate fiscal events even when the client reconnects and replays the queue.
 
 !!! tip "Treat the queue like a compliance ledger"
-    Every state transition is proof that the invoice existed and was delivered responsibly. Because the DEF never releases a fiscal number until `COMMIT` succeeds, the queue can safely replay sealed records without risking duplicate issuance. Keep telemetry dashboards on this ledger so auditors can reconstruct the whole story if needed.
+    Every state transition is proof that the invoice draft existed and was delivered responsibly. Because the Cloud Signing Service never releases a fiscal number until it processes the payload, the queue can safely replay unsigned drafts without risking duplicate issuance. Keep telemetry dashboards on this queue so auditors can reconstruct the whole story if needed.

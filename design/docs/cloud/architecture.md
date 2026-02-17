@@ -1,74 +1,86 @@
 # Cloud Architecture
 
-The Bono Pay Cloud sits on the **trusted side** of the architecture that is described in `spec/architecture-kutapay-system-1.md`. It never touches raw invoice payloads until they are sealed, and it is responsible for every step after the USB Fiscal Memory device emits the fiscal response. The cloud orchestrates sync, backup, DGI uploads, device provisioning, and operational insight while keeping the trust boundary intact and honoring the offline-first guarantees described in `DISCUSSION.md` (see the deployment, offline, and resilience commentary around lines 7030‑7060).
+The Bono Pay Cloud is the **trusted fiscal authority** in Phase 1 (Software Invoicing). Unlike a relay that merely forwards sealed data, the cloud is responsible for the entire fiscalization pipeline: it receives canonical payloads from untrusted client applications, validates them, signs them via the HSM-backed Cloud Signing Service, assigns sequential fiscal numbers, timestamps them, stores them in the append-only Fiscal Ledger, and delivers sealed responses back to the caller. Only after an invoice is sealed does the Sync Agent forward it to the DGI.
 
 ## Responsibilities
 
-- **Sync & upload service** — ingests sealed invoices from the local fiscal service, enqueues them in arrival order, retries uploads when the DGI endpoint is slow or offline, and confirms each invoice has arrived before discarding the local copy.
-- **Backup & audit storage** — keeps an encrypted ledger of every sealed invoice, metadata, and fulfillment event so auditors can reproduce Z/X/A reports even if POS terminals lose their local cache.
-- **DGI integration** — handles authenticated uploads to the e‑DEF/MCF APIs, respects rate limits, and exposes a retry dashboard for operators when the DGI stack is unavailable.
-- **Device registry & provisioning** — tracks each outlet’s DEF serial, activation token, firmware version, and certificate status; it also brokers activation flows that bind a device to a merchant and the DGI’s credentials.
-- **Operations dashboard** — surfaces sync health, device connectivity, report generation, and compliance KPIs for auditors and support staff.
+| Component | Role |
+|-----------|------|
+| **Cloud Signing Service (HSM)** | Assigns fiscal numbers via the Monotonic Counter Manager, signs canonical payloads with ECDSA keys that never leave the HSM, generates QR payloads, and produces trusted timestamps. |
+| **Fiscal Ledger** | Append-only, hash-chained storage of every sealed invoice. Source of truth for Z/X/A reports and audit exports. |
+| **Tax Engine** | Validates the 14 DGI tax groups, applies client classification rules, performs rounding, and rejects invalid payloads before signing. |
+| **Report Generator** | Produces Z, X, A reports and full audit exports from the Fiscal Ledger on schedule or on demand. |
+| **Sync Agent** | Uploads sealed invoices to the DGI MCF/e-MCF endpoint, handles retries with exponential backoff, and records acknowledgements. |
+| **Merchant & Outlet Registry** | Tracks merchants, outlets, API keys, users, and their association with HSM signing contexts. Manages provisioning, activation, and key rotation. |
+| **Operations Dashboard** | Surfaces sync health, invoice pipeline status, report generation, and compliance KPIs for auditors and support staff. |
 
 !!! warning "Trust boundary reminder"
-    The cloud only stores **sealed** invoices: the USB device is the only source of truth for fiscal numbers, device IDs, signatures, timestamps, and QR metadata. Any attempt to reconstruct or mutate those values on the cloud side breaks the trust boundary.
+    In Phase 1 the Cloud Signing Service is the **sole authority** for fiscal numbers, signatures, timestamps, and QR metadata. Client applications (API consumers, web dashboard, SDK integrators) submit canonical payloads and receive sealed responses — they never fabricate security elements.
+
+!!! info "Phase 3 — USB Hardware"
+    In Phase 3, the USB Fiscal Memory device (DEF) can replace or augment the Cloud Signing Service for merchants needing DEF homologation. The cloud then acts as a sync relay. Hardware docs are archived in `docs-archive/hardware/`.
 
 ## Deployment model
 
 ### Deployment options
 
-1. **Serverless ingestion** — stateless functions (e.g., FaaS) react to new invoices pushed through the fiscal service, validate signatures, and persist them to the audit store. This keeps bursty loads from overloading stateful systems and scales naturally when dozens of outlets sync concurrently.
-2. **Containerized services** — longer-running components (dashboard, registry, audit export generator) run inside orchestrated containers with horizontal pods per tenant cluster. Containers host the richer UI, reporting, and heavy CSV/Excel exports that need memory and CPU persistence.
-3. **Hybrid pattern** — front-door APIs and sync workers stay serverless for elasticity; the registry, dashboard, and report generation run on containers inside a private cloud/VPC that sits inside the DRC region.
+1. **Serverless ingestion** — Stateless functions (FaaS) validate incoming payloads, route them to the signing pipeline, and return sealed responses. This keeps bursty loads from overloading stateful systems and scales naturally when many outlets submit concurrently.
+2. **Containerized services** — Longer-running components (Cloud Signing Service, Report Generator, Operations Dashboard, Sync Agent) run inside orchestrated containers with horizontal scaling per tenant cluster. Containers host the HSM integration, ledger writes, reporting, and heavy CSV/Excel exports.
+3. **Hybrid pattern** — Front-door API and validation workers stay serverless for elasticity; the Cloud Signing Service, Fiscal Ledger, and Report Generator run on containers inside a private VPC within the DRC region.
 
-Each deployment option is wired into a multi-tenant namespace (see below) so containers and functions can be scaled independently per customer while still sharing operational tooling, logs, and secrets.
+Each deployment option feeds into a multi-tenant namespace (see below) so containers and functions can be scaled independently per customer while sharing operational tooling, logs, and secrets.
 
 ## Multi-tenant & per-outlet isolation
 
-The cloud is multi-tenant by design: every merchant (and by extension, every outlet) receives its own namespace, audit partition, and quota enforcement while still being hosted inside the shared DRC deployment. Tenant metadata flows from the local fiscal service (outlet ID, POS terminal ID, cashier ID) into the registry and sync engine so the cloud can reconstruct per-outlet order and assign the correct device guardrails. Shared tooling (monitoring, billing, backups) reuses the same clusters, but each tenant’s data sits in logically separated buckets with IAM policies, ensuring the single-device-per-outlet guarantee from `spec/architecture-kutapay-system-1.md` remains intact.
+The cloud is multi-tenant by design: every merchant (and by extension, every outlet) receives its own namespace, audit partition, and quota enforcement while being hosted inside the shared DRC deployment. Tenant metadata flows from the API request (merchant NIF, outlet ID, API key / user ID) into the registry and signing pipeline so the cloud can enforce serial numbering per outlet.
 
-A dedicated sync queue per outlet prevents terminal contention: even if multiple POS terminals attempt to upload simultaneously, the queue serializes them before the upload worker touches the DGI API, honoring the arrival order requirement expressed in the architecture spec.
+The **Monotonic Counter Manager** maintains one counter per outlet with serializable database isolation. Even if multiple API consumers or dashboard users submit invoices simultaneously, the counter serializes them before the Cloud Signing Service signs, guaranteeing gap-free sequential fiscal numbers. Shared tooling (monitoring, billing, backups) reuses the same clusters, but each tenant's data sits in logically separated partitions with IAM policies.
 
 ## Data residency & compliance
 
-All cloud workloads run in a **DRC-hosted region** to comply with local data residency expectations (see the regulatory positioning in `DISCUSSION.md` around offline and governance sections). Invoices, logs, and audit exports are stored encrypted at rest, keys are managed within the same region, and TLS enforces encryption in transit. Backups are kept on redundant DRC zones, and any cross-border reporting is delivered through sealed exports (not raw invoice data) so that no sensitive tax information leaves the country without explicit ministerial approval. The cloud also tracks regulatory metadata (compliance deadlines, report cadence, audit trail hashes) so operators can prove they met the DGI requirements described in the SFE summary.
+All cloud workloads run in a **DRC-hosted region** to comply with local data residency expectations. Invoices, logs, and audit exports are stored encrypted at rest; keys are managed within the same region; TLS 1.3+ enforces encryption in transit. Backups are kept on redundant DRC zones, and any cross-border reporting is delivered through sealed exports (not raw invoice data) so no sensitive tax information leaves the country without explicit ministerial approval.
+
+The cloud also tracks regulatory metadata (compliance deadlines, report cadence, audit trail hashes) so operators can prove they met the DGI requirements described in the SFE specifications.
 
 ## Deployment diagram
 
-The following Mermaid diagram shows the key deployment elements, how POS/fiscal services connect to the cloud, and how the cloud forwards sealed data to the DGI while keeping everything inside the trusted zone:
-
 ```mermaid
 graph LR
-    subgraph EDF["Bono Pay Cloud (DRC deployment)"]
-        API["API Gateway"]
-        Sync["Sync & Upload Service"]
-        Registry["Device Registry"]
-        Storage["Encrypted Invoice Store"]
-        Dashboard["Operations Dashboard"]
-        Audit["Audit Export Generator"]
+    subgraph Clients["Client Apps (untrusted)"]
+        Dashboard["Web Dashboard"]
+        API_Consumer["REST API consumers"]
+        SDK["SDK integrators"]
     end
-    subgraph Edge["Merchant Edge (Per-outlet)"]
-        POS[POS Terminals]
-        FiscalService[Local fiscal service]
-        USB[USB Fiscal Memory device]
+    subgraph Cloud["Bono Pay Cloud (DRC deployment, trusted)"]
+        Gateway["API Gateway"]
+        TaxEng["Tax Engine"]
+        HSM["Cloud Signing Service (HSM)"]
+        Ledger["Fiscal Ledger"]
+        Reports["Report Generator"]
+        Sync["Sync Agent"]
+        Registry["Merchant & Outlet Registry"]
+        Ops["Operations Dashboard"]
     end
     DGI["DGI MCF / e-MCF"]
-    POS --> FiscalService
-    FiscalService --> Sync
-    USB --> Sync
-    Sync --> Storage
+
+    Dashboard --> Gateway
+    API_Consumer --> Gateway
+    SDK --> Gateway
+    Gateway --> TaxEng
+    TaxEng --> HSM
+    HSM --> Ledger
+    Ledger --> Reports
+    Ledger --> Sync
     Sync --> DGI
-    Registry --> Sync
-    Sync --> Dashboard
-    Registry --> Dashboard
-    Storage --> Audit
-    Audit --> DGI
-    Dashboard -->|alerts, compliance dashboards| API
-    API --> Sync
+    Registry --> HSM
+    Reports --> Ops
+    Sync --> Ops
+    Gateway --> Ops
+
     subgraph Region["DRC Data Residency"]
-        Storage
+        Ledger
         Registry
-        Dashboard
-        Audit
+        Ops
+        Reports
     end
 ```

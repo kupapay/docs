@@ -1,59 +1,88 @@
-# Phase 2 — Retail & Restaurants
+# Phase 2 — POS & Retail
 
-Phase 1 proved that the PREPARE → COMMIT handshake, hash-chained journal, and manual compliance tooling can keep a small B2B pilot honest. Phase 2 now scales the platform to the retail and restaurant segments that demand multi-terminal coverage, full cloud sync, automatic DGI uploads, and real-time reporting while serving **100 pilot clients over 3 months** (June–August 2026).
+Phase 1 proved that the Cloud Signing Service, REST API, and web dashboard can deliver fiscally compliant invoices for B2B clients. Phase 2 extends the platform to **physical retail and restaurant environments** with POS SDK integration, multi-terminal support, mobile money payments, and the webhook event system. Target: **100 retail outlets over 3 months** (June–August 2026).
 
 ## Objectives
 
-- **Target:** onboard 100 retail/restaurant outlets (10-lane retail counters, mobile waiter stacks, and fast-service kiosks) without sacrificing the Phase 1 trust boundary.
-- **Duration:** 3-month sprint with milestones each month for multi-terminal orchestration, cloud automation, and report automation.
-- **New capabilities:** multi-terminal mediator, resilient cloud sync, automatic DGI uploads, complete Z/X/A/audit report pipeline, mobile waiter UX, and observability/alerting for the larger fleet.
-- **Reference artifacts:** `spec/architecture-kutapay-system-1.md`, `spec/protocol-usb-fiscal-device-1.md`, `spec/design-cloud-api-1.md`, `spec/infrastructure-dgi-integration-1.md`, `spec/process-fiscal-reports-1.md`, `spec/schema-tax-engine-1.md`, and the Phase 1 roadmap (`design/docs/implementation/phase-1.md`).
+- **Target:** Onboard 100 retail/restaurant outlets (multi-lane counters, mobile waitstaff, fast-service kiosks) using the same cloud fiscal authority from Phase 1.
+- **Duration:** 3-month sprint with monthly milestones.
+- **New capabilities:** POS SDK, multi-terminal concurrency, mobile money integration, webhook API, enhanced dashboard views, and fleet observability.
 
 ## Epics
 
-1. **Multi-terminal orchestration & fiscal service hardening**
-   - **Description:** Extend the fiscal service mediator so many POS terminals per outlet share one DEF without racing fiscal numbers. Honor the ordered canonical payload from `spec/architecture-kutapay-system-1.md`/`spec/protocol-usb-fiscal-device-1.md`, keep outlet/POS/cashier IDs intact, and serialize PREPARE/COMMIT calls to avoid nonce conflicts.
-   - **Acceptance criteria:**
-     * Local fiscal mediator sequences requests from every terminal and exposes explicit wait states when the DEF is busy.
-     * Each payload carries outlet_id, pos_terminal_id, cashier_id, and client classification (per `spec/schema-tax-engine-1.md`) so the USB device enforces the trust boundary.
-     * Concurrency guards (mutex/queue) prevent duplicate fiscal numbers while logging who owns the next nonce.
-   - **Dependencies:** `spec/architecture-kutapay-system-1.md`, `spec/protocol-usb-fiscal-device-1.md`, `design/docs/pos/multi-terminal.md`, `design/docs/architecture/trust-boundary.md`.
-   - **Estimate:** 3 weeks to refactor the mediator and 1 week for multi-terminal QA.
+### 1. POS SDK & multi-terminal support
 
-2. **Cloud sync automation & DGI upload pipeline**
-   - **Description:** Automate the offline queue, retries, and eventual upload to the DGI control modules via the cloud API described in `spec/design-cloud-api-1.md` while acknowledging the unknowns captured in `spec/infrastructure-dgi-integration-1.md`. The sync agent must surface `retry_after`, DGI status, and queue depth without leaking secrets or violating the trust boundary.
-   - **Acceptance criteria:**
-     * Sealed invoices are queued and retried automatically, honoring the sync state machine from `design/docs/cloud/offline-sync.md`.
-     * Automatic uploads include headers (`X-KUTAPAY-DEVICE-ID`, `X-KUTAPAY-NONCE`) and canonical payload order so the DGI receives precise security elements.
-     * Sync dashboard exposes backlog, oldest queued invoice, and next retry timestamp so operators know when to intervene.
-   - **Dependencies:** `spec/design-cloud-api-1.md`, `spec/infrastructure-dgi-integration-1.md`, `design/docs/cloud/offline-sync.md`, `design/docs/cloud/dgi-integration.md`.
-   - **Estimate:** 4 weeks for cloud agent automation plus 1 week for ops dashboards and handoffs.
+**Description:** Build a POS SDK that wraps the Cloud API with receipt rendering, offline queue, and multi-terminal awareness. The Monotonic Counter Manager already serializes fiscal numbers per outlet, so POS terminals are simply additional API consumers.
 
-3. **Report automation & audit readiness**
-   - **Description:** Build the full suite of Z, X, A, and audit exports from `spec/process-fiscal-reports-1.md`, ship them through both device and cloud pipelines, and integrate them with the larger fleet so auditors never wait.
-   - **Acceptance criteria:**
-     * Z reports close each retail shift with per-tax-group totals, journal hashes, and device security elements.
-     * X reports can be triggered manually or on a schedule (e.g., hourly) with device health metadata.
-     * A reports stream article-level detail plus client classification/line references.
-     * Audit exports deliver hash-chained chunks (with prev_hash/signature) to satisfy DGI spot checks.
-   - **Dependencies:** `spec/process-fiscal-reports-1.md`, `spec/protocol-usb-fiscal-device-1.md`, `design/docs/fiscal/reports.md`, `design/docs/cloud/dgi-integration.md`.
-   - **Estimate:** 2 weeks to implement report generators and 1 week for integration and automation.
+**Acceptance criteria:**
 
-4. **Mobile waiter & POS UX resilience**
-   - **Description:** Adapt the POS UX to support roaming waitstaff, portable terminals, and rapid checkout while surfacing offline helpers and device status per `.github/copilot-instructions.md` UX guidance and the existing `design/docs/pos/ui-ux.md`.
-   - **Acceptance criteria:**
-     * Mobile waiters can pair/disconnect safely, view nonce/connection status, and retry COMMITs without duplicating invoices.
-     * Receipt templates keep the device-issued fiscal number, auth code, timestamp, and QR visible so inspectors can verify every transaction.
-     * POS UI clearly alarms when the multi-terminal mediator is busy, the DEF is offline, or canonical payload validation fails.
-   - **Dependencies:** `design/docs/pos/ui-ux.md`, `design/docs/pos/multi-terminal.md`, `spec/architecture-kutapay-system-1.md`, `spec/schema-tax-engine-1.md`.
-   - **Estimate:** 2 weeks for UI changes plus 1 week of usability testing with pilots.
+- POS SDK (JavaScript) handles invoice creation, offline queue, receipt template rendering, and device-specific status indicators.
+- Multiple POS terminals per outlet submit invoices concurrently; the cloud serializes fiscal numbering without gaps.
+- Each invoice carries `pos_terminal_id` and `cashier_id` for traceability.
+- Receipt templates include all five security elements (fiscal number, fiscal authority ID, auth code, timestamp, QR code).
 
-5. **Observability, onboarding, and fleet operations**
-   - **Description:** Prepare for 100 outlets by instrumenting device health, sync queues, and report generation telemetry; publish onboarding playbooks (install steps, DGI manual uploads) for retail staff.
-   - **Acceptance criteria:**
-     * Dashboards combine cloud API status (`/sync/status`, `/devices/{device_id}/health`) with DEF reports/queues so engineers can spot blocked uploads.
-     * Onboarding docs walk merchant teams through pairing the DEF, configuring tax groups, and verifying the trust boundary before going live.
-     * Alerts cover dropped connections, nonce exhaustion, failed uploads, and missing security elements so operations can react before regulators notice.
-   - **Dependencies:** `spec/design-cloud-api-1.md`, `spec/process-fiscal-reports-1.md`, `design/docs/cloud/architecture.md`, `design/docs/implementation/roadmap.md`.
-   - **Estimate:** 2 weeks for dashboards/playbooks plus 1 week for training pilots.
+**Estimated effort:** 3 weeks for SDK + 1 week for multi-terminal QA.
+**Dependencies:** `design/docs/platform/multi-user.md`, `design/docs/api/invoicing-sdk.md`.
 
+### 2. Mobile money integration
+
+**Description:** Support mobile money (M-Pesa, Airtel Money, Orange Money) as payment methods within invoices. Payment confirmation callbacks trigger invoice submission or update payment status on existing invoices.
+
+**Acceptance criteria:**
+
+- Payment callbacks from mobile money providers are processed and recorded in the invoice's `payments` array.
+- Invoices can be sealed before or after payment confirmation (payment status does not block fiscalization).
+- Dashboard shows payment status alongside invoice status.
+
+**Estimated effort:** 2 weeks per provider + 1 week for integration testing.
+**Dependencies:** `design/docs/platform/integrations.md`.
+
+### 3. Webhook event system
+
+**Description:** Build the webhook delivery system that pushes signed event notifications to external endpoints when invoices are sealed, reports are generated, or sync errors occur.
+
+**Acceptance criteria:**
+
+- Webhook events: `invoice.sealed`, `invoice.sync.success`, `invoice.sync.failed`, `report.generated`, `outlet.offline_alert`.
+- Payloads are signed with HMAC-SHA256 using the webhook secret.
+- Retry with exponential backoff on delivery failure (max 5 retries).
+- Dashboard UI for webhook management (create, test, view delivery logs).
+
+**Estimated effort:** 2 weeks for delivery engine + 1 week for dashboard UI.
+**Dependencies:** `design/docs/platform/integrations.md`.
+
+### 4. Enhanced dashboard & supervisor views
+
+**Description:** Add shift management, supervisor drill-downs, and fleet health views to the web dashboard for retail operations.
+
+**Acceptance criteria:**
+
+- Shift open/close workflow with X report generation per shift.
+- Supervisor view showing all terminals in an outlet with real-time invoice counts and sync status.
+- Fleet overview page (for multi-outlet merchants) with aggregate health metrics.
+- Offline client alerts with draft counts and ages.
+
+**Estimated effort:** 2 weeks.
+**Dependencies:** `design/docs/platform/dashboard.md`.
+
+### 5. Observability, onboarding & fleet operations
+
+**Description:** Instrument the platform for 100-outlet scale with monitoring, alerting, and onboarding playbooks for retail staff.
+
+**Acceptance criteria:**
+
+- Dashboards showing API latency, signing throughput, sync queue depth, and error rates.
+- Alerts for: failed DGI uploads, offline grace period exceeded, rate limit breaches, HSM health.
+- Onboarding documentation for retail merchants: outlet setup, API key creation, POS SDK installation, tax group configuration.
+- Automated regression tests for offline queue, multi-terminal concurrency, and mobile money flows.
+
+**Estimated effort:** 2 weeks for dashboards/playbooks + 1 week for training.
+**Dependencies:** `design/docs/cloud/architecture.md`, `design/docs/cloud/offline-sync.md`.
+
+## Risks
+
+!!! warning "Phase 2 Risks"
+    - POS environments have unreliable connectivity; the offline queue must handle 48–72h outages without data loss or duplicate fiscal events.
+    - Mobile money provider APIs have variable reliability and documentation quality; build provider-agnostic abstractions.
+    - DGI readiness for automated uploads may still be pending — maintain manual compliance tooling as a fallback.
+    - Scaling from 10 to 100 outlets may expose performance bottlenecks in the signing pipeline or Fiscal Ledger writes.

@@ -9,10 +9,10 @@
       
       
       
-        <link rel="prev" href="../arretes/">
+        <link rel="prev" href="../dashboard/">
       
       
-        <link rel="next" href="../../adr/">
+        <link rel="next" href="../../fiscal/invoice-lifecycle/">
       
       
         
@@ -23,7 +23,7 @@
     
     
       
-        <title>SFE Specifications - Bono Pay Technical Design</title>
+        <title>SDK & Libraries - Bono Pay Technical Design</title>
       
     
     
@@ -72,7 +72,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#sfe-specifications-v1" class="md-skip">
+        <a href="#sdk-libraries" class="md-skip">
           Skip to content
         </a>
       
@@ -108,7 +108,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              SFE Specifications
+              SDK & Libraries
             
           </span>
         </div>
@@ -394,18 +394,20 @@
       
   
   
+    
   
   
+  
     
     
     
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
         
           
           <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
@@ -426,7 +428,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
             
@@ -444,7 +446,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../platform/overview/" class="md-nav__link">
+      <a href="../overview/" class="md-nav__link">
         
   
   
@@ -472,7 +474,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../platform/api/" class="md-nav__link">
+      <a href="../api/" class="md-nav__link">
         
   
   
@@ -500,7 +502,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../platform/dashboard/" class="md-nav__link">
+      <a href="../dashboard/" class="md-nav__link">
         
   
   
@@ -525,10 +527,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../platform/sdk/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SDK & Libraries
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -544,6 +573,142 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#supported-sdks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Supported SDKs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#core-sdk-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core SDK features
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#getting-started" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Getting started
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Getting started">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#javascript-typescript" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        JavaScript / TypeScript
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#python" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Python
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#canonical-payload-tax-helpers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Canonical payload &amp; tax helpers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#offline-queue-reliability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Offline queue &amp; reliability
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#webhooks-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Webhooks &amp; verification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pos-integration-guide-phase-2-preview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        POS integration guide (Phase 2 preview)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#see-also" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        See also
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -914,7 +1079,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../platform/multi-user/" class="md-nav__link">
+      <a href="../multi-user/" class="md-nav__link">
         
   
   
@@ -942,7 +1107,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../platform/integrations/" class="md-nav__link">
+      <a href="../integrations/" class="md-nav__link">
         
   
   
@@ -974,20 +1139,18 @@
       
   
   
-    
   
   
-  
     
     
     
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
         
           
           <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
@@ -1008,7 +1171,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7">
             <span class="md-nav__icon md-icon"></span>
             
@@ -1026,7 +1189,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../legal-framework/" class="md-nav__link">
+      <a href="../../regulatory/legal-framework/" class="md-nav__link">
         
   
   
@@ -1054,7 +1217,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../arretes/" class="md-nav__link">
+      <a href="../../regulatory/arretes/" class="md-nav__link">
         
   
   
@@ -1079,37 +1242,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    SFE Specifications
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../regulatory/sfe-specs/" class="md-nav__link">
         
   
   
@@ -1125,92 +1261,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#mandatory-invoice-types" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Mandatory Invoice Types
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#14-dgi-tax-groups" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        14 DGI Tax Groups
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#required-reports" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Required Reports
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#security-elements" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Security Elements
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#offline-behavior-dgi-integration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Offline Behavior &amp; DGI Integration
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#data-integrity-immutability-and-mutations" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Data Integrity, Immutability, and Mutations
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1776,10 +1826,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#mandatory-invoice-types" class="md-nav__link">
+  <a href="#supported-sdks" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Mandatory Invoice Types
+        Supported SDKs
       
     </span>
   </a>
@@ -1787,10 +1837,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#14-dgi-tax-groups" class="md-nav__link">
+  <a href="#core-sdk-features" class="md-nav__link">
     <span class="md-ellipsis">
       
-        14 DGI Tax Groups
+        Core SDK features
       
     </span>
   </a>
@@ -1798,10 +1848,49 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#required-reports" class="md-nav__link">
+  <a href="#getting-started" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Required Reports
+        Getting started
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Getting started">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#javascript-typescript" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        JavaScript / TypeScript
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#python" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Python
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#canonical-payload-tax-helpers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Canonical payload &amp; tax helpers
       
     </span>
   </a>
@@ -1809,10 +1898,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#security-elements" class="md-nav__link">
+  <a href="#offline-queue-reliability" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Security Elements
+        Offline queue &amp; reliability
       
     </span>
   </a>
@@ -1820,10 +1909,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#offline-behavior-dgi-integration" class="md-nav__link">
+  <a href="#webhooks-verification" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Offline Behavior &amp; DGI Integration
+        Webhooks &amp; verification
       
     </span>
   </a>
@@ -1831,10 +1920,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#data-integrity-immutability-and-mutations" class="md-nav__link">
+  <a href="#pos-integration-guide-phase-2-preview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Data Integrity, Immutability, and Mutations
+        POS integration guide (Phase 2 preview)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#see-also" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        See also
       
     </span>
   </a>
@@ -1858,240 +1958,95 @@
 
 
 
-<h1 id="sfe-specifications-v1">SFE Specifications (v1)<a class="headerlink" href="#sfe-specifications-v1" title="Permanent link">&para;</a></h1>
-<p>This page distills the DGI Système de Facturation d'Entreprise (SFE) requirements so the Bono Pay design team can trace every regulatory demand to our architecture, fiscal flows, and hardware guarantees.</p>
-<p>The official summary calls out the layered deployment (SFE → DEF → MCF/e-MCF → DGI), mandates five invoice types, demands all 14 tax groups, requires Z/X/A/audit reporting, and insists security elements come from the trusted fiscal layer—not the POS. These constraints steer the content on the fiscal engine, hardware, and reports pages.</p>
-<div class="admonition warning">
-<p class="admonition-title">Trust boundary reminder</p>
-<p>In <strong>Phase 1</strong>, the Cloud Signing Service (HSM) is the trusted component that generates fiscal numbers, authentication codes, trusted timestamps, and QR codes. In <strong>Phase 3</strong>, the USB Fiscal Memory device (DEF) can assume this role for merchants needing hardware homologation. In both phases, client applications (API consumers, dashboard, SDK) must treat security elements as sealed outputs. See <a href="../../architecture/trust-boundary/">Architecture Trust Boundary</a> for details.</p>
-</div>
-<h2 id="mandatory-invoice-types">Mandatory Invoice Types<a class="headerlink" href="#mandatory-invoice-types" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Invoice Type</th>
-<th>French Label</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Sale invoice</td>
-<td>Facture de vente</td>
-<td>Everyday retail/wholesale sales; the default workflow in <code>design/docs/fiscal/invoice-lifecycle.md</code>.</td>
-</tr>
-<tr>
-<td>Advance invoice</td>
-<td>Facture d'avance</td>
-<td>Payments received before goods/services are fulfilled; still requires PREPARE → COMMIT.</td>
-</tr>
-<tr>
-<td>Credit note</td>
-<td>Note de crédit</td>
-<td>Correction for returned goods or billing adjustments; treated as a new fiscal event.</td>
-</tr>
-<tr>
-<td>Export invoice</td>
-<td>Facture d'exportation</td>
-<td>Sales destined outside the DRC; destines the invoice to TG07 (Export Zero Rate).</td>
-</tr>
-<tr>
-<td>Export credit note</td>
-<td>Note de crédit d'exportation</td>
-<td>Refund tied to an export transaction, sequenced independently like all refunds.</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-<p>Each type is implemented by the same canonical flow documented in the <a href="../../fiscal/invoice-lifecycle/">Invoice Lifecycle</a> page: client submits the canonical payload to the Cloud Signing Service, receives the sealed response with security elements, and delivers the receipt.</p>
-</blockquote>
-<h2 id="14-dgi-tax-groups">14 DGI Tax Groups<a class="headerlink" href="#14-dgi-tax-groups" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Code</th>
-<th>Name</th>
-<th>Rate</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>TG01</td>
-<td>Exempt</td>
-<td>0%</td>
-<td>Diplomats, embassies, NGOs, government transfers.</td>
-</tr>
-<tr>
-<td>TG02</td>
-<td>Standard VAT — Goods</td>
-<td>16%</td>
-<td>Default for tangible goods.</td>
-</tr>
-<tr>
-<td>TG03</td>
-<td>Standard VAT — Services</td>
-<td>16%</td>
-<td>Professional and intangible services.</td>
-</tr>
-<tr>
-<td>TG04</td>
-<td>Reduced VAT</td>
-<td>9%</td>
-<td>Essential foodstuffs and medicines flagged in catalog metadata.</td>
-</tr>
-<tr>
-<td>TG05</td>
-<td>Public Financing VAT</td>
-<td>16%</td>
-<td>Publicly funded programs; requires funding source metadata.</td>
-</tr>
-<tr>
-<td>TG06</td>
-<td>Customs VAT</td>
-<td>16%</td>
-<td>Imported goods (CIF basis) in addition to duties.</td>
-</tr>
-<tr>
-<td>TG07</td>
-<td>Export Zero Rate</td>
-<td>0%</td>
-<td>Goods/services consumed outside the DRC; requires export certificate.</td>
-</tr>
-<tr>
-<td>TG08</td>
-<td>Special Regime — Agriculture</td>
-<td>5%</td>
-<td>Agribusiness items registered under the agricultural regime.</td>
-</tr>
-<tr>
-<td>TG09</td>
-<td>Special Regime — Mining</td>
-<td>10%</td>
-<td>Mining sector goods/services with operator license metadata.</td>
-</tr>
-<tr>
-<td>TG10</td>
-<td>Specific Tax — Fuel</td>
-<td>25%</td>
-<td>Excise on gasoline, diesel, aviation fuel.</td>
-</tr>
-<tr>
-<td>TG11</td>
-<td>Specific Tax — Tobacco</td>
-<td>30%</td>
-<td>Applies to cigarettes, cigars, and tobacco preparations.</td>
-</tr>
-<tr>
-<td>TG12</td>
-<td>Specific Tax — Alcohol</td>
-<td>20%</td>
-<td>Spirits, beer, wine sold for domestic consumption.</td>
-</tr>
-<tr>
-<td>TG13</td>
-<td>Specific Tax — Telecommunications</td>
-<td>15%</td>
-<td>Mobile/data/SMS packages; include telecom operator ID.</td>
-</tr>
-<tr>
-<td>TG14</td>
-<td>Specific Tax — Digital Services</td>
-<td>12%</td>
-<td>Streaming, SaaS, online advertising delivered to DRC clients.</td>
-</tr>
-</tbody>
-</table>
-<p>These codes feed the canonical <code>tax_groups</code> manifest described in <code>spec/schema-tax-engine-1.md</code> (project root) and are enforced by the <a href="../../fiscal/tax-engine/">Tax Engine</a>. Each invoice must carry a <code>tax_summary</code> entry per group, and the Fiscal Ledger uses these to drive the Z/X/A reports.</p>
-<h2 id="required-reports">Required Reports<a class="headerlink" href="#required-reports" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Report</th>
-<th>Purpose</th>
-<th>Trigger</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Z Report</td>
-<td>Daily closure with totals per tax group, fiscal number range, and ledger hash.</td>
-<td>End-of-day or manual closure; cloud-initiated.</td>
-</tr>
-<tr>
-<td>X Report</td>
-<td>Periodic/session snapshot with counts, totals by payment method, and platform health.</td>
-<td>Configurable (hourly/shift) for operators or auditors.</td>
-</tr>
-<tr>
-<td>A Report</td>
-<td>Article-level detail, enumerating every line item with tax group, client classification, and invoice reference.</td>
-<td>On-demand for audits or DGI requests.</td>
-</tr>
-<tr>
-<td>Audit Export</td>
-<td>Full append-only journal (sales, voids, refunds, resets) sent in chunks for deep reconciliation.</td>
-<td>Scheduled (monthly/annual) or upon DGI request.</td>
-</tr>
-</tbody>
-</table>
-<p>Report design lives in <a href="../../fiscal/reports/"><code>design/docs/fiscal/reports.md</code></a>. The Z/X/A outputs are produced by the Report Generator from the Fiscal Ledger's hash-chained entries and counters.</p>
-<h2 id="security-elements">Security Elements<a class="headerlink" href="#security-elements" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Element</th>
-<th>Phase 1: Generated by</th>
-<th>Phase 3: Generated by</th>
-<th>Where referenced</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Sequential fiscal number</td>
-<td>Cloud Signing Service (Monotonic Counter Manager)</td>
-<td>USB Fiscal Memory device</td>
-<td>Printed on every receipt; enforced by the per-outlet counter.</td>
-</tr>
-<tr>
-<td>Fiscal authority ID</td>
-<td>Cloud Signing Service (HSM cluster ID)</td>
-<td>USB Fiscal Memory device (DEF NID)</td>
-<td>Identifies the trusted signer in every response and sync payload.</td>
-</tr>
-<tr>
-<td>Authentication code</td>
-<td>Cloud HSM (ECDSA signature)</td>
-<td>DEF Secure Element (ECDSA)</td>
-<td>Cryptographic proof stored in the Fiscal Ledger.</td>
-</tr>
-<tr>
-<td>Trusted timestamp</td>
-<td>Cloud infrastructure (NTP-synced)</td>
-<td>DEF RTC</td>
-<td>Anchor for chronological integrity; the Sync Agent uses it for ordering.</td>
-</tr>
-<tr>
-<td>QR code</td>
-<td>Cloud Signing Service (encoded fiscal number + auth code + timestamp)</td>
-<td>DEF (same encoding)</td>
-<td>Exposed to inspectors and customers; verified by DGI and internal tools.</td>
-</tr>
-</tbody>
-</table>
-<p>In Phase 1, every element comes from the Cloud Signing Service. In Phase 3, the DEF generates them locally. Client applications may only display these values — see <a href="../../fiscal/security-elements/">Security Elements</a> for per-element verification rules.</p>
-<h2 id="offline-behavior-dgi-integration">Offline Behavior &amp; DGI Integration<a class="headerlink" href="#offline-behavior-dgi-integration" title="Permanent link">&para;</a></h2>
-<p>The specification emphasizes that offline operation is normal. In Phase 1, client applications queue unsigned draft payloads locally (IndexedDB / SQLite) when the cloud is unreachable. Once connectivity returns, the drafts are submitted to the Cloud Signing Service for sealing. The Sync Agent then uploads sealed invoices to the MCF/e-MCF control modules. A dedicated sync state machine ensures retries, grace periods, and conflict resolution:</p>
+<h1 id="sdk-libraries">SDK &amp; Libraries<a class="headerlink" href="#sdk-libraries" title="Permanent link">&para;</a></h1>
+<p>Bono Pay provides SDKs and client libraries that wrap the Invoicing API so developers can focus on invoices, receipts, and integrations instead of plumbing canonical payloads. This page replaces the legacy POS plugin reference and summarizes the same deterministic payload structure, offline queueing guarantees, and webhook handling that the archived POS plugin document captured.</p>
+<h2 id="supported-sdks">Supported SDKs<a class="headerlink" href="#supported-sdks" title="Permanent link">&para;</a></h2>
 <ul>
-<li><a href="../../cloud/offline-sync/"><code>design/docs/cloud/offline-sync.md</code></a> documents how drafts transition from <code>QUEUED</code> to <code>SEALED</code> (via the Cloud Signing Service) and how sealed invoices are uploaded to the DGI.</li>
-<li><a href="../../cloud/dgi-integration/"><code>design/docs/cloud/dgi-integration.md</code></a> captures the known vs unknown pieces of the MCF/e-MCF API and highlights the remaining blockers for homologation.</li>
+<li><strong>JavaScript / TypeScript (npm)</strong> — Browser, Electron, React Native, and POS integrations can share the same package.</li>
+<li><strong>Python (pip)</strong> — Flask/FastAPI backends, ERP connectors, and accounting scripts.</li>
+<li><strong>PHP (composer)</strong> — Legacy ERP systems or PHP-based ecommerce platforms.</li>
+<li><strong>Future adopters</strong> — Java, .NET, and native mobile SDKs land in Phase 1+ as usage grows.</li>
 </ul>
-<p>This layered behavior mirrors the core architecture: canonical payloads flow from client applications to the Cloud Signing Service (or DEF in Phase 3), then sealed invoices flow through the Sync Agent to the DGI control modules.</p>
-<h2 id="data-integrity-immutability-and-mutations">Data Integrity, Immutability, and Mutations<a class="headerlink" href="#data-integrity-immutability-and-mutations" title="Permanent link">&para;</a></h2>
-<p>The SFE must never delete invoices. Corrections are credit notes, voids are new fiscal events, and all entries remain in the append-only Fiscal Ledger. These expectations appear in the <a href="../../fiscal/invoice-lifecycle/">Invoice Lifecycle</a> narrative and the Architecture Context Map (<code>memory-bank/context-map.md</code> in the project root). Any mutation references the original invoice and is submitted as a new canonical payload to the Cloud Signing Service (or DEF in Phase 3), ensuring auditability.</p>
-<blockquote>
-<p>This page is part of the regulatory view of the MkDocs site. For additional context, consult the <a href="../legal-framework/">DRC Legal Framework</a> overview and the <a href="../arretes/">Arrêté Summaries</a> tabs.</p>
-</blockquote>
+<p>Each SDK targets the canonical payload described in <code>spec/design-pos-plugin-api-1.md</code>, enforces authentication headers like <code>Authorization: Bearer</code>, and respects the <code>X-BonoPay-Merchant-ID</code> / <code>X-BonoPay-Outlet-ID</code> scoping that the Invoicing API (<code>design/docs/platform/api.md</code>) requires.</p>
+<h2 id="core-sdk-features">Core SDK features<a class="headerlink" href="#core-sdk-features" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Authentication helpers</strong> — Acquire, refresh, and attach scoped API keys.</li>
+<li><strong>Canonical payload serialization</strong> — Always order <code>merchant_id</code>, <code>outlet_id</code>, <code>pos_terminal_id</code>, <code>cashier_id</code>, <code>client</code>, <code>items</code>, <code>tax_groups</code>, <code>totals</code>, and <code>payments</code> so signatures remain reproducible (see <code>spec/design-cloud-api-1.md</code> and <code>spec/design-pos-plugin-api-1.md</code>).</li>
+<li><strong>Offline queue with auto-retry</strong> — IndexedDB (browser) or SQLite (native) keeps drafts, flushes FIFO when connectivity returns, and surfaces fiscal status callbacks (<code>onQueued</code>, <code>onFiscalized</code>, <code>onError</code>).</li>
+<li><strong>Tax group helpers</strong> — Ship the 14 DGI tax group codes plus client classification validation (Individual, Company, Commercial Individual, Professional, Embassy) before hitting the API.</li>
+<li><strong>Receipt rendering</strong> — HTML/print-ready templates plus PDF helpers so dashboards and POS screens can embed fiscal numbers, auth codes, and QR payloads.</li>
+<li><strong>Webhook signature verification</strong> — Validate <code>X-BonoPay-Signature</code> (HMAC-SHA256) before honoring <code>fiscalized</code>, <code>synced</code>, or <code>dgi_rejected</code> events.</li>
+<li><strong>Webhook receivers + delivery utilities</strong> — Automatically verify payloads, emit typed events, and surface <code>ledger_hash</code> + <code>security_elements</code> for auditing.</li>
+</ul>
+<h2 id="getting-started">Getting started<a class="headerlink" href="#getting-started" title="Permanent link">&para;</a></h2>
+<h3 id="javascript-typescript">JavaScript / TypeScript<a class="headerlink" href="#javascript-typescript" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>npm<span class="w"> </span>install<span class="w"> </span>@bonopay/sdk
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">BonoPay</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@bonopay/sdk&#39;</span><span class="p">;</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">client</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">BonoPay</span><span class="p">({</span><span class="w"> </span><span class="nx">apiKey</span><span class="o">:</span><span class="w"> </span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">BONOPAY_API_KEY</span><span class="w"> </span><span class="p">});</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">invoice</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">client</span><span class="p">.</span><span class="nx">invoices</span><span class="p">.</span><span class="nx">create</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">client</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Acme Ltd&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">nif</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;987654321&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">classification</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Company&#39;</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="nx">items</span><span class="o">:</span><span class="w"> </span><span class="p">[{</span><span class="w"> </span><span class="nx">description</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Consulting&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">quantity</span><span class="o">:</span><span class="w"> </span><span class="mf">1</span><span class="p">,</span><span class="w"> </span><span class="nx">unit_price</span><span class="o">:</span><span class="w"> </span><span class="mf">500</span><span class="p">,</span><span class="w"> </span><span class="nx">tax_group</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;TG03&#39;</span><span class="w"> </span><span class="p">}],</span>
+<span class="w">  </span><span class="nx">currency</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;CDF&#39;</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">merchant_id</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;bonopay-ks-1&#39;</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">outlet_id</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;outlet-kin001&#39;</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">pos_terminal_id</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;pos-sdk-js&#39;</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">cashier_id</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;cashier-42&#39;</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">invoice_type</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;sale&#39;</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">timestamp</span><span class="o">:</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nb">Date</span><span class="p">().</span><span class="nx">toISOString</span><span class="p">(),</span>
+<span class="w">  </span><span class="nx">tax_groups</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">code</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;TG03&#39;</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Standard VAT — Services&#39;</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">rate</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;0.16&#39;</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">base_amount</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;500.00&#39;</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">tax_amount</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;80.00&#39;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="nx">totals</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">subtotal</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;500.00&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">total_vat</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;80.00&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">total</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;580.00&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">currency</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;CDF&#39;</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="nx">payments</span><span class="o">:</span><span class="w"> </span><span class="p">[{</span><span class="w"> </span><span class="nx">method</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;mobile_money&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">amount</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;580.00&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">instrument_id</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;MOMO-123&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">currency</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;CDF&#39;</span><span class="w"> </span><span class="p">}]</span>
+<span class="p">});</span>
+
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Fiscal number&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">invoice</span><span class="p">.</span><span class="nx">fiscal_number</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;QR&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">invoice</span><span class="p">.</span><span class="nx">qr_payload</span><span class="p">);</span>
+</code></pre></div>
+<h3 id="python">Python<a class="headerlink" href="#python" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>bonopay-sdk
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">bonopay</span><span class="w"> </span><span class="kn">import</span> <span class="n">BonoPay</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">BonoPay</span><span class="p">(</span><span class="n">api_key</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;BONOPAY_API_TOKEN&quot;</span><span class="p">])</span>
+<span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;merchant_id&quot;</span><span class="p">:</span> <span class="s2">&quot;bonopay-ks-1&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;outlet_id&quot;</span><span class="p">:</span> <span class="s2">&quot;outlet-kin001&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;pos_terminal_id&quot;</span><span class="p">:</span> <span class="s2">&quot;python-sdk-01&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;cashier_id&quot;</span><span class="p">:</span> <span class="s2">&quot;cashier-13&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;invoice_type&quot;</span><span class="p">:</span> <span class="s2">&quot;sale&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;timestamp&quot;</span><span class="p">:</span> <span class="s2">&quot;2026-02-17T04:00:00Z&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;client&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Acme Ltd&quot;</span><span class="p">,</span> <span class="s2">&quot;nif&quot;</span><span class="p">:</span> <span class="s2">&quot;123456789&quot;</span><span class="p">,</span> <span class="s2">&quot;classification&quot;</span><span class="p">:</span> <span class="s2">&quot;Company&quot;</span><span class="p">},</span>
+    <span class="s2">&quot;items&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;code&quot;</span><span class="p">:</span> <span class="s2">&quot;CONS-001&quot;</span><span class="p">,</span> <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Consulting hours&quot;</span><span class="p">,</span> <span class="s2">&quot;quantity&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;unit_price&quot;</span><span class="p">:</span> <span class="s2">&quot;500.00&quot;</span><span class="p">,</span> <span class="s2">&quot;tax_group&quot;</span><span class="p">:</span> <span class="s2">&quot;TG03&quot;</span><span class="p">,</span> <span class="s2">&quot;taxable_unit&quot;</span><span class="p">:</span> <span class="s2">&quot;hour&quot;</span><span class="p">}],</span>
+    <span class="s2">&quot;tax_groups&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;code&quot;</span><span class="p">:</span> <span class="s2">&quot;TG03&quot;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Standard VAT — Services&quot;</span><span class="p">,</span> <span class="s2">&quot;rate&quot;</span><span class="p">:</span> <span class="s2">&quot;0.16&quot;</span><span class="p">,</span> <span class="s2">&quot;base_amount&quot;</span><span class="p">:</span> <span class="s2">&quot;1000.00&quot;</span><span class="p">,</span> <span class="s2">&quot;tax_amount&quot;</span><span class="p">:</span> <span class="s2">&quot;160.00&quot;</span><span class="p">}],</span>
+    <span class="s2">&quot;totals&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;subtotal&quot;</span><span class="p">:</span> <span class="s2">&quot;1000.00&quot;</span><span class="p">,</span> <span class="s2">&quot;total_vat&quot;</span><span class="p">:</span> <span class="s2">&quot;160.00&quot;</span><span class="p">,</span> <span class="s2">&quot;total&quot;</span><span class="p">:</span> <span class="s2">&quot;1160.00&quot;</span><span class="p">,</span> <span class="s2">&quot;currency&quot;</span><span class="p">:</span> <span class="s2">&quot;CDF&quot;</span><span class="p">},</span>
+    <span class="s2">&quot;payments&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;method&quot;</span><span class="p">:</span> <span class="s2">&quot;mobile_money&quot;</span><span class="p">,</span> <span class="s2">&quot;amount&quot;</span><span class="p">:</span> <span class="s2">&quot;1160.00&quot;</span><span class="p">,</span> <span class="s2">&quot;instrument_id&quot;</span><span class="p">:</span> <span class="s2">&quot;MOMO-123&quot;</span><span class="p">,</span> <span class="s2">&quot;currency&quot;</span><span class="p">:</span> <span class="s2">&quot;CDF&quot;</span><span class="p">}]</span>
+<span class="p">}</span>
+
+<span class="n">invoice</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">invoices</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Fiscalized:&quot;</span><span class="p">,</span> <span class="n">invoice</span><span class="p">[</span><span class="s2">&quot;payload&quot;</span><span class="p">][</span><span class="s2">&quot;fiscal_number&quot;</span><span class="p">],</span> <span class="s2">&quot;with QR&quot;</span><span class="p">,</span> <span class="n">invoice</span><span class="p">[</span><span class="s2">&quot;payload&quot;</span><span class="p">][</span><span class="s2">&quot;qr_payload&quot;</span><span class="p">])</span>
+</code></pre></div>
+<h2 id="canonical-payload-tax-helpers">Canonical payload &amp; tax helpers<a class="headerlink" href="#canonical-payload-tax-helpers" title="Permanent link">&para;</a></h2>
+<p>Every SDK enforces the field ordering defined in <code>spec/design-pos-plugin-api-1.md</code> (merchant_id → payments) and mirrors the same validation rules described in the Invoicing API reference. Tax group helpers surface the 14 DGI codes plus client classifications before the request leaves the client, so the Cloud Signing Service can trust the payload order and tax totals when the payload arrives.</p>
+<h2 id="offline-queue-reliability">Offline queue &amp; reliability<a class="headerlink" href="#offline-queue-reliability" title="Permanent link">&para;</a></h2>
+<p>Offline is non-negotiable. SDKs queue invoices in IndexedDB (browser) or SQLite (native) with statuses such as <code>draft</code>, <code>queued</code>, <code>fiscalized</code>, and <code>error</code>. When connectivity returns, the SDK flushes invoices FIFO to <code>POST /api/v1/invoices</code>, recomputes totals if the catalog changed, and retries with exponential backoff (100 ms → 5 s → 20 s, max 3 attempts). Each retry line logs the <code>nonce</code>/<code>hash</code> so merchants can audit why a submission was delayed. Fiscal status callbacks keep dashboards in sync: green for <code>fiscalized</code>, yellow for queued, red for errors.</p>
+<h2 id="webhooks-verification">Webhooks &amp; verification<a class="headerlink" href="#webhooks-verification" title="Permanent link">&para;</a></h2>
+<p>The SDK verifies <code>X-BonoPay-Signature</code> (HMAC-SHA256) before honoring webhook events that describe <code>dgi_status</code> changes (<code>queued</code>, <code>synced</code>, <code>dgi_acknowledged</code>, <code>fiscal_error</code>). Webhook payloads include <code>fiscal_number</code>, <code>ledger_hash</code>, and the canonical payload hash so applications can reconcile receipts without touching untrusted layers. The SDK also exposes helper functions to render receipts (HTML + PDF) summarizing the security elements and tax breakdown.</p>
+<h2 id="pos-integration-guide-phase-2-preview">POS integration guide (Phase 2 preview)<a class="headerlink" href="#pos-integration-guide-phase-2-preview" title="Permanent link">&para;</a></h2>
+<p>Phase 2 POS vendors embed the same SDK to talk to Bono Pay Cloud instead of running a local fiscal service. In practice, each POS terminal becomes another API consumer that connects through the SDK, scopes requests with <code>outlet_id</code> and <code>user_id</code>, and relies on the SDK’s deterministic serialization, offline queue, and webhook callbacks. POS integrations can reuse the same receipt templates, tax group helpers, and webhook logic that existing dashboards use, which means the transition from Phase 1 dashboards to Phase 2 multi-terminal POS systems is seamless.</p>
+<h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
+<ul>
+<li><code>design/docs/platform/api.md</code> — the REST endpoints that every SDK targets.</li>
+<li><code>spec/design-pos-plugin-api-1.md</code> — formal payload specification and canonical ordering.</li>
+<li><code>design/docs/api/pos-plugin.md</code> — legacy plugin reference (archived for Phase 3 compliance) that preserved the original payload examples.</li>
+</ul>
 
 
 

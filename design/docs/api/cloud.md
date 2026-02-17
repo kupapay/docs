@@ -1,115 +1,165 @@
 # Cloud API Reference
 
-This API is the cloud-facing bridge between POS terminals, the trusted USB Fiscal Memory device, and the DGI control modules. It stores uploads from `spec/architecture-kutapay-system-1.md`, replays them in arrival order, and exposes reporting and audit endpoints aligned with `spec/design-cloud-api-1.md`.
+The Bono Pay Cloud API is the primary interface for creating fiscalized invoices, querying their status, generating reports, and managing outlets. All client applications (web dashboard, REST API consumers, SDKs) interact with the platform through this API.
 
 !!! caution "Security by design"
-    All endpoints require TLS 1.3+, `Authorization: Bearer <token>`, and the `X-KUTAPAY-DEVICE-ID` header so we can tie uploads to trusted DEF instances. Never accept invoices with missing canonical fields or unsigned nonces.
+    All endpoints require TLS 1.3+, `Authorization: Bearer <api_key>`, and the `X-Bono-Outlet-ID` header to scope requests to a specific outlet. Never accept payloads with missing canonical fields or unauthorized API keys.
 
 ## Key Endpoints
 
-| Endpoint | Purpose | Response highlights |
-|----------|---------|---------------------|
-| `POST /api/v1/invoices/upload` | Accept sealed invoices from the canonical payload and queue them for DGI transmission | `dgi_status`, `queued_at`, retry hints |
-| `GET /api/v1/invoices/{fiscal_number}/status` | Check whether the DGI acknowledged a fiscal number | `dgi_status`, `processed_at` |
-| `POST /api/v1/devices/register` | Register DEF hardware and provision prefixes | `assigned_prefix`, `activation_code` |
-| `GET /api/v1/devices/{device_id}/health` | Monitor DEF heartbeat, counter, and queue | `current_counter`, `queued_invoices` |
-| `GET /api/v1/sync/status` | Surface queue depth, state machine, and retry timing | `backlog`, `state`, `next_retry` |
-| `POST /api/v1/reports` | Trigger Z/X/A reports derived from the hash-chained journal | `report_id`, `download_url` |
-| `GET /api/v1/audit/export` | Download journal exports for inspections/audit | `journal_hash`, `entries`, signed downloads |
+| Endpoint | Method | Purpose | Response highlights |
+|----------|--------|---------|---------------------|
+| `/api/v1/invoices` | POST | Submit a canonical payload for fiscalization | `fiscal_number`, `auth_code`, `timestamp`, `qr_payload` |
+| `/api/v1/invoices/{fiscal_number}` | GET | Retrieve a sealed invoice | Full sealed payload + `dgi_status` |
+| `/api/v1/invoices/batch` | POST | Submit multiple payloads in one request | Array of sealed responses |
+| `/api/v1/invoices/{fiscal_number}/status` | GET | Check DGI sync status | `dgi_status`, `acknowledged_at` |
+| `/api/v1/outlets` | POST | Register a new outlet | `outlet_id`, `fiscal_authority_id` |
+| `/api/v1/outlets/{outlet_id}/status` | GET | Check outlet health and counter | `next_fiscal_number`, `pending_sync`, `status` |
+| `/api/v1/reports` | POST | Generate Z/X/A reports | `report_id`, `download_url` |
+| `/api/v1/audit/export` | GET | Download hash-chained journal exports | `ledger_hash`, `entries`, signed downloads |
+| `/api/v1/webhooks` | POST | Register a webhook endpoint | `webhook_id`, `events`, `active` |
+| `/api/v1/api-keys` | POST | Create a scoped API key | `api_key_id`, `key`, `scopes` |
 
 !!! info "Specification reference"
-    The endpoint request/response schema definitions live in `spec/design-cloud-api-1.md` (project root).
+    The endpoint request/response schema definitions are based on `spec/design-cloud-api-1.md` (project root).
 
-## Example: Invoice Upload
+## Example: Create Invoice
 
 ```json
-POST /api/v1/invoices/upload
+POST /api/v1/invoices
 Content-Type: application/json
-Authorization: Bearer dgi-token
-X-KUTAPAY-DEVICE-ID: DEF-1A2B3C
+Authorization: Bearer bono_key_abc123
+X-Bono-Outlet-ID: OUTLET-001
+Idempotency-Key: hash_of_canonical_payload
 
 {
-  "fiscal_number": "KUTA-2026-000123",
-  "device_id": "DEF-1A2B3C",
-  "auth_code": "h9fj2w8s...",
-  "timestamp": "2026-02-17T03:00:00Z",
-  "qr_payload": "https://secure.dgi/conformity?hash=...",
-  "canonical_payload": {
-    "merchant_nif": "123456789",
-    "client": { "name": "Acme Ltd", "nif": "987654321" },
-    "client_classification": "Company",
-    "outlet_id": "OUTLET-001",
-    "pos_terminal_id": "POS-01",
-    "cashier_id": "CASHIER-07",
-    "tax_groups": [
-      { "code": "VAT_STD", "amount": 120.0, "rate": 16.0 }
-    ],
-    "items": [
-      { "sku": "SKU-001", "description": "Widget", "quantity": 2, "unit_price": 60.0, "tax_group": "VAT_STD" }
-    ],
-    "totals": { "subtotal": 120.0, "tax": 19.2, "total": 139.2 },
-    "timestamp": "2026-02-17T03:00:00Z"
-  }
+  "invoice_type": "sale",
+  "merchant_nif": "123456789",
+  "client": {
+    "name": "Acme Ltd",
+    "nif": "987654321",
+    "classification": "company"
+  },
+  "items": [
+    {
+      "sku": "SKU-001",
+      "description": "Consulting service",
+      "quantity": 1,
+      "unit_price": 100000,
+      "tax_group": "TG03"
+    }
+  ],
+  "tax_groups": [
+    { "code": "TG03", "base_amount": 100000, "rate": 0.16, "tax_amount": 16000 }
+  ],
+  "totals": {
+    "subtotal": 100000,
+    "tax": 16000,
+    "total": 116000,
+    "currency": "CDF"
+  },
+  "payments": [
+    { "method": "bank_transfer", "amount": 116000, "reference": "TXN-789" }
+  ]
 }
 ```
 
-Response:
+Response (201 Created):
 
 ```json
 {
-  "status": "ok",
-  "code": "INVOICE_UPLOADED",
-  "payload": {
-    "queued_at": "2026-02-17T03:01:00Z",
-    "dgi_status": "pending",
-    "retry_after": "2026-02-17T03:05:00Z"
+  "fiscal_number": "BONO-OUTLET001-000123",
+  "fiscal_authority_id": "HSM-CLUSTER-01",
+  "auth_code": "MEUCIQD8j2w8s...",
+  "timestamp": "2026-02-17T03:00:00Z",
+  "qr_payload": "https://verify.bonopay.cd/i?hash=...",
+  "dgi_status": "pending_sync",
+  "submitted_by": {
+    "type": "api_key",
+    "id": "KEY-abc123"
   }
 }
 ```
 
-## Example: Report Request
+## Example: Generate Report
 
 ```json
 POST /api/v1/reports
 Content-Type: application/json
-Authorization: Bearer dgi-token
+Authorization: Bearer bono_key_abc123
+X-Bono-Outlet-ID: OUTLET-001
 
 {
   "type": "Z",
   "period": { "date": "2026-02-17" },
-  "outlet_id": "OUTLET-001",
-  "include_journal_hash": true
+  "include_ledger_hash": true
 }
 ```
 
-Response:
+Response (200 OK):
 
 ```json
 {
-  "status": "ok",
-  "code": "REPORT_READY",
-  "payload": {
-    "report_id": "RPT-Z-2026-02-17",
-    "download_url": "/reports/zip/download/RPT-Z-2026-02-17",
-    "generated_at": "2026-02-17T03:30:00Z"
-  }
+  "report_id": "RPT-Z-OUTLET001-2026-02-17",
+  "type": "Z",
+  "download_url": "/api/v1/reports/RPT-Z-OUTLET001-2026-02-17/download",
+  "generated_at": "2026-02-17T23:58:30Z",
+  "ledger_hash": "3F9B-7A12-..."
+}
+```
+
+## Example: Outlet Registration
+
+```json
+POST /api/v1/outlets
+Content-Type: application/json
+Authorization: Bearer bono_owner_key
+
+{
+  "merchant_nif": "123456789",
+  "name": "Acme Kinshasa Branch",
+  "address": "123 Boulevard du 30 Juin, Kinshasa"
+}
+```
+
+Response (201 Created):
+
+```json
+{
+  "outlet_id": "OUTLET-001",
+  "fiscal_authority_id": "HSM-CLUSTER-01",
+  "next_fiscal_number": 1,
+  "status": "active"
 }
 ```
 
 ## Monitoring endpoints
 
-- `GET /api/v1/devices/{device_id}/health` returns the last heartbeat, queue size, and current counter so operations can alert on stalled syncs.
-- `GET /api/v1/sync/status` exposes the sync state machine (PENDING → RETRYING → ACKNOWLEDGED) and should power dashboards and alerting rules.
-- `GET /api/v1/audit/export` returns the hash-chained journal with signed `journal_hash` plus downloadable artifacts for auditors.
+| Endpoint | Purpose |
+|----------|---------|
+| `GET /api/v1/outlets/{outlet_id}/status` | Returns sync health, pending invoice count, next fiscal number, and platform status. |
+| `GET /api/v1/sync/status` | Exposes aggregate sync pipeline health: backlog, state, next retry timestamp. |
+| `GET /api/v1/audit/export` | Returns the hash-chained Fiscal Ledger with signed `ledger_hash` plus downloadable artifacts for auditors. |
 
-## Error handling summary
+## Error handling
 
-- **Invalid canonical payload**: respond with `error: INVALID_SIGNATURE`.
-- **Retries**: When `dgi_status` remains `pending`, the client should respect `retry_after` and refrain from re-submitting until the time arrives.
-- **Authorization**: Fail fast with `error: INSUFFICIENT_PERMISSIONS` when tokens lack the required scopes for device registration, reporting, or audit exports.
+| Scenario | HTTP status | Error code | Notes |
+|----------|-------------|------------|-------|
+| Invalid canonical payload | 400 | `INVALID_PAYLOAD` | Missing required fields or tax group validation failure. |
+| Invalid signature / auth | 401 | `UNAUTHORIZED` | API key invalid, expired, or revoked. |
+| Insufficient permissions | 403 | `INSUFFICIENT_PERMISSIONS` | API key lacks the required scope for this operation. |
+| Outlet not found | 404 | `OUTLET_NOT_FOUND` | The `X-Bono-Outlet-ID` does not match a registered outlet. |
+| Duplicate request | 409 | `DUPLICATE_PAYLOAD` | `Idempotency-Key` matches an already-sealed invoice; returns the existing sealed response. |
+| Rate limit exceeded | 429 | `RATE_LIMIT_EXCEEDED` | Retry after the duration specified in `Retry-After` header. |
+
+## Rate limiting
+
+- Default: 100 requests/second per API key.
+- Burst: up to 200 requests in a 1-second window.
+- Rate limit headers: `X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Reset`.
 
 ## Notes
 
-- The cloud API keeps every invoice traceable through `fiscal_number`, `device_id`, and `outlet_id` tags.
-- Keep audit exports within the 30-day window to avoid `RANGE_TOO_LARGE`.
-- All endpoints should emit structured logs (`cloud.request`, `cloud.response`) that include `device_id`, `fiscal_number`, and `dgi_status`.
+- Every invoice is traceable through `fiscal_number`, `outlet_id`, and `submitted_by` (user_id or api_key_id).
+- Audit exports default to a 30-day window. Use `start_date` and `end_date` query parameters to customize.
+- All endpoints emit structured logs (`bono.api.request`, `bono.api.response`) that include `outlet_id`, `fiscal_number`, and `dgi_status`.

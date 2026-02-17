@@ -2,10 +2,10 @@
 
 ## Regulatory mandate
 
-The DGI SFE specification and the Bono Pay discussion notes are unambiguous: **the tax engine must handle all 14 DGI-defined tax groups, client classifications that drive tax selection, and precise rounding before an invoice is handed to the USB Fiscal Memory device.** The `spec/schema-tax-engine-1.md` document controls the canonical schema, while this page focuses on implementation guidance and examples.
+The DGI SFE specification and the Bono Pay discussion notes are unambiguous: **the tax engine must handle all 14 DGI-defined tax groups, client classifications that drive tax selection, and precise rounding before an invoice is submitted to the Cloud Signing Service (HSM).** The `spec/schema-tax-engine-1.md` document controls the canonical schema, while this page focuses on implementation guidance and examples.
 
 !!! warning "Regulatory constraint"
-    The tax engine cannot shortcut the 14-group requirement. If the documentable tax group manifest does not list a TG## code, the invoice must fail validation before it reaches the device.
+    The tax engine cannot shortcut the 14-group requirement. If the documentable tax group manifest does not list a TG## code, the invoice must fail validation before it reaches the Cloud Signing Service.
 
 ## Tax Group Matrix
 
@@ -52,7 +52,7 @@ flowchart TD
     Kind --> |Reduced| TG4[TG04: Reduced VAT]
 ```
 
-This flowchart should be embedded into the POS taxonomy. At each branch, the catalog metadata must flag the appropriate tax group so that the fiscal service never guesses a code. The `special` branch also checks for catalogue flags such as `is_excise`, `use_customs_rate`, or `special_regime_code`.
+This flowchart should be embedded into the product catalog taxonomy. At each branch, the catalog metadata must flag the appropriate tax group so that the invoicing platform never guesses a code. The `special` branch also checks for catalogue flags such as `is_excise`, `use_customs_rate`, or `special_regime_code`.
 
 ## Client Classification and Its Effects
 
@@ -87,5 +87,5 @@ This flowchart should be embedded into the POS taxonomy. At each branch, the cat
 
 1. Reference `spec/schema-tax-engine-1.md` for the authoritative TG## definitions and canonical schema fields before you add a new tax_group_code.
 2. Drive the taxonomy (export vs. local, special regime, excise) through catalog metadata and client classification.
-3. When the USB Fiscal Memory returns the fiscal response, persist `tax_summary` so you can regenerate Z/X/A reports that align with the manifest version.
+3. When the Cloud Signing Service returns the sealed fiscal response, persist `tax_summary` so you can regenerate Z/X/A reports that align with the manifest version.
 4. Update `tax_group_manifest_version` whenever DGI publishes a new rate or adds a group; the spec file mirrors the latest manifest and should be the source of truth for the document.

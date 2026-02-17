@@ -47,10 +47,19 @@ flowchart TB
 - **Technical observability (SFE spec):** Archives must retain invoices for at least one year, report outputs (Z/X/A/audit) must be generated locally, and every invoice must carry sequential fiscal number, device ID, signature, timestamp, and QR code before syncing; offline issuance remains normal operation.
 - **Fallback & resilience (Arrêté 033):** Hardware failure is not an excuse—fallback systems must stay powered; replacement devices and offline queues must be ready immediately whenever connectivity or device issues occur.
 
+## Phased compliance strategy
+
+| Phase | Scope | Compliance approach |
+|-------|-------|--------------------|
+| **Phase 1 — Software Invoicing** | API-first invoicing platform with Cloud Signing Service (HSM) | Cloud HSM generates all security elements. Meets SFE requirements via software. Manual DGI submissions until MCF/e-MCF API is published. |
+| **Phase 2 — POS & Retail** | POS SDK, multi-terminal, mobile money | POS terminals connect as API consumers. Cloud remains fiscal authority. |
+| **Phase 3 — USB Hardware** | USB Fiscal Memory device (DEF) for DEF homologation | Optional USB device signs invoices locally. Cloud syncs sealed data to DGI. Full hardware homologation path. |
+| **Phase 4 — Enterprise** | ERP connectors, fleet management, analytics | Enterprise integrations built on the established fiscal platform. |
+
 ## Implications for Bono Pay
 
-1. **Governance alignment**: Treat the Steering and Technical Committees as the ultimate arbiters—submit architecture and compliance reports, engage politically, and log every decision for the Secretariat.
-2. **Operational discipline**: The POS / USB device / cloud stack must enforce the layered mandate (SFE → DEF → MCF → DGI) with immutable journals, security elements, and multi-terminal per-outlet rules.
-3. **Commercial readiness**: Homologation, distributor partnerships, pricing disclosures, spare parts, and two-year renewal plans are as critical as firmware.
-4. **Technical completeness**: Support all 14 tax groups, five invoice types, offline-first issuance, and mandated reports before reaching DGI; treat the SFE spec as a living contract even as regulatory details (e.g., QR payloads) evolve.
+1. **Governance alignment**: Treat the Steering and Technical Committees as the ultimate arbiters — submit architecture and compliance reports, engage politically, and log every decision for the Secretariat.
+2. **Operational discipline**: The invoicing platform and Cloud Signing Service must enforce the layered mandate (SFE → trusted signer → MCF → DGI) with the append-only Fiscal Ledger, security elements, and per-outlet serialized numbering.
+3. **Commercial readiness**: Homologation, distributor partnerships, pricing disclosures, spare parts, and two-year renewal plans are as critical as software delivery.
+4. **Technical completeness**: Support all 14 tax groups, five invoice types, offline-first behavior, and mandated reports before reaching DGI; treat the SFE spec as a living contract even as regulatory details (e.g., QR payloads) evolve.
 

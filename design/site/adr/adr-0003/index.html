@@ -12,7 +12,7 @@
         <link rel="prev" href="../adr-0002/">
       
       
-        <link rel="next" href="../../implementation/roadmap/">
+        <link rel="next" href="../adr-0004/">
       
       
         
@@ -23,7 +23,7 @@
     
     
       
-        <title>0003 - POS Technology Stack - Bono Pay Technical Design</title>
+        <title>0003 - Platform Technology Stack - Bono Pay Technical Design</title>
       
     
     
@@ -72,7 +72,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#adr-0003-pos-technology-stack" class="md-skip">
+        <a href="#adr-0003-platform-technology-stack" class="md-skip">
           Skip to content
         </a>
       
@@ -108,7 +108,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              0003 - POS Technology Stack
+              0003 - Platform Technology Stack
             
           </span>
         </div>
@@ -415,7 +415,7 @@
   <span class="md-ellipsis">
     
   
-    Hardware
+    Invoicing Platform
   
 
     
@@ -431,7 +431,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Hardware
+    Invoicing Platform
   
 
           </label>
@@ -444,14 +444,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../hardware/usb-device/" class="md-nav__link">
+      <a href="../../platform/overview/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    USB Fiscal Memory
+    Product Overview
   
 
     
@@ -472,14 +472,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../hardware/protocol/" class="md-nav__link">
+      <a href="../../platform/api/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    USB Protocol (2PC)
+    Invoicing API
   
 
     
@@ -500,14 +500,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../hardware/secure-element/" class="md-nav__link">
+      <a href="../../platform/dashboard/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Secure Element
+    Web Dashboard
   
 
     
@@ -528,14 +528,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../hardware/bom/" class="md-nav__link">
+      <a href="../../platform/sdk/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    BOM & Manufacturing
+    SDK & Libraries
   
 
     
@@ -885,7 +885,7 @@
   <span class="md-ellipsis">
     
   
-    POS Application
+    Platform & Integrations
   
 
     
@@ -901,7 +901,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    POS Application
+    Platform & Integrations
   
 
           </label>
@@ -914,14 +914,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../pos/multi-terminal/" class="md-nav__link">
+      <a href="../../platform/multi-user/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Multi-Terminal
+    Multi-User Access
   
 
     
@@ -942,35 +942,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../pos/ui-ux/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    UI/UX
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../pos/integrations/" class="md-nav__link">
+      <a href="../../platform/integrations/" class="md-nav__link">
         
   
   
@@ -1292,7 +1264,7 @@
   <span class="md-ellipsis">
     
   
-    0003 - POS Technology Stack
+    0003 - Platform Technology Stack
   
 
     
@@ -1310,7 +1282,7 @@
   <span class="md-ellipsis">
     
   
-    0003 - POS Technology Stack
+    0003 - Platform Technology Stack
   
 
     
@@ -1336,10 +1308,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#decision-2026-02-17" class="md-nav__link">
+  <a href="#decision-2026-02-17-revised-2026-06-01" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Decision - 2026-02-17
+        Decision - 2026-02-17 (revised 2026-06-01)
       
     </span>
   </a>
@@ -1350,6 +1322,62 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adr-0004/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0004 - Cloud Fiscal Signing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adr-0005/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0005 - Strategic Pivot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -1387,7 +1415,7 @@
   <span class="md-ellipsis">
     
   
-    Implementation
+    API Reference
   
 
     
@@ -1400,6 +1428,116 @@
         
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/cloud/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cloud API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/invoicing-sdk/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Invoicing SDK
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Implementation
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1451,7 +1589,7 @@
   <span class="md-ellipsis">
     
   
-    Phase 1 - B2B Pilot
+    Phase 1 - Software Invoicing
   
 
     
@@ -1479,7 +1617,7 @@
   <span class="md-ellipsis">
     
   
-    Phase 2 - Retail
+    Phase 2 - POS & Retail
   
 
     
@@ -1507,89 +1645,7 @@
   <span class="md-ellipsis">
     
   
-    Phase 3 - Enterprise
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    
-    
-    
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
-        
-          
-          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    API Reference
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_10">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    API Reference
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../api/usb-device/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    USB Device API
+    Phase 3 - USB Hardware
   
 
     
@@ -1610,42 +1666,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../api/cloud/" class="md-nav__link">
+      <a href="../../implementation/phase-4/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Cloud API
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../api/pos-plugin/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    POS Plugin API
+    Phase 4 - Enterprise
   
 
     
@@ -1693,10 +1721,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#decision-2026-02-17" class="md-nav__link">
+  <a href="#decision-2026-02-17-revised-2026-06-01" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Decision - 2026-02-17
+        Decision - 2026-02-17 (revised 2026-06-01)
       
     </span>
   </a>
@@ -1720,34 +1748,46 @@
 
 
 
-<h1 id="adr-0003-pos-technology-stack">ADR-0003: POS Technology Stack<a class="headerlink" href="#adr-0003-pos-technology-stack" title="Permanent link">&para;</a></h1>
-<h3 id="decision-2026-02-17">Decision - 2026-02-17<a class="headerlink" href="#decision-2026-02-17" title="Permanent link">&para;</a></h3>
-<p><strong>Decision</strong>: Adopt a Progressive Web App (PWA) front-end paired with a dedicated local fiscal daemon to run the Bono Pay POS across Android, desktop, and low-end hardware while respecting the trust boundary and USB fiscalization requirements.</p>
+<h1 id="adr-0003-platform-technology-stack">ADR-0003: Platform Technology Stack<a class="headerlink" href="#adr-0003-platform-technology-stack" title="Permanent link">&para;</a></h1>
+<h3 id="decision-2026-02-17-revised-2026-06-01">Decision - 2026-02-17 (revised 2026-06-01)<a class="headerlink" href="#decision-2026-02-17-revised-2026-06-01" title="Permanent link">&para;</a></h3>
+<p><strong>Decision</strong>: Build Bono Pay as a cloud-first invoicing platform with a REST API, web dashboard, and client SDKs (JavaScript / Python) — replacing the original PWA + local fiscal daemon architecture that assumed USB hardware from day one.</p>
 <p><strong>Context</strong>:
-- The POS UI must run on Android tablets/phones, laptops, and eventually desktops while keeping the experience as fluid as the Odoo baseline described in <code>design/docs/pos/ui-ux.md</code>.
-- The interface must stay offline-first (Service Worker + IndexedDB caching), show fiscal status in real time, and never print or persist a sale until the USB Fiscal Memory device completes PREPARE → COMMIT.
-- Browsers cannot access raw USB endpoints or run long-lived USB CDC connections, so any Web layer must delegate device interactions to a trusted local daemon that enforces the canonical payload, handles nonce lifecycles, and maintains the trust boundary.
-- The team must balance offline storage, USB communication, developer skill sets, and the desire to share UI assets across Android, desktop, and web-like surfaces.</p>
+- The strategic pivot (see ADR-0005) moves Bono Pay from a POS-hardware-first product to an API-first invoicing platform (think Stripe Invoices for DRC fiscal compliance). Phase 1 targets B2B service companies, wholesalers, and schools that need sealed fiscal invoices without deploying POS terminals or USB devices.
+- The Cloud Signing Service (HSM) is the trusted fiscal authority in Phase 1. Client applications are untrusted — they submit canonical payloads and receive sealed responses containing fiscal numbers, signatures, timestamps, and QR codes.
+- The platform must support two client surfaces from launch: a REST API for programmatic integrations and a web dashboard for manual invoice management.
+- Offline-first remains non-negotiable: client apps queue unsigned drafts locally (IndexedDB/Service Worker for web, SQLite for SDKs) and submit them when connectivity returns. Fiscalization only happens in the cloud.
+- Phase 2 adds POS terminals as API consumers. Phase 3 optionally introduces the USB Fiscal Memory device (DEF) as an alternative signer. The technology stack must accommodate these future layers without rearchitecture.</p>
 <p><strong>Options</strong>:
-1. <strong>PWA + local daemon</strong><br />
-   - Pros: Leverages the PWA/offline lessons from the POS UX direction, runs on tablets, phones, and desktops without platform-specific builds, and updates instantly through the browser while IndexedDB and Service Workers keep catalogs and queue state offline. The local daemon (fiscal service) encapsulates USB CDC communication, nonce handling, and canonical payload serialization, keeping the trust boundary intact.<br />
-   - Cons: Requires installing or running a small native helper on each terminal, but the helper can be minimal (Java/Go/Rust) and scoped strictly to device interactions.
-2. <strong>Flutter (single codebase)</strong><br />
-   - Pros: Compiles to Android, desktop, and potentially web, offers smooth UI performance, and can reuse a single Dart codebase. Offline storage is supported via built-in plugins.<br />
-   - Cons: Flutter apps still need a native module for USB CDC, complicating the trust boundary, and the team would need Dart expertise. Odoo-style web workflows would need to be rearchitected, and deploying updates requires reinstalling the app rather than just refreshing a browser page.
-3. <strong>React Native + native bridge</strong><br />
-   - Pros: Shares JavaScript knowledge with the current web-focused team, supports Android and desktop via multi-platform frameworks, and integrates with native USB code through bridges.<br />
-   - Cons: Native bridges add maintenance overhead for multiple platforms, offline caching and service worker–style updates do not come naturally, and code sharing with the cloud/web experience remains limited compared to a true web UI.
-4. <strong>Electron desktop app + separate Android native app</strong><br />
-   - Pros: Electron can host the Odoo-inspired UI with full control over the file system and USB APIs, while a bespoke Android native app handles tablets.<br />
-   - Cons: Increases maintenance (two codebases), bloats resource usage, and loses the lightweight, instant-on feel of the PWA. Electron’s appetite for CPU/memory conflicts with low-end retail hardware, and shipping separate apps for Android/tablet undermines the goal of a single POS experience.</p>
-<p><strong>Rationale</strong>: The PWA + local daemon option best balances the UX directives in <code>design/docs/pos/ui-ux.md</code>, offline-first constraints, and the USB trust boundary. The PWA delivers immediate updates, dual-currency dashboards, IndexedDB caching, and the fiscal-first ribbon described in the UX guide. Relying on a local fiscal daemon preserves the canonical payload handshake, nonce lifecycle, and USB CDC framing without exposing those responsibilities to the browser. Flutter, React Native, and Electron introduce heavier runtimes, multi-codebase complexity, or weaker alignment with the Odoo-inspired patterns we already document.</p>
+1. <strong>REST API + Web Dashboard + Client SDKs (selected)</strong>
+   - Pros: Fastest path to market for B2B pilot. REST API is universally understood and integrates with any language or ERP. Web dashboard provides immediate value without installation. SDKs (JavaScript, Python) abstract API complexity and enable offline queuing. Cloud HSM centralizes the trust boundary — no local daemon needed for Phase 1.
+   - Cons: Requires cloud infrastructure from day one (HSM, database, sync agent). No offline fiscalization until Phase 3 introduces the DEF.</p>
+<ol>
+<li><strong>PWA + Local Fiscal Daemon (original architecture)</strong></li>
+<li>Pros: Enables offline fiscalization via the USB device. Single codebase runs on tablets, phones, and desktops.</li>
+<li>
+<p>Cons: Requires USB hardware from day one, which delays market entry. Local daemon adds deployment complexity. Not suitable for API-first B2B integrations (service companies, schools). Assumes POS UX that most Phase 1 customers don't need.</p>
+</li>
+<li>
+<p><strong>GraphQL API instead of REST</strong></p>
+</li>
+<li>Pros: Flexible querying for complex invoice structures. Single endpoint simplifies versioning.</li>
+<li>
+<p>Cons: Adds complexity for simple CRUD operations. Tooling ecosystem is smaller in the DRC developer community. Over-engineering for the current feature set.</p>
+</li>
+<li>
+<p><strong>Mobile-first native apps (iOS/Android)</strong></p>
+</li>
+<li>Pros: Best mobile UX. Direct access to device hardware (camera for QR scanning, NFC).</li>
+<li>Cons: Two codebases to maintain. App store distribution delays updates. Most Phase 1 customers (B2B) prefer web/API access over mobile apps.</li>
+</ol>
+<p><strong>Rationale</strong>: The REST API + Web Dashboard + SDKs stack aligns with the API-first strategy. It delivers the fastest path to the B2B pilot (Phase 1) without requiring USB hardware or POS terminals. The cloud HSM centralizes the trust boundary, eliminating the need for a local fiscal daemon in Phase 1. JavaScript and Python SDKs cover the majority of integration scenarios in the DRC market. The web dashboard (built as a standard SPA) provides immediate value for merchants who prefer manual invoice management. This stack naturally extends to Phase 2 (POS terminals become API consumers) and Phase 3 (USB device proxy communicates with the same Cloud API).</p>
 <p><strong>Impact</strong>:
-- Build and maintain a minimal local fiscal daemon that can start at terminal boot, expose a secure REST/IPC surface, and talk over USB CDC to the fiscal device while enforcing canonical payload ordering.
-- Harden deployment/installation so the daemon auto-starts and the browser UI can detect device status, nonces, and offline queue lengths via the daemon’s API.
-- Document the daemon contract so frontend developers can continue to focus on PWA experiences (Service Workers, IndexedDB, localization) while the daemon owns USB trust boundary enforcement.
-- Keep observability, logging, and firmware compatibility checks centralized inside the daemon to avoid leaking sensitive state into the untrusted browser.</p>
-<p><strong>Review</strong>: Reevaluate this choice if browsers gain reliable, secure USB CDC support without compromising the trust boundary, or if the daemon approach proves too brittle on specific merchant infrastructure. Also revisit if future compliance requirements demand a fully native stack for certified DGI integrations.</p>
+- Cloud infrastructure (HSM, PostgreSQL, Redis, message queue) must be provisioned and secured from Phase 1.
+- REST API design follows the canonical payload contract documented in <code>api/cloud.md</code>.
+- Web dashboard is a standard SPA (React or Vue) that consumes the same REST API as external integrators.
+- SDKs implement offline queuing (IndexedDB/SQLite), idempotency (payload hash + <code>Idempotency-Key</code> header), and automatic retry logic.
+- The local fiscal daemon from the original architecture is deferred to Phase 3 as the USB Device Proxy, scoped to outlets that opt into DEF signing.</p>
+<p><strong>Review</strong>: Reevaluate if Phase 1 pilot feedback indicates that offline fiscalization (without cloud connectivity) is a hard requirement for the initial market segment, which would accelerate Phase 3 USB hardware delivery.</p>
 
 
 

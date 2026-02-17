@@ -4,31 +4,40 @@ This page captures how the Bono Pay Cloud interfaces with the DGI control module
 
 ## Overview
 
-The DGI enforces a layered chain: the POS/SFE prepares invoices, the trusted DEF secures them, and the control modules (MCF / e-MCF) verify and relay fiscalized data to the DGI backend. Bono Pay Cloud is the synchronization agent: it queues sealed invoices when offline, uploads them to the MCF/e-MCF endpoint when connectivity returns, and stores the fiscal numbers, auth codes, and timestamps produced by those control modules. The infrastructure must be always-on, support fallback hardware, and present audit-ready logs at all times.
-
-## Known constraints and responsibilities
-
-- The MCF/e-MCF modules are the only entities authorized to produce the sequential fiscal number, authentication code, trusted timestamp, and QR payload that make an invoice legally valid.
-- Every submission to the control modules must include the canonical payload plus device identifiers (DEF NID, outlet ID, cashier ID) so that the DGI can link the invoice to its originating outlet.
-- Offline issuance is permitted, but the Cloud must replay queued invoices to the control modules as soon as connectivity is restored; regulators view uptime as mandatory and require replacement hardware ready if the primary link fails.
-- The control modules enforce immutability, continuous compliance, and real-time VAT surveillance (per Arrêté 033), meaning the Cloud must log every retry, failure, and acknowledgement.
-- Bono Pay Cloud is also responsible for device registry tasks such as storing activation codes, monitoring device health, and surfacing failure alerts to operators.
-
-## Integration architecture
-
-The following flow captures the responsibilities we control and the trust boundary between Bono Pay Cloud and DGI:
+The DGI enforces a layered chain for fiscal compliance in the DRC. In Bono Pay's Phase 1 (Software Invoicing), the **Cloud Signing Service (HSM)** acts as the trusted fiscal authority — it assigns sequential fiscal numbers, signs invoices, generates timestamps and QR codes, and stores everything in the Fiscal Ledger. The **Sync Agent** then uploads sealed invoices to the DGI MCF/e-MCF control modules for central verification and tax surveillance.
 
 ```mermaid
 flowchart LR
-  POS["POS / SFE"] -->|canonical payload| Cloud["Bono Pay Cloud\n(sync queue + registry)"]
-  Cloud -->|sealed invoice + metadata| MCF["DGI MCF / e-MCF control modules"]
-  MCF -->|security elements (fiscal number, auth code, timestamp)| Cloud
+  Client["Client Apps\n(API / Dashboard / SDK)"] -->|canonical payload| Cloud["Bono Pay Cloud\n(Cloud Signing Service)"]
+  Cloud -->|sealed invoice + security elements| Ledger["Fiscal Ledger"]
+  Cloud -->|sealed invoice + metadata| MCF["DGI MCF / e-MCF\ncontrol modules"]
+  MCF -->|acknowledgement| Cloud
   MCF -->|delivery stream| DGI["DGI Backend\n(central tax authority)"]
-  Cloud -->|fallback communication| Fallback["Replacement DEF\n(hardware backup)"]
-  Fallback -->|same sync path| MCF
 ```
 
-This diagram emphasizes that the Cloud never generates security elements—it relays them between the POS (or the local fiscal service) and the DGI control modules, while also coordinating fallback hardware when the primary DEF or network link fails.
+This diagram emphasizes that the Cloud Signing Service **generates** the security elements (fiscal number, auth code, timestamp, QR) — it does not merely relay them. The Sync Agent handles the upstream delivery to the DGI.
+
+!!! info "Phase 3 — USB Hardware"
+    In Phase 3, the USB Fiscal Memory device (DEF) can serve as the trusted signer for merchants needing DEF homologation. The Sync Agent still uploads sealed invoices from the DEF through the cloud to the DGI using the same pipeline.
+
+## Known constraints and responsibilities
+
+- In Phase 1, the **Cloud Signing Service (HSM)** produces the sequential fiscal number, authentication code, trusted timestamp, and QR payload that make an invoice legally valid. In Phase 3, the DEF can assume this role.
+- Every submission to the DGI control modules must include the sealed canonical payload plus identifiers (fiscal_authority_id, outlet_id, merchant_nif, cashier_id / api_key_id) so that the DGI can link the invoice to its originating outlet.
+- Offline client issuance is permitted (clients queue unsigned drafts locally), but the Cloud must seal them and then upload to the DGI as soon as possible. Regulators view uptime as mandatory and expect contingency plans.
+- The DGI control modules enforce immutability, continuous compliance, and real-time VAT surveillance (per Arrêté 033), meaning the Cloud must log every sync attempt, failure, and acknowledgement.
+- Bono Pay Cloud is also responsible for merchant/outlet registry tasks: storing activation codes, monitoring outlet health, and surfacing failure alerts to operators.
+
+## Sync Agent pipeline
+
+The Sync Agent runs as a background service within the Bono Pay Cloud:
+
+1. **Poll the Fiscal Ledger** for newly sealed invoices not yet acknowledged by the DGI.
+2. **Format the DGI submission** with the required security elements and identifiers.
+3. **Upload to the MCF/e-MCF endpoint** via authenticated HTTPS.
+4. **Record the acknowledgement** (or failure) in the Fiscal Ledger and update the invoice's `dgi_status`.
+5. **Retry with exponential backoff** on transient failures; escalate to FAILED after max retries.
+6. **Surface dashboards and alerts** for operators when uploads are pending or failing.
 
 ## Unknowns (tracked as ??? admonitions)
 
@@ -43,4 +52,4 @@ This diagram emphasizes that the Cloud never generates security elements—it re
 
 ## Spike reference & next steps
 
-Refer to `spec/infrastructure-dgi-integration-1.md` for the full list of known facts and open questions gathered during this research pass. Update that file (and this page) as soon as the DGI publishes more integration guidance so the Cloud sync agent and device registry can evolve from placeholders to production-ready connectors.
+Refer to `spec/infrastructure-dgi-integration-1.md` for the full list of known facts and open questions gathered during this research pass. Update that file (and this page) as soon as the DGI publishes more integration guidance so the Sync Agent can evolve from placeholders to production-ready connectors.

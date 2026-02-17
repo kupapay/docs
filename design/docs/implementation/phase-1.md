@@ -1,56 +1,90 @@
-# Phase 1 — B2B Pilot
+# Phase 1 — Software Invoicing
 
-The B2B pilot proves that the architecture described in `spec/architecture-kutapay-system-1.md` can deliver sealed invoices, security elements, and regulatory reports without changing existing POS workflows. This 3‑month sprint targets 10 pilot clients (service companies, wholesalers, schools) using a single-terminal POS/fiscal-service combo with manual DGI submissions while the USB Fiscal Memory device executes the canonical PREPARE → COMMIT handshake.
+Phase 1 proves that the Bono Pay Cloud can deliver sealed, fiscally compliant invoices through an API-first platform. This 3-month sprint targets **10 B2B pilot clients** (service companies, wholesalers, schools) using the Cloud Signing Service (HSM) as the trusted fiscal authority, with a web dashboard, REST API, and SDKs.
 
 ## Pilot targets
 
-- **Duration:** 3 months (March through May 2026) to align with the roadmap’s Phase 1 Gantt lane.
-- **Clients:** 10 pilot partners representing service businesses, wholesalers, and schools who need invoice sealing, trust-boundary enforcement, and offline resilience.
-- **Scope:** Single-terminal POS + fiscal service + USB device per outlet, manual DGI upload (CSV/audit export) while the cloud queue matures, and foundational reporting (Z, X, A).
+- **Duration:** 3 months (March through May 2026).
+- **Clients:** 10 B2B pilot partners who need invoice sealing, tax compliance, and regulatory reporting.
+- **Scope:** Cloud Signing Service + REST API + Web Dashboard + JavaScript/Python SDK + Z/X/A reports + manual DGI compliance tooling.
 
 ## Epics
 
-1. **USB Firmware MVP (PREPARE / COMMIT + immutable journal + Z report)**
-   - **Description:** Ship USB Fiscal Memory firmware that validates the canonical JSON payload (deterministic field order, tax groups, client classification) on PREPARE/COMMIT, atomically increments the monotonic counter, signs the record, and stores it in the hash-chained journal described in `spec/protocol-usb-fiscal-device-1.md`.
-   - **Acceptance criteria:**
-     - PREPARE validates schema, taxonomy, and replay status, returning a nonce while leaving counters untouched.
-     - COMMIT increments the fiscal number, produces the device ID/auth code/timestamp/QR, appends to the hash chain, and surfaces those security elements back to the POS.
-     - Firmware can generate a Z report that contains sequence ranges, per-tax-group totals, and journal hashes per `spec/process-fiscal-reports-1.md`.
-   - **Estimated effort:** 4 weeks of firmware development plus 1 week of hardware-in-the-loop testing.
-   - **Dependencies:** `spec/architecture-kutapay-system-1.md`, `spec/protocol-usb-fiscal-device-1.md`, `design/docs/hardware/usb-device.md`, `design/docs/fiscal/reports.md`.
+### 1. Cloud Signing Service MVP
 
-2. **Fiscal Service Library (canonical serializer + device proxy + tax engine)**
-   - **Description:** Build the untrusted fiscal service that mediates between the POS and the USB device, serializes canonical invoices, enforces the 14 DGI tax groups in `spec/schema-tax-engine-1.md`, and brokers multi-terminal access to the device.
-   - **Acceptance criteria:**
-     - Canonical invoices include outlet/terminal/cashier IDs, client classification, tax_groups[], totals, and payment instruments in deterministic order before issuing TXN|PREPARE.
-     - Tax engine calculates TG01–TG14 amounts, applies client classification rules (individual, company, commercial individual, professional, embassy), and records rounding deltas per `spec/schema-tax-engine-1.md`.
-     - Fiscal service serializes responses from QRY/TXN commands, logs nonce lifetimes, retries failed PREPAREs/COMMITs, and surfaces device health (QRY|STATUS) to the POS UI.
-   - **Estimated effort:** 3 weeks for canonical service + 1 week for tax engine integration.
-   - **Dependencies:** `spec/architecture-kutapay-system-1.md`, `spec/schema-tax-engine-1.md`, `spec/protocol-usb-fiscal-device-1.md`, `design/docs/architecture/trust-boundary.md`, `design/docs/pos/multi-terminal.md`.
+**Description:** Build the HSM-backed Cloud Signing Service that assigns sequential fiscal numbers, signs canonical payloads with ECDSA, generates QR codes, and stores everything in the append-only Fiscal Ledger.
 
-3. **POS MVP (sale entry, receipt generation, tax-aware catalog)**
-   - **Description:** Deliver a single-terminal POS workflow that lets cashiers prepare invoices, prints receipts with the device-provided security elements, and shows offline/nonce status per `.github/copilot-instructions.md` UX guidance.
-   - **Acceptance criteria:**
-     - Sale flow (add items, select tax groups, choose payment method) completes fiscalization in under 5 seconds and prints receipt only after COMMIT returns fiscal number, auth code, timestamp, and QR.
-     - Receipt includes fiscal number, device ID, signature/auth code, trusted timestamp, QR, and references to the canonical payload (items, tax breakdown) so auditors can reconcile.
-     - UI exposes offline indicators, device-disconnect recovery, and nonce exhaustion warnings, keeping cashiers informed while the device enforces the trust boundary.
-   - **Estimated effort:** 3 weeks to build sale entry + 1 week to polish receipt/UX messaging.
-   - **Dependencies:** `spec/architecture-kutapay-system-1.md`, `design/docs/fiscal/security-elements.md`, `docs/odoo-pos-lessons-for-kutapay.md`, `design/docs/pos/ui-ux.md`.
+**Acceptance criteria:**
 
-4. **Manual compliance tooling (CSV export + audit dump)**
-   - **Description:** Provide the compliance belt that lets pilot clients deliver mandated outputs to the DGI before automated cloud uploads arrive: CSV exports for sealed invoices, Z/X/A reports, and audit dumps derived from the hash-chained journal.
-   - **Acceptance criteria:**
-     - Generate a DGI-ready CSV containing the canonical invoice metadata, fiscal number, auth code, totals, and per-tax-group amounts.
-     - Produce Z/X/A reports plus an audit export (streamed chunk) as described in `spec/process-fiscal-reports-1.md`, with counters, journal hashes, and security elements intact.
-     - Surface explicit instructions for manual upload to the DGI control module (via email or portal) and track evidence of submission in the pilot logs.
-   - **Estimated effort:** 2 weeks to implement exports + 1 week for documentation/guidance.
-   - **Dependencies:** `spec/process-fiscal-reports-1.md`, `spec/protocol-usb-fiscal-device-1.md`, `docs/sfe-specifications-v1-summary.md`, `design/docs/cloud/dgi-integration.md` (for future automation notes).
+- Monotonic Counter Manager guarantees gap-free sequential numbering per outlet under serializable database isolation.
+- HSM signs every canonical payload and returns `fiscal_number`, `auth_code`, `timestamp`, `qr_payload`, and `fiscal_authority_id`.
+- Fiscal Ledger stores hash-chained entries; each entry references the previous hash for tamper detection.
+- Invoice mutations (void, refund, credit note) create new fiscal events — nothing is deleted.
 
-5. **Testing & homologation prep (pilot onboarding + risk mitigation)**
-   - **Description:** Validate the pilot with 10 clients, automate regression scripts for offline resilience, and prepare evidence for homologation reviews (DGI, auditors).
-   - **Acceptance criteria:**
-     - Onboard at least 10 service/wholesale/school partners, run fiscalization in offline (48–72 h queue) and synchronous scenarios, and collect logs demonstrating canonical payload integrity, nonce handling, and retries.
-     - Document failure modes (power loss during COMMIT, cable disconnects, nonce expiration) and verify the firmware/service recovers without incrementing counters or producing duplicates.
-     - Demonstrate DGI compliance by submitting the CSV/Z/X/A/audit exports, logging reviewer feedback, and flagging open questions (e.g., unknown MCF endpoint or signature algorithm) with `???` admonitions in the compliance notebook.
-   - **Estimated effort:** 4 weeks of field testing combined with 1 week for homologation paperwork.
-   - **Dependencies:** `spec/infrastructure-dgi-integration-1.md`, `design/docs/cloud/offline-sync.md`, `design/docs/implementation/roadmap.md`, `memory-bank/context-map.md`.
+**Estimated effort:** 4 weeks.
+**Dependencies:** `spec/architecture-kutapay-system-1.md`, `design/docs/architecture/trust-boundary.md`.
+
+### 2. REST API + Tax Engine
+
+**Description:** Build the REST API that accepts canonical payloads, validates them through the tax engine (14 DGI groups + client classification), routes them to the Cloud Signing Service, and returns sealed responses.
+
+**Acceptance criteria:**
+
+- API accepts canonical payloads with deterministic field ordering and validates all required fields.
+- Tax Engine enforces TG01–TG14, applies client classification rules (individual, company, commercial_individual, professional, embassy), and calculates rounding per `spec/schema-tax-engine-1.md`.
+- API returns sealed responses with all five security elements.
+- Error responses include actionable validation messages.
+- Rate limiting (100 req/s per API key) and idempotency keys prevent abuse and duplicates.
+
+**Estimated effort:** 3 weeks for API + 1 week for tax engine integration.
+**Dependencies:** `spec/schema-tax-engine-1.md`, `design/docs/fiscal/tax-engine.md`.
+
+### 3. Web Dashboard MVP
+
+**Description:** Deliver the web dashboard for invoice management, outlet administration, user/API key management, and report generation.
+
+**Acceptance criteria:**
+
+- Dashboard supports invoice creation, viewing, filtering, and status tracking.
+- Outlet registration and configuration via the dashboard.
+- User and API key management with role-based access control (Cashier, Supervisor, Manager, Owner).
+- Z/X/A report generation and download.
+- Offline indicators for queued drafts.
+
+**Estimated effort:** 3 weeks for core UI + 1 week for polish.
+**Dependencies:** `design/docs/platform/dashboard.md`, `design/docs/platform/multi-user.md`.
+
+### 4. JavaScript & Python SDK
+
+**Description:** Ship official client libraries with type-safe models, offline queue support, and receipt rendering helpers.
+
+**Acceptance criteria:**
+
+- SDKs wrap the REST API with typed request/response models.
+- Built-in offline queue (IndexedDB for browser, SQLite for native) with configurable grace period and retry logic.
+- Tax engine helpers for building valid `tax_groups` and `tax_summary` arrays.
+- Event callbacks for queue state transitions (synced, failed, grace exceeded).
+
+**Estimated effort:** 2 weeks per SDK.
+**Dependencies:** `design/docs/api/cloud.md`, `design/docs/api/invoicing-sdk.md`.
+
+### 5. Manual compliance tooling & pilot onboarding
+
+**Description:** Provide compliance tools for pilot clients to submit fiscal data to the DGI before automated MCF/e-MCF uploads are available.
+
+**Acceptance criteria:**
+
+- Generate DGI-ready CSV/Excel exports containing sealed invoice metadata, fiscal numbers, tax summaries, and security elements.
+- Produce Z/X/A reports and audit exports from the Fiscal Ledger.
+- Onboard 10 pilot clients with documentation, API keys, and training.
+- Collect pilot feedback and validate offline queue behavior under real-world conditions.
+
+**Estimated effort:** 2 weeks for tooling + 2 weeks for onboarding.
+**Dependencies:** `design/docs/fiscal/reports.md`, `design/docs/cloud/dgi-integration.md`.
+
+## Risks
+
+!!! warning "Phase 1 Risks"
+    - The DGI MCF/e-MCF API remains undefined, so manual compliance tooling is required for the pilot. Automated uploads come in Phase 2 or when the DGI publishes the spec.
+    - HSM provider selection and key provisioning may introduce lead time. Evaluate cloud HSM offerings (AWS CloudHSM, Azure Managed HSM) early.
+    - Field testing in DRC conditions may expose unexpected latency and connectivity patterns. The offline queue must handle extended outages gracefully.
