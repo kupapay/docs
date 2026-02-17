@@ -826,7 +826,8 @@ Format as a reference document (not narrative). Use code blocks for examples.
 
 ### TASK-028: Cloud API reference
 ```
-Status:     READY (after TASK-018)
+Status:     DONE (after TASK-018)
+Completed:  2026-02-17
 Depends:    TASK-018
 Agent:      @specification + @se-technical-writer
 Sources:    spec/architecture-kutapay-system-1.md,
