@@ -229,7 +229,8 @@ Deep-dive into the trust boundary. Include:
 
 ### TASK-006: Component map
 ```
-Status:     READY (after TASK-001)
+Status:     DONE (after TASK-001)
+Completed:  2026-02-17
 Depends:    TASK-001, TASK-003
 Agent:      @gem-documentation-writer
 Sources:    spec/architecture-kutapay-system-1.md, DISCUSSION.md lines 6975-7050
