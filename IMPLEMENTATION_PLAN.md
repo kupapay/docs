@@ -64,7 +64,7 @@ Requires `PROMPT_build.md` (see Appendix A).
 | 2 — Hardware | 4 | 0 | BLOCKED by Phase 1 |
 | 3 — Fiscal Engine | 4 | 0 | BLOCKED by Phase 1 |
 | 4 — Cloud & Sync | 3 | 0 | BLOCKED by Phase 1 |
-| 5 — POS Application | 3 | 0 | BLOCKED by Phase 1 |
+| 5 — POS Application | 3 | 3 | DONE |
 | 6 — Regulatory | 3 | 0 | READY (independent) |
 | 7 — API Reference | 3 | 0 | BLOCKED by Phase 2+3 |
 | 8 — Implementation Roadmap | 4 | 0 | BLOCKED by Phase 1-5 |
@@ -721,7 +721,8 @@ UX principles, screen descriptions, accessibility considerations.
 
 ### TASK-023: Integration strategy
 ```
-Status:     READY (after TASK-004)
+Status:     DONE (after TASK-004)
+Completed:  2026-02-17
 Depends:    TASK-004
 Agent:      @gem-documentation-writer
 Sources:    .github/copilot-instructions.md (integration priority section),
