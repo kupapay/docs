@@ -296,7 +296,8 @@ Rewrite `.github/copilot-instructions.md` to reflect the pivot. Key changes:
 
 ### TASK-005: Rewrite memory bank for invoicing platform
 ```
-Status:     READY (after TASK-004)
+Status:     DONE
+Completed:  2026-02-17
 Depends:    TASK-004
 Agent:      manual
 Sources:    .github/copilot-instructions.md (updated), docs/sfe-specifications-v1-summary.md,

@@ -1,18 +1,26 @@
 # Technical Context
 
 ## Stack decisions
-- **Hardware:** USB Fiscal Memory device with a secure MCU, secure element (ATECC608/SE050 class), flash storage, RTC, USB-C interface, and status LED. Costs must stay within the $10–15 BOM target.
-- **Software:** Untrusted POS clients (Odoo-inspired web/desktop) submit canonical JSON payloads to a local fiscal service that relays them to the trusted device; the cloud layer handles device registry, offline queueing, and upload to DGI.
-- **Networking:** The device exposes a USB CDC interface for POS terminals and shares audit data with the cloud without ever speaking directly to DGI.
+
+- **Cloud Signing Service (HSM-backed):** FIPS-level HSM enforces key material isolation, signs canonical payloads, generates fiscal numbers, and emits verification QR payloads.
+- **REST API + SDK ecosystem:** Node.js/FastAPI-style API surfaces CRUD endpoints, tax-checking, and report generation. SDKs (JS/Python/PHP) handle canonical serialization, offline queues, and webhook verification.
+- **PWA dashboard:** React/Vue SPA with service workers, IndexedDB queue, offline indicators (green/yellow/red), and mobile-first layout inspired by Odoo lessons.
+- **Fiscal ledger:** PostgreSQL with serializable monotonic counter table, hash-chained ledger entries, audit logs, and nightly backups.
+- **Sync agent:** Cloud-side service uploads sealed invoices to the DGI (MCF/e-MCF), tracks acknowledgments, and surfaces errors to dashboards/webhooks.
+- **Infrastructure:** Cloud-native containers, HSM integration (AWS CloudHSM, Azure Dedicated HSM, or Vault Transit), observability (metrics/tracing), multi-tenancy isolation per merchant/outlet.
 
 ## Decided items
-- Two-phase commit (PREPARE → COMMIT) ensures the device does not accept a payload until both POS and device agree, then responds with fiscal number, auth code, timestamp, and QR data.
-- Canonical payloads require deterministic field ordering, include tax groups, client classification, and references to outlet/POS/cashier identifiers.
-- The USB device owns sequential counters, hash-chained immutable logs, security elements (device ID, signature, timestamp, QR), and report generation.
-- Offline-first behavior is mandatory: the device must fiscalize locally, queue receipts in the cloud, and support deferred uploads.
+
+- Trust boundary is cloud-first: client apps are untrusted, Cloud Signing Service is authority in Phase 1, USB hardware is optional Phase 3.
+- Canonical payload ordering is mandated for deterministic signatures; tax engine must handle all 14 DGI tax groups plus required client classifications.
+- Offline-first clients queue invoices locally and rely on cloud fiscalization when connectivity returns—no fiscalization occurs purely in-browser.
+- Reports (Z, X, A, audit export) are derived from the cloud fiscal ledger but the USB device may mirror them in Phase 3.
+- Regulatory compliance requires 5 invoice types, canonical security elements, hash-chained storage, and open audit trails.
 
 ## Open questions
-- DGI MCF/e-MCF API details: endpoints, authentication, request/response schema, and offline rules.
-- Exact cryptographic signature algorithm, QR payload format, and counter formats the DGI accepts.
-- Device registration/activation protocol with the DGI and provisioning/rotation of cryptographic keys.
-- Multi-terminal orchestration for retail/restaurant scenarios—how local fiscal services coordinate multiple POS clients with one outlet device.
+
+- **MCF/e-MCF API spec:** Endpoint URLs, authentication scheme, and schema are still unreleased.
+- **Signature & QR format:** DGI-approved algorithm, payload structure, and validation checks need confirmation.
+- **Registration protocol:** How merchants or services register with DGI/MCF—keys, activation codes, provider obligations—remains undefined.
+- **Offline grace period:** How long can invoices stay queued before heavy penalties or forced retries.
+- **Hardware migration:** When and how the archived USB Fiscal Memory device will replace the cloud signer for Phase 3 merchants.
