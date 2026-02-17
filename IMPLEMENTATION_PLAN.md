@@ -806,7 +806,8 @@ Cross-reference to the relevant design pages (fiscal engine, hardware, reports).
 
 ### TASK-027: USB device API reference
 ```
-Status:     READY (after TASK-011)
+Status:     DONE (after TASK-011)
+Completed:  2026-02-17
 Depends:    TASK-011
 Agent:      @se-technical-writer
 Sources:    spec/protocol-usb-fiscal-device-1.md
