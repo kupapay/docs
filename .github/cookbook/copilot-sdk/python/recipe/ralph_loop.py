@@ -62,8 +62,12 @@ async def ralph_loop(mode: str = "build", max_iterations: int = 50):
             session.on(log_tool_event)
             try:
                 await session.send_and_wait(
-                    MessageOptions(prompt=prompt), timeout=600
+                    MessageOptions(prompt=prompt), timeout=1800
                 )
+            except TimeoutError:
+                print(f"\n⚠ Iteration {i} timed out after 1800s — continuing to next iteration")
+            except Exception as e:
+                print(f"\n⚠ Iteration {i} error: {e} — continuing to next iteration")
             finally:
                 await session.destroy()
 
