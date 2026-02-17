@@ -516,7 +516,8 @@ Create the Invoicing API overview page (developer-facing):
 
 ### TASK-014: Create web dashboard page
 ```
-Status:     READY (after TASK-012)
+Status:     DONE
+Completed:  2026-02-17
 Depends:    TASK-012
 Agent:      manual
 Sources:    docs/odoo-pos-lessons-for-kutapay.md (UI patterns, offline, PWA, touchscreen),
