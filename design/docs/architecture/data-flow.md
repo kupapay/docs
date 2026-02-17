@@ -1,133 +1,125 @@
 # Data Flow Diagrams
 
-The architecture specification enforces that every fiscal interaction follows the trusted USB device and canonical payload rules. The diagrams below trace how invoices flow through the POS, fiscal service, DEF, cloud, and DGI in normal, degraded, and multi-terminal deployments.
+Bono Pay paths prioritize a cloud-first fiscal authority. Every canonical payload (merchant_nif, outlet_id, pos_terminal_id, cashier_id, client, items, tax_groups, totals, payments, timestamp) flows through the Cloud Signing Service (HSM) before any fiscal number, signature, timestamp, or QR payload leaves the trusted zone. The diagrams below trace five operational flows described in the architecture specification and highlight how the fiscal ledger, tax engine, and sync agent collaborate with clients.
 
-!!! caution "Trust boundary reminder"
-    The USB Fiscal Memory device is the only component that can fabricate fiscal numbers, signatures, and timestamps. Every diagram below keeps those primitives inside the trusted zone—no POS, local fiscal service, or cloud component generates them.
+!!! info "Canonical payload & trust boundary"
+    - Clients (web dashboard users, API consumers, SDKs, future POS terminals) remain untrusted; they only present canonical JSON with deterministic field ordering.
+    - The Cloud Signing Service (HSM) is the sole authority that assigns fiscal numbers, generates authentication codes, timestamps, and QR payloads, and persists the hash-chained fiscal ledger.
+    - Sync Agent uploads sealed invoices to the DGI (MCF/e-MCF); clients may display the security elements but may **never** fabricate or mutate them.
 
-## Happy path sequence
+## 1. API invoice creation (happy path)
 
-The happy path starts with the cashier confirming a sale and ends with the sealed invoice reaching the DGI. The local fiscal service mediates canonical payload creation and the PREPARE→COMMIT handshake before the POS prints and syncs the sealed response.
-
-```mermaid
-sequenceDiagram
-    actor Cashier
-    participant POS
-    participant FiscalService as "Fiscal Service"
-    participant DEF as "USB DEF"
-    participant Cloud
-    participant DGI
-
-    Cashier->>POS: confirm sale with items, tax groups, client classification
-    POS->>FiscalService: serialize canonical payload (merchant_nif,outlet_id,totals)
-    FiscalService->>DEF: TXN PREPARE canonical JSON
-    DEF-->>FiscalService: nonce + validation result
-    FiscalService->>DEF: TXN COMMIT + nonce
-    DEF-->>FiscalService: fiscal response (fiscal_number,device_id,auth_code,timestamp,QR)
-    FiscalService->>POS: deliver sealed response
-    POS->>POS: print receipt with DEF security elements
-    POS->>Cloud: queue sealed invoice for sync
-    Cloud->>DGI: upload sealed invoice in arrival order
-```
-
-## Offline-first sequence
-
-When connectivity to the cloud/DGI is down, the device continues to accept PREPARE→COMMIT flows while the POS stores sealed invoices locally. Once the network returns, the queue drains in chronological order so deferred uploads preserve the audit trail.
+Developers and automation systems call `POST /api/v1/invoices` to fiscalize a sale. The Bono Pay Invoicing API validates the payload, runs the 14-group tax engine, and forwards the result to the Cloud Signing Service. The signed response returns to the client immediately while the Sync Agent enqueues the ledger entry for the DGI.
 
 ```mermaid
 sequenceDiagram
-    actor Cashier
-    participant POS
-    participant FiscalService as "Fiscal Service"
-    participant DEF as "USB DEF"
-    participant Queue as "Local Queue"
-    participant Cloud
-    participant DGI
+    participant "Merchant / Developer" as Merchant
+    participant "Bono Pay Invoicing API" as InvoicingAPI
+    participant "Tax Engine" as TaxEngine
+    participant "Cloud Signing Service (HSM)" as CloudSigning
+    participant "Fiscal Ledger" as Ledger
+    participant "Sync Agent" as SyncAgent
+    participant "DGI (MCF/e-MCF)" as DGI
+    participant "Client App" as ClientApp
 
-    Cashier->>POS: confirm sale
-    POS->>FiscalService: send canonical payload
-    FiscalService->>DEF: TXN PREPARE
-    DEF-->>FiscalService: nonce
-    FiscalService->>DEF: TXN COMMIT
-    DEF-->>FiscalService: fiscal response
-    FiscalService->>POS: deliver sealed reply
-    POS->>Queue: store sealed invoice (cloud unreachable)
-    Note right of Queue: await connectivity
-    Queue->>Cloud: push queued invoice when online
-    Cloud->>DGI: upload sealed invoice
+    Merchant->>InvoicingAPI: POST /api/v1/invoices with canonical payload (merchant_nif, outlet_id, pos_terminal_id, cashier_id, client, items, tax_groups, totals, payments, timestamp)
+    InvoicingAPI->>TaxEngine: validate schema + compute all 14 DGI tax groups
+    TaxEngine->>CloudSigning: forward validated payload for fiscal number + signature
+    CloudSigning->>Ledger: persist sealed invoice (fiscal_number, auth_code, timestamp, qr_payload) in hash-chained ledger
+    CloudSigning-->>InvoicingAPI: return sealed response with fiscal data
+    InvoicingAPI-->>ClientApp: deliver fiscalized invoice + security elements
+    CloudSigning->>SyncAgent: queue ledger entry for upload
+    SyncAgent->>DGI: transmit sealed invoice batch
 ```
 
-## Void event sequence
+## 2. Web dashboard invoice creation (browser flow)
 
-Voids become new fiscal events that reference the original invoice. The POS builds a canonical void payload, the DEF validates the reference and counters, and the system issues a fresh fiscal number for auditing.
+Bono Pay's PWA dashboard mirrors the API flow while adding UX touches for touchscreen terminals. The dashboard still builds the canonical payload, invokes the Invoicing API, and surfaces sealed invoices and delivery options without ever touching fiscal numbers.
 
 ```mermaid
 sequenceDiagram
-    actor Cashier
-    participant POS
-    participant FiscalService as "Fiscal Service"
-    participant DEF as "USB DEF"
-    participant Cloud
-    participant DGI
+    participant "Merchant (Web Dashboard)" as WebMerchant
+    participant "Web Dashboard (PWA)" as Dashboard
+    participant "Service Worker Queue (IndexedDB)" as SWQueue
+    participant "Bono Pay Invoicing API" as InvoicingAPI
+    participant "Cloud Signing Service (HSM)" as CloudSigning
+    participant "Fiscal Ledger" as Ledger
+    participant "Sync Agent" as SyncAgent
+    participant "DGI (MCF/e-MCF)" as DGI
 
-    Cashier->>POS: request void referencing invoice #123
-    POS->>FiscalService: canonical void payload with original fiscal_number
-    FiscalService->>DEF: TXN PREPARE (void)
-    DEF-->>FiscalService: nonce + context
-    FiscalService->>DEF: TXN COMMIT (void)
-    DEF-->>FiscalService: fiscal response (new fiscal_number,auth_code)
-    FiscalService->>POS: print void receipt, queue sealed void
-    Cloud->>DGI: upload void event alongside original reference
+    WebMerchant->>Dashboard: finalize invoice draft (client selection, line items, payments)
+    Dashboard->>SWQueue: enqueue canonical payload for online submission
+    SWQueue->>InvoicingAPI: POST /api/v1/invoices when connectivity available
+    InvoicingAPI->>CloudSigning: fiscalize payload
+    CloudSigning->>Ledger: record sealed event
+    CloudSigning-->>InvoicingAPI: return fiscalized response
+    InvoicingAPI-->>Dashboard: update UI (receipt delivery, QR, fiscal number)
+    CloudSigning->>SyncAgent: hand off entry for DGI sync
+    SyncAgent->>DGI: upload sealed invoice
 ```
 
-## Refund (credit note) sequence
+## 3. Offline client flow (SDK or dashboard)
 
-Refunds and credit notes are handled as fresh fiscal events so auditors can trace them back to the original sale while preserving immutable counters and signatures.
+Offline clients queue invoices locally (IndexedDB for dashboard, SQLite for SDKs) and retry automatic submission when they reconnect. Fiscalization happens only after the payload reaches the Cloud Signing Service, ensuring no sealed invoice is issued while the client remains offline.
 
 ```mermaid
 sequenceDiagram
-    actor Cashier
-    participant POS
-    participant FiscalService as "Fiscal Service"
-    participant DEF as "USB DEF"
-    participant Cloud
-    participant DGI
+    participant "Merchant (SDK)" as SDKMerchant
+    participant "Local Queue (IndexedDB/SQLite)" as LocalQueue
+    participant "Bono Pay Invoicing API" as InvoicingAPI
+    participant "Cloud Signing Service (HSM)" as CloudSigning
+    participant "Fiscal Ledger" as Ledger
+    participant "Sync Agent" as SyncAgent
+    participant "DGI (MCF/e-MCF)" as DGI
 
-    Cashier->>POS: initiate refund for invoice #123
-    POS->>FiscalService: credit note payload with tax breakdown
-    FiscalService->>DEF: TXN PREPARE (credit note)
-    DEF-->>FiscalService: nonce, tax validation
-    FiscalService->>DEF: TXN COMMIT
-    DEF-->>FiscalService: fiscal response (new fiscal_number,QR)
-    FiscalService->>POS: print credit note, queue sealed response
-    Cloud->>DGI: upload credit note with memo referencing original
+    SDKMerchant->>LocalQueue: save canonical payload (queued, status=Queued)
+    LocalQueue-->>LocalQueue: await connectivity (automatic retries)
+    LocalQueue->>InvoicingAPI: submit stored payload when online
+    InvoicingAPI->>CloudSigning: fiscalize queued payload
+    CloudSigning->>Ledger: append sealed invoice
+    CloudSigning-->>InvoicingAPI: deliver sealed response
+    InvoicingAPI-->>SDKMerchant: notify fiscalized status (green)
+    CloudSigning->>SyncAgent: schedule upload
+    SyncAgent->>DGI: transmit invoice batch
 ```
 
-## Multi-terminal coordination
+## 4. Void & credit note fiscal events
 
-Every outlet shares a single DEF. The local fiscal service serializes access from multiple POS terminals, enforces the nonce-based handshake, and attaches outlet/POS/cashier IDs to every canonical request so the USB device maintains sequential ordering per outlet.
+Voids and refunds are always new fiscal events that reference the original fiscal number. The same tax engine and signing flow produce a fresh fiscal number, ledger entry, and sealed response so auditors can trace both the original and reversal.
 
 ```mermaid
-flowchart LR
-    classDef untrusted fill:#fee,stroke:#c00;
-    classDef trusted fill:#e6ffe6,stroke:#2a8f2a;
+sequenceDiagram
+    participant "Merchant / Auditor" as MerchantAuditor
+    participant "Bono Pay Invoicing API" as InvoicingAPI
+    participant "Cloud Signing Service (HSM)" as CloudSigning
+    participant "Fiscal Ledger" as Ledger
+    participant "Sync Agent" as SyncAgent
+    participant "DGI (MCF/e-MCF)" as DGI
 
-    subgraph Outlet ["Outlet Local Network"]
-        POS1["POS Terminal 1"]
-        POS2["POS Terminal 2"]
-        Proxy["Local Fiscal Service"]
-    end
-    Cloud["Bono Pay Cloud"]
-    DGI["DRC DGI"]
-    DEF["USB Fiscal Memory Device"]
+    MerchantAuditor->>InvoicingAPI: POST /api/v1/invoices/{fiscal_number}/void with reference to original and new totals
+    InvoicingAPI->>CloudSigning: rerun tax & signing flow for void/credit note
+    CloudSigning->>Ledger: append new sealed event (new fiscal_number, QR, auth_code, references original)
+    CloudSigning-->>InvoicingAPI: return sealed reversal response
+    InvoicingAPI-->>MerchantAuditor: provide void/credit note receipt
+    CloudSigning->>SyncAgent: enqueue reversal for DGI
+    SyncAgent->>DGI: upload reversal batch
+```
 
-    POS1 -->|canonical payload + IDs| Proxy
-    POS2 -->|canonical payload + IDs| Proxy
-    Proxy -->|PREPARE & COMMIT| DEF
-    DEF -->|fiscal response| Proxy
-    Proxy -->|sealed invoice queue| Cloud
-    Cloud --> DGI
+## 5. Report generation (auditor view)
 
-    class POS1,POS2,Proxy untrusted
-    class DEF trusted
+Report requests hit Bono Pay's reporting endpoints that query the Fiscal Ledger for the mandated Z, X, A, and audit export views. Each response includes fiscal_number ranges, auth codes, timestamps, and ledger hashes sourced from the cloud ledger so every report matches the same sealed invoices the Sync Agent uploads.
+
+```mermaid
+sequenceDiagram
+    participant "Auditor / Merchant" as Auditor
+    participant "Bono Pay Reporting API" as ReportingAPI
+    participant "Report Generator" as ReportGenerator
+    participant "Fiscal Ledger" as Ledger
+
+    Auditor->>ReportingAPI: POST /api/v1/reports (type=Z/X/A/audit)
+    ReportingAPI->>ReportGenerator: fetch ledger entries for requested range
+    ReportGenerator->>Ledger: read hash-chained sealed invoices
+    Ledger-->>ReportGenerator: return fiscal numbers, auth codes, timestamps, tax totals
+    ReportGenerator-->>ReportingAPI: assemble report (JSON + PDF)
+    ReportingAPI-->>Auditor: deliver report with fiscal_authority_id and ledger hash
 ```

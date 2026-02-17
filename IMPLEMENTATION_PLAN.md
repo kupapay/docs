@@ -441,7 +441,8 @@ Heavy rewrite — replace POS Layer + USB Device with invoicing platform compone
 
 ### TASK-011: Rewrite data flow diagrams
 ```
-Status:     READY (after TASK-008)
+Status:     DONE
+Completed:  2026-02-17
 Depends:    TASK-008
 Agent:      manual
 Sources:    design/docs/architecture/data-flow.md (current), spec/architecture-kutapay-system-1.md (updated)
