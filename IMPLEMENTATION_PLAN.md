@@ -146,7 +146,8 @@ Validate:   ls design/docs-archive/hardware/*.md | wc -l  (expect 4)
 
 ### TASK-002: Restructure mkdocs.yml nav for invoicing platform
 ```
-Status:     READY (after TASK-001)
+Status:     DONE
+Completed: 2026-02-17
 Depends:    TASK-001
 Agent:      manual
 Sources:    design/mkdocs.yml

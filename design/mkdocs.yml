@@ -33,11 +33,11 @@ nav:
     - Trust Boundary: architecture/trust-boundary.md
     - Component Map: architecture/components.md
     - Data Flow: architecture/data-flow.md
-  - Hardware:
-    - USB Fiscal Memory: hardware/usb-device.md
-    - USB Protocol (2PC): hardware/protocol.md
-    - Secure Element: hardware/secure-element.md
-    - BOM & Manufacturing: hardware/bom.md
+  - Invoicing Platform:
+    - Product Overview: platform/overview.md
+    - Invoicing API: platform/api.md
+    - Web Dashboard: platform/dashboard.md
+    - SDK & Libraries: platform/sdk.md
   - Fiscal Engine:
     - Invoice Lifecycle: fiscal/invoice-lifecycle.md
     - Tax Engine (14 Groups): fiscal/tax-engine.md
@@ -47,26 +47,23 @@ nav:
     - Cloud Architecture: cloud/architecture.md
     - Offline-First Sync: cloud/offline-sync.md
     - DGI Integration: cloud/dgi-integration.md
-  - POS Application:
-    - Multi-Terminal: pos/multi-terminal.md
-    - UI/UX: pos/ui-ux.md
-    - Integrations: pos/integrations.md
+  - Platform & Integrations:
+    - Multi-User Access: platform/multi-user.md
+    - Integrations: platform/integrations.md
   - Regulatory:
     - DRC Legal Framework: regulatory/legal-framework.md
-    - Arrêté Summary: regulatory/arretes.md
+    - "Arrêté Summary": regulatory/arretes.md
     - SFE Specifications: regulatory/sfe-specs.md
   - ADRs:
     - Index: adr/index.md
     - "0001 - Two-Phase Commit": adr/adr-0001.md
     - "0002 - Signature Algorithm": adr/adr-0002.md
-    - "0003 - POS Technology Stack": adr/adr-0003.md
+    - "0003 - Platform Technology Stack": adr/adr-0003.md
+    - "0004 - Cloud Fiscal Signing": adr/adr-0004.md
+    - "0005 - Strategic Pivot": adr/adr-0005.md
   - Implementation:
     - Roadmap: implementation/roadmap.md
-    - Phase 1 - B2B Pilot: implementation/phase-1.md
-    - Phase 2 - Retail: implementation/phase-2.md
-    - Phase 3 - Enterprise: implementation/phase-3.md
-  - API Reference:
-    - USB Device API: api/usb-device.md
-    - Cloud API: api/cloud.md
-    - POS Plugin API: api/pos-plugin.md
+    - "Phase 1 - Software Invoicing": implementation/phase-1.md
+    - "Phase 2 - POS & Retail": implementation/phase-2.md
+    - "Phase 3 - USB Hardware": implementation/phase-3.md
 
