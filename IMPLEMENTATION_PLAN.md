@@ -256,7 +256,8 @@ Include a deployment diagram (single-terminal vs multi-terminal).
 
 ### TASK-007: Data flow diagrams
 ```
-Status:     READY (after TASK-001)
+Status:     DONE (after TASK-001)
+Completed:  2026-02-17
 Depends:    TASK-001, TASK-003
 Agent:      @gem-documentation-writer + excalidraw skill (optional)
 Sources:    spec/architecture-kutapay-system-1.md
