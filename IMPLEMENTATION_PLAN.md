@@ -997,7 +997,8 @@ Include a brief explanation of the ADR process.
 
 ### TASK-035: ADR-0002 Signature Algorithm
 ```
-Status:     READY (after TASK-012)
+Status:     DONE (after TASK-012)
+Completed:  2026-02-17
 Depends:    TASK-012
 Agent:      @adr-generator
 Sources:    DISCUSSION.md lines 7285-7400 (SE section),

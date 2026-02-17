@@ -5,7 +5,7 @@ Accepted
 
 ## Context
 - The USB Fiscal Memory device and its Secure Element are the only components that ever see the private signing key (design/docs/hardware/secure-element.md). Nothing outside the SE can derive, export, or clone this key, so the algorithm must be supported inside the sealed chip.
-- The Secure Element review already evaluated ECDSA P-256 versus Ed25519 and concluded that the family we selected (ATECC608B / SE050) already accelerates P-256 and matches the curve used on existing fiscal certificates. Ed25519 is treated as a future-proof option pending regulatory and vendor certification, while RSA is too heavy for the MCU (design context + DISCUSSION.md lines 7285-7400 explain why hardware is mandated).
+- The Secure Element review already evaluated ECDSA P-256 versus Ed25519 and concluded that the family we selected (ATECC608B / SE050) already accelerates P-256 and matches the curve used on existing fiscal certs. Ed25519 is treated as a future-proof option pending regulatory and vendor certification, while RSA is too heavy for the MCU (design context + DISCUSSION.md lines 7285-7400 explain why hardware is mandated).
 - The DGI has not published a mandatory signature algorithm, but inspectors expect curves compatible with earlier fiscal memories and want minimal signature payloads on receipts.
 
 ## Options
