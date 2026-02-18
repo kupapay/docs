@@ -7,6 +7,12 @@ theme:
     primary: '#3FFF00'
     accent: '#3FFF00'
 
+extra_css:
+  - assets/mermaid-zoom.css
+
+extra_javascript:
+  - assets/mermaid-zoom.js
+
 plugins:
   - search
   - mermaid2
@@ -49,6 +55,7 @@ nav:
     - DGI Integration: cloud/dgi-integration.md
   - Platform & Integrations:
     - Multi-User Access: platform/multi-user.md
+    - AI & Natural Language: platform/ai-capabilities.md
     - Integrations: platform/integrations.md
   - Regulatory:
     - DRC Legal Framework: regulatory/legal-framework.md

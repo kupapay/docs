@@ -26,9 +26,11 @@ flowchart LR
 - **Deterministic canonical payloads:** Field ordering, tax group metadata, and payment records are never reshuffled so the Fiscal Ledger and QR payloads remain verifiable.
 - **Multi-user, multi-tenant scale:** Each invoice tags `outlet_id`, `pos_terminal_id`, `cashier_id`, and API key scopes so the Monotonic Counter Manager serializes numbering per outlet while roles and quotas protect tenants.
 - **Mobile money + multi-currency support:** Airtel Money, M-Pesa, Orange Money, and USD/CDF split payments are front and center so traders and schools can use cash and mobile instruments simultaneously.
+- **AI-assisted, human-confirmed:** Natural language invoice creation, tax auto-classification, anomaly detection, and predictive analytics are embedded across the platform — but the Cloud Signing Service remains the sole fiscal authority. AI suggests; the HSM decides. See [AI & Natural Language Capabilities](ai-capabilities.md).
 
 ## Target users
 - Finance teams and comptrollers who need sealed invoices, Z/X/A/audit reports, and instant receipts (email, WhatsApp, PDF, print) without managing hardware.
+- **Merchants and cashiers** who create invoices by typing a natural language message — in French, Lingala, or Swahili — via WhatsApp or the dashboard chat widget, and receive a sealed fiscal invoice in seconds. See [Natural Language Invoice Creation](ai-capabilities.md#1-natural-language-invoice-creation).
 - Developers building integrations, SDKs, ERP connectors, or webhook consumers who expect Stripe-like payloads, rate limits, and deterministic behavior.
 - POS vendors and retailers preparing for Phase 2 multi-terminal deployment with local fiscal services that mediate access to the cloud signer.
 - Auditors, regulators, and the DGI who demand append-only ledgers, canonical security elements, and verified QR codes for every invoice.
@@ -37,7 +39,9 @@ flowchart LR
 Bono Pay satisfies the SFE specifications: all five invoice types plus the 14 DGI tax groups run through the tax engine, client classification is mandatory, and every sealed invoice includes the fiscal number, fiscal authority ID, cryptographic auth code, trusted timestamp, and QR payload produced by the Cloud Signing Service (HSM). The Fiscal Ledger remains append-only, the Report Generator emits Z/X/A/audit exports, and voids/refunds become new fiscal events instead of deletions.
 
 ## Delivery & reporting
-Receipt delivery is multi-channel (email, WhatsApp, PDF, thermal print) and always includes the fiscal number plus QR payload while the ledger and Report Generator power Z, X, A, and audit export data for inspectors and finance teams. Offline-first clients queue invoices locally, surface queue depth indicators, and retry until Bono Pay Cloud seals the payload. The Sync Agent handles DGI integration (MCF/e-MCF) so authorized invoices and ledger hashes reach the ministry even when connectivity is intermittent.
+Receipt delivery is multi-channel (email, WhatsApp, PDF, thermal print) and always includes the fiscal number plus QR payload while the ledger and Report Generator power Z, X, A, and audit export data for inspectors and finance teams. The [WhatsApp Invoice Bot](ai-capabilities.md#2-whatsapp-invoice-bot) also serves as a delivery and query channel — merchants can check invoice status, download receipts, and request Z reports directly in their WhatsApp conversation. Offline-first clients queue invoices locally, surface queue depth indicators, and retry until Bono Pay Cloud seals the payload. The Sync Agent handles DGI integration (MCF/e-MCF) so authorized invoices and ledger hashes reach the ministry even when connectivity is intermittent.
+
+[Anomaly detection](ai-capabilities.md#4-anomaly-detection) continuously monitors the Fiscal Ledger for numbering gaps, velocity spikes, and suspicious patterns, surfacing alerts through the dashboard, email, and webhooks. [Predictive analytics](ai-capabilities.md#5-predictive-analytics) project tax liability and revenue trends so finance teams plan ahead rather than react.
 
 ## Phasing summary
 1. **Phase 1 — Software Invoicing (current):** Cloud Signing Service (HSM) is the trusted authority, the Invoicing API/web dashboard/SDK ecosystem produce canonical payloads, and sealed invoices stream to delivery channels while the Sync Agent uploads to the DGI.

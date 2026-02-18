@@ -1,6 +1,6 @@
 # Bono Pay Technical Design Documentation
 
-Bono Pay is fiscal invoicing infrastructure for the DRC's Facture Normalisée mandate. Developers, finance teams, and auditors use this documentation to understand how invoices are created, validated, signed, and synchronized in a software-first platform that delivers fiscal numbers, cryptographic signatures, and trusted timestamps without forcing merchants to adopt bespoke hardware.
+Bono Pay is fiscal invoicing infrastructure for the DRC's Facture Normalisée mandate. The platform creates, validates, signs, and synchronizes invoices in a software-first system that delivers fiscal numbers, cryptographic signatures, and trusted timestamps without requiring merchants to adopt bespoke hardware. Invoices are sealed by a cloud signing service backed by an HSM, then synced to the DGI while clients queue requests offline and deliver sealed receipts.
 
 The platform combines an API-first invoicing surface (REST + SDKs), a web dashboard, a cloud signing service backed by an HSM, and a resilient sync agent that delivers sealed invoices to the DGI. Each section below shows how Bono Pay enforces fiscal compliance while keeping the developer experience modern and familiar.
 

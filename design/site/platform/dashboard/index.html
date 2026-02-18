@@ -15,6 +15,7 @@
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
 <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+<link href="../../assets/mermaid-zoom.css" rel="stylesheet"/>
 <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
 </head>
 <body data-md-color-accent="#3FFF00" data-md-color-primary="#3FFF00" data-md-color-scheme="slate" dir="ltr">
@@ -553,6 +554,18 @@
 </a>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="../ai-capabilities/">
+<span class="md-ellipsis">
+    
+  
+    AI &amp; Natural Language
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="../integrations/">
 <span class="md-ellipsis">
     
@@ -1030,11 +1043,11 @@
 <p>After the Cloud Signing Service replies, the UI shows a success toast with the fiscal number, auth code, timestamp, and QR preview. Receipt delivery options include email, WhatsApp share, PDF download, and browser print (thermal print via printer APIs). The dashboard also stores the ledger hash and DGI sync status for audit requests and exposes <code>POST /api/v1/reports</code> links (Z, X, A, audit export) so auditors can download sealed data without touching the USB device.</p>
 <h2 id="mermaid-wireframe-flow">Mermaid wireframe flow<a class="headerlink" href="#mermaid-wireframe-flow" title="Permanent link">¶</a></h2>
 <pre class="mermaid"><code>flowchart LR
-    "Dashboard" --&gt; "Create Invoice"
-    "Create Invoice" --&gt; "Add Items + Tax"
-    "Add Items + Tax" --&gt; "Submit to Bono Pay Cloud"
-    "Submit to Bono Pay Cloud" --&gt; "Cloud Signing Service (HSM)"
-    "Cloud Signing Service (HSM)" --&gt; "Receipt Delivery (email/WhatsApp/PDF/print)"</code></pre>
+    A["Dashboard"] --&gt; B["Create Invoice"]
+    B --&gt; C["Add Items + Tax"]
+    C --&gt; D["Submit to Bono Pay Cloud"]
+    D --&gt; E["Cloud Signing Service HSM"]
+    E --&gt; F["Receipt Delivery\nemail / WhatsApp / PDF / print"]</code></pre>
 </article>
 </div>
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
@@ -1060,5 +1073,6 @@
 </div>
 <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
 <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+<script src="../../assets/mermaid-zoom.js"></script>
 </body>
 </html>

@@ -57,17 +57,19 @@ Phase 4 extends Bono Pay into enterprise environments with ERP connectors, fleet
 
 ### 3. Advanced analytics
 
-**Description:** Analytics engine that transforms Fiscal Ledger data into actionable insights for merchants and compliance teams.
+**Description:** Analytics engine that transforms Fiscal Ledger data into actionable insights for merchants and compliance teams, powered by ML-based anomaly detection, predictive forecasting, and natural language search.
 
 **Reports:**
 
 | Report | Description |
 |--------|-------------|
 | **Revenue trends** | Daily/weekly/monthly revenue by outlet, product category, and tax group |
-| **Tax liability forecast** | Projected tax obligations based on current invoicing velocity |
+| **Tax liability forecast** | Projected tax obligations based on current invoicing velocity and seasonal patterns (Prophet / ARIMA) |
 | **Client segmentation** | Invoice volume and revenue by client classification (individual, company, embassy, etc.) |
-| **Compliance scorecard** | DGI submission success rate, average sync latency, numbering integrity |
+| **Compliance scorecard** | DGI submission success rate, average sync latency, numbering integrity, AI-driven risk score per outlet |
 | **Cashier performance** | Invoices per hour, average transaction value, void/refund rate per cashier |
+| **Seasonal demand** | Peak/trough period identification for inventory and staffing |
+| **Cash flow prediction** | Forecast mobile money vs. cash collection timing |
 
 **Acceptance criteria:**
 
@@ -122,6 +124,36 @@ Phase 4 extends Bono Pay into enterprise environments with ERP connectors, fleet
 
 **Estimated effort:** 4 weeks of research + 2 weeks for documentation.
 
+### 6. AI-Powered Capabilities (Full Suite)
+
+**Description:** Deploy the full AI suite that builds on Phase 2's foundation (WhatsApp bot, NL invoicing, tax classifier, rule-based anomaly detection) with advanced ML models, OCR, compliance monitoring, and natural language search.
+
+**Components:**
+
+| Component | Description | Effort |
+|-----------|-------------|--------|
+| **ML Anomaly Detection** | Replace Phase 2 rule-based triggers with Isolation Forest / Autoencoder models trained on per-outlet baselines. Detect velocity, amount, timing, tax group, and void/refund anomalies with higher precision. | 3 weeks |
+| **Predictive Analytics Engine** | Time-series forecasting (Prophet / ARIMA) for tax liability, revenue projection, seasonal demand, and cash flow prediction. Dashboard forecast cards with confidence intervals. | 3 weeks |
+| **OCR & Document Digitization** | Camera/PDF upload → preprocessing → Tesseract/Cloud Vision OCR → field extraction (NER + layout analysis) → human review → stored as digitized record. Historical paper invoices are informational records only — never fabricate fiscal numbers for scanned documents. | 4 weeks |
+| **NLP Compliance Monitoring** | Monitor DGI website, official gazette, and ministry circulars for regulatory changes. NLP document classifier detects changes to tax rates, exemptions, and reporting obligations. Alerts reviewed by compliance team before pushing to merchants. | 3 weeks |
+| **Smart Search (Text-to-SQL)** | Natural language queries over fiscal data via dashboard search bar and `/api/v1/search/query`. Fine-tuned CodeLlama/StarCoder translates French/English questions into sandboxed SQL queries against the Fiscal Ledger read replica. Role-based access control enforced. | 3 weeks |
+| **Voice Invoice Creation** | Speech-to-text (Whisper multilingual) → text → NL Invoice Parser pipeline. Supports French, Lingala, Swahili. | 2 weeks |
+
+**Acceptance criteria:**
+
+- ML anomaly detection achieves ≥ 80% precision with < 5% false positive rate.
+- Predictive forecasts within ±15% accuracy for 30-day projections.
+- OCR field extraction accuracy ≥ 90%. Low-quality scans flagged for manual entry.
+- Compliance monitor detects regulatory changes within 48 hours of publication.
+- Smart Search handles ≥ 90% of common finance team queries with correct results.
+- Voice input achieves ≥ 85% entity extraction accuracy for supported languages.
+- All AI models run within the Bono Pay cloud boundary. No cross-tenant training.
+
+**Estimated effort:** 18 weeks total (components can be parallelized across teams).
+**Dependencies:** `platform/ai-capabilities.md`, `fiscal/reports.md`, `cloud/architecture.md`.
+
+See [AI & Natural Language Capabilities](../platform/ai-capabilities.md) for full specifications, data flows, and privacy governance.
+
 ## Risks
 
 !!! warning "Phase 4 Risks"
@@ -129,6 +161,9 @@ Phase 4 extends Bono Pay into enterprise environments with ERP connectors, fleet
     - Multi-country expansion may require separate legal entities and local partnerships.
     - Analytics on large datasets requires careful data warehouse design to avoid performance issues.
     - Event streaming infrastructure (Kafka/NATS) adds operational complexity.
+    - AI model accuracy depends on sufficient training data from Phases 1–3; limited pilot volume may require synthetic data augmentation.
+    - OCR accuracy degrades significantly on poor-quality scans (torn, faded, handwritten) common in DRC markets.
+    - Multilingual NLP (especially Lingala and Tshiluba) has limited pre-trained model coverage; fine-tuning requires labeled datasets.
 
 ## Success criteria
 
@@ -136,3 +171,7 @@ Phase 4 extends Bono Pay into enterprise environments with ERP connectors, fleet
 - Fleet dashboard supports 3+ enterprise merchants with 50+ outlets each.
 - Analytics reports are used by at least 5 merchants for tax planning.
 - Multi-country research delivers go/no-go recommendations for at least 2 countries.
+- WhatsApp bot and NL Invoice API handle ≥ 500 invoices/month across all merchants.
+- Tax Auto-Classifier accuracy ≥ 85% on production items.
+- Anomaly detection surfaces real issues with < 5% false positive rate.
+- Smart Search resolves ≥ 90% of natural language finance queries correctly.

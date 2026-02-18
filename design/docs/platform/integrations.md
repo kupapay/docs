@@ -121,6 +121,20 @@ In Phase 2, point-of-sale systems connect to Bono Pay as API consumers:
 - Multi-terminal outlets share a single fiscal counter via the Monotonic Counter Manager.
 - See [Multi-User Access Control](multi-user.md) for details on terminal/user identity.
 
+## AI-powered integration surfaces
+
+Bono Pay embeds AI across its integration tiers so external systems and end-users benefit from natural language processing, automated classification, and intelligent alerting:
+
+| AI capability | Integration point | Phase |
+|--------------|-------------------|-------|
+| **Natural Language Invoice API** (`/api/v1/invoices/natural`) | Any REST client or SDK can submit invoices as free-text French/Lingala/Swahili instead of structured JSON | Phase 2 |
+| **Tax Auto-Classification** (`/api/v1/tax/classify`) | ERPs and POS systems call the classifier to suggest tax groups before building the canonical payload | Phase 2 |
+| **Anomaly Detection webhooks** (`anomaly.detected` event) | External systems receive real-time alerts when the Fiscal Ledger shows irregularities | Phase 2 |
+| **Smart Search API** (`/api/v1/search/query`) | Dashboards and BI tools query fiscal data using natural language | Phase 4 |
+| **WhatsApp Bot** | Merchants create, query, and receive invoices via WhatsApp Business API | Phase 2 |
+
+See [AI & Natural Language Capabilities](ai-capabilities.md) for full specifications.
+
 ## Security considerations
 
 - All integrations authenticate via API keys scoped to specific outlets and permissions.
@@ -128,3 +142,4 @@ In Phase 2, point-of-sale systems connect to Bono Pay as API consumers:
 - ERP connectors use OAuth 2.0 or certificate-based authentication for the ERP side.
 - API keys can be rotated and revoked without downtime.
 - Rate limiting protects the API from abuse (default: 100 req/s per API key).
+- AI endpoints inherit the same authentication, rate limiting, and tenant isolation as the core invoicing API. AI models run within the Bono Pay cloud boundary — no customer data is sent to third-party providers unless explicitly opted in.

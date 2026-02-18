@@ -15,6 +15,7 @@
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
 <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+<link href="../../assets/mermaid-zoom.css" rel="stylesheet"/>
 <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
 </head>
 <body data-md-color-accent="#3FFF00" data-md-color-primary="#3FFF00" data-md-color-scheme="slate" dir="ltr">
@@ -522,6 +523,18 @@
 </a>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="../ai-capabilities/">
+<span class="md-ellipsis">
+    
+  
+    AI &amp; Natural Language
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="../integrations/">
 <span class="md-ellipsis">
     
@@ -938,11 +951,11 @@
 </ol>
 <h2 id="platform-flow">Platform Flow<a class="headerlink" href="#platform-flow" title="Permanent link">¶</a></h2>
 <pre class="mermaid"><code>flowchart LR
-  "API / Dashboard" --&gt; "Bono Pay Cloud (Invoicing API + Cloud Signing Service (HSM))"
-  "SDKs &amp; Integrations" --&gt; "Bono Pay Cloud (Invoicing API + Cloud Signing Service (HSM))"
-  "Bono Pay Cloud (Invoicing API + Cloud Signing Service (HSM))" --&gt; "Sealed Invoice (Fiscal Ledger &amp; Report Generator)"
-  "Sealed Invoice (Fiscal Ledger &amp; Report Generator)" --&gt; "Email / WhatsApp / PDF / Print"
-  "Sealed Invoice (Fiscal Ledger &amp; Report Generator)" --&gt; "Sync Agent (MCF/e-MCF)"</code></pre>
+  A["API / Dashboard"] --&gt; C["Bono Pay Cloud\nInvoicing API + Cloud Signing Service HSM"]
+  B["SDKs &amp; Integrations"] --&gt; C
+  C --&gt; D["Sealed Invoice\nFiscal Ledger &amp; Report Generator"]
+  D --&gt; E["Email / WhatsApp / PDF / Print"]
+  D --&gt; F["Sync Agent — MCF/e-MCF"]</code></pre>
 <h2 id="design-principles">Design principles<a class="headerlink" href="#design-principles" title="Permanent link">¶</a></h2>
 <ul>
 <li><strong>Cloud-first trust boundary:</strong> The Cloud Signing Service (HSM) is the only authority for fiscal numbers, auth codes, timestamps, and QR payloads; client apps never fabricate or mutate security elements.</li>
@@ -950,10 +963,12 @@
 <li><strong>Deterministic canonical payloads:</strong> Field ordering, tax group metadata, and payment records are never reshuffled so the Fiscal Ledger and QR payloads remain verifiable.</li>
 <li><strong>Multi-user, multi-tenant scale:</strong> Each invoice tags <code>outlet_id</code>, <code>pos_terminal_id</code>, <code>cashier_id</code>, and API key scopes so the Monotonic Counter Manager serializes numbering per outlet while roles and quotas protect tenants.</li>
 <li><strong>Mobile money + multi-currency support:</strong> Airtel Money, M-Pesa, Orange Money, and USD/CDF split payments are front and center so traders and schools can use cash and mobile instruments simultaneously.</li>
+<li><strong>AI-assisted, human-confirmed:</strong> Natural language invoice creation, tax auto-classification, anomaly detection, and predictive analytics are embedded across the platform — but the Cloud Signing Service remains the sole fiscal authority. AI suggests; the HSM decides. See <a href="../ai-capabilities/">AI &amp; Natural Language Capabilities</a>.</li>
 </ul>
 <h2 id="target-users">Target users<a class="headerlink" href="#target-users" title="Permanent link">¶</a></h2>
 <ul>
 <li>Finance teams and comptrollers who need sealed invoices, Z/X/A/audit reports, and instant receipts (email, WhatsApp, PDF, print) without managing hardware.</li>
+<li><strong>Merchants and cashiers</strong> who create invoices by typing a natural language message — in French, Lingala, or Swahili — via WhatsApp or the dashboard chat widget, and receive a sealed fiscal invoice in seconds. See <a href="../ai-capabilities/#1-natural-language-invoice-creation">Natural Language Invoice Creation</a>.</li>
 <li>Developers building integrations, SDKs, ERP connectors, or webhook consumers who expect Stripe-like payloads, rate limits, and deterministic behavior.</li>
 <li>POS vendors and retailers preparing for Phase 2 multi-terminal deployment with local fiscal services that mediate access to the cloud signer.</li>
 <li>Auditors, regulators, and the DGI who demand append-only ledgers, canonical security elements, and verified QR codes for every invoice.</li>
@@ -961,7 +976,8 @@
 <h2 id="security-compliance">Security &amp; compliance<a class="headerlink" href="#security-compliance" title="Permanent link">¶</a></h2>
 <p>Bono Pay satisfies the SFE specifications: all five invoice types plus the 14 DGI tax groups run through the tax engine, client classification is mandatory, and every sealed invoice includes the fiscal number, fiscal authority ID, cryptographic auth code, trusted timestamp, and QR payload produced by the Cloud Signing Service (HSM). The Fiscal Ledger remains append-only, the Report Generator emits Z/X/A/audit exports, and voids/refunds become new fiscal events instead of deletions.</p>
 <h2 id="delivery-reporting">Delivery &amp; reporting<a class="headerlink" href="#delivery-reporting" title="Permanent link">¶</a></h2>
-<p>Receipt delivery is multi-channel (email, WhatsApp, PDF, thermal print) and always includes the fiscal number plus QR payload while the ledger and Report Generator power Z, X, A, and audit export data for inspectors and finance teams. Offline-first clients queue invoices locally, surface queue depth indicators, and retry until Bono Pay Cloud seals the payload. The Sync Agent handles DGI integration (MCF/e-MCF) so authorized invoices and ledger hashes reach the ministry even when connectivity is intermittent.</p>
+<p>Receipt delivery is multi-channel (email, WhatsApp, PDF, thermal print) and always includes the fiscal number plus QR payload while the ledger and Report Generator power Z, X, A, and audit export data for inspectors and finance teams. The <a href="../ai-capabilities/#2-whatsapp-invoice-bot">WhatsApp Invoice Bot</a> also serves as a delivery and query channel — merchants can check invoice status, download receipts, and request Z reports directly in their WhatsApp conversation. Offline-first clients queue invoices locally, surface queue depth indicators, and retry until Bono Pay Cloud seals the payload. The Sync Agent handles DGI integration (MCF/e-MCF) so authorized invoices and ledger hashes reach the ministry even when connectivity is intermittent.</p>
+<p><a href="../ai-capabilities/#4-anomaly-detection">Anomaly detection</a> continuously monitors the Fiscal Ledger for numbering gaps, velocity spikes, and suspicious patterns, surfacing alerts through the dashboard, email, and webhooks. <a href="../ai-capabilities/#5-predictive-analytics">Predictive analytics</a> project tax liability and revenue trends so finance teams plan ahead rather than react.</p>
 <h2 id="phasing-summary">Phasing summary<a class="headerlink" href="#phasing-summary" title="Permanent link">¶</a></h2>
 <ol>
 <li><strong>Phase 1 — Software Invoicing (current):</strong> Cloud Signing Service (HSM) is the trusted authority, the Invoicing API/web dashboard/SDK ecosystem produce canonical payloads, and sealed invoices stream to delivery channels while the Sync Agent uploads to the DGI.</li>
@@ -993,5 +1009,6 @@
 </div>
 <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
 <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+<script src="../../assets/mermaid-zoom.js"></script>
 </body>
 </html>

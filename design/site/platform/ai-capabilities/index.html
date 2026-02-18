@@ -1,0 +1,2667 @@
+
+<!DOCTYPE html>
+
+<html class="no-js" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<link href="../multi-user/" rel="prev"/>
+<link href="../integrations/" rel="next"/>
+<link href="../../assets/images/favicon.png" rel="icon"/>
+<meta content="mkdocs-1.6.1, mkdocs-material-9.7.1" name="generator"/>
+<title>AI &amp; Natural Language - Bono Pay Technical Design</title>
+<link href="../../assets/stylesheets/main.484c7ddc.min.css" rel="stylesheet"/>
+<link href="../../assets/stylesheets/palette.ab4e12ef.min.css" rel="stylesheet"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
+<style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+<link href="../../assets/mermaid-zoom.css" rel="stylesheet"/>
+<script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+</head>
+<body data-md-color-accent="#3FFF00" data-md-color-primary="#3FFF00" data-md-color-scheme="slate" dir="ltr">
+<input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
+<input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
+<label class="md-overlay" for="__drawer"></label>
+<div data-md-component="skip">
+<a class="md-skip" href="#ai-natural-language-capabilities">
+          Skip to content
+        </a>
+</div>
+<div data-md-component="announce">
+</div>
+<header class="md-header md-header--shadow" data-md-component="header">
+<nav aria-label="Header" class="md-header__inner md-grid">
+<a aria-label="Bono Pay Technical Design" class="md-header__button md-logo" data-md-component="logo" href="../.." title="Bono Pay Technical Design">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+<label class="md-header__button md-icon" for="__drawer">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+</label>
+<div class="md-header__title" data-md-component="header-title">
+<div class="md-header__ellipsis">
+<div class="md-header__topic">
+<span class="md-ellipsis">
+            Bono Pay Technical Design
+          </span>
+</div>
+<div class="md-header__topic" data-md-component="header-topic">
+<span class="md-ellipsis">
+            
+              AI &amp; Natural Language
+            
+          </span>
+</div>
+</div>
+</div>
+<label class="md-header__button md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+</label>
+<div class="md-search" data-md-component="search" role="dialog">
+<label class="md-search__overlay" for="__search"></label>
+<div class="md-search__inner" role="search">
+<form class="md-search__form" name="search">
+<input aria-label="Search" autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="search-query" name="query" placeholder="Search" required="" spellcheck="false" type="text"/>
+<label class="md-search__icon md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+</label>
+<nav aria-label="Search" class="md-search__options">
+<button aria-label="Clear" class="md-search__icon md-icon" tabindex="-1" title="Clear" type="reset">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+</button>
+</nav>
+</form>
+<div class="md-search__output">
+<div class="md-search__scrollwrap" data-md-scrollfix="" tabindex="0">
+<div class="md-search-result" data-md-component="search-result">
+<div class="md-search-result__meta">
+            Initializing search
+          </div>
+<ol class="md-search-result__list" role="presentation"></ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+</nav>
+</header>
+<div class="md-container" data-md-component="container">
+<main class="md-main" data-md-component="main">
+<div class="md-main__inner md-grid">
+<div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Navigation" class="md-nav md-nav--primary" data-md-level="0">
+<label class="md-nav__title" for="__drawer">
+<a aria-label="Bono Pay Technical Design" class="md-nav__button md-logo" data-md-component="logo" href="../.." title="Bono Pay Technical Design">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+    Bono Pay Technical Design
+  </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../..">
+<span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_2" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_2_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_2">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Architecture
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../architecture/overview/">
+<span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../architecture/trust-boundary/">
+<span class="md-ellipsis">
+    
+  
+    Trust Boundary
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../architecture/components/">
+<span class="md-ellipsis">
+    
+  
+    Component Map
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../architecture/data-flow/">
+<span class="md-ellipsis">
+    
+  
+    Data Flow
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_3" type="checkbox"/>
+<label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Invoicing Platform
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_3_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_3">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Invoicing Platform
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../overview/">
+<span class="md-ellipsis">
+    
+  
+    Product Overview
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../api/">
+<span class="md-ellipsis">
+    
+  
+    Invoicing API
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../dashboard/">
+<span class="md-ellipsis">
+    
+  
+    Web Dashboard
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../sdk/">
+<span class="md-ellipsis">
+    
+  
+    SDK &amp; Libraries
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Fiscal Engine
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_4_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_4">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Fiscal Engine
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../fiscal/invoice-lifecycle/">
+<span class="md-ellipsis">
+    
+  
+    Invoice Lifecycle
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../fiscal/tax-engine/">
+<span class="md-ellipsis">
+    
+  
+    Tax Engine (14 Groups)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../fiscal/security-elements/">
+<span class="md-ellipsis">
+    
+  
+    Security Elements
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../fiscal/reports/">
+<span class="md-ellipsis">
+    
+  
+    Reports (Z/X/A)
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Cloud &amp; Sync
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_5">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Cloud &amp; Sync
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../cloud/architecture/">
+<span class="md-ellipsis">
+    
+  
+    Cloud Architecture
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../cloud/offline-sync/">
+<span class="md-ellipsis">
+    
+  
+    Offline-First Sync
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../cloud/dgi-integration/">
+<span class="md-ellipsis">
+    
+  
+    DGI Integration
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--active md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_6" type="checkbox"/>
+<label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Platform &amp; Integrations
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="true" aria-labelledby="__nav_6_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_6">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Platform &amp; Integrations
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../multi-user/">
+<span class="md-ellipsis">
+    
+  
+    Multi-User Access
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--active">
+<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+<label class="md-nav__link md-nav__link--active" for="__toc">
+<span class="md-ellipsis">
+    
+  
+    AI &amp; Natural Language
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<a class="md-nav__link md-nav__link--active" href="./">
+<span class="md-ellipsis">
+    
+  
+    AI &amp; Natural Language
+  
+
+    
+  </span>
+</a>
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#design-principles">
+<span class="md-ellipsis">
+      
+        Design principles
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#capability-map">
+<span class="md-ellipsis">
+      
+        Capability map
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-natural-language-invoice-creation">
+<span class="md-ellipsis">
+      
+        1. Natural Language Invoice Creation
+      
+    </span>
+</a>
+<nav aria-label="1. Natural Language Invoice Creation" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#problem">
+<span class="md-ellipsis">
+      
+        Problem
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#specification">
+<span class="md-ellipsis">
+      
+        Specification
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#data-flow">
+<span class="md-ellipsis">
+      
+        Data flow
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#entity-extraction-targets">
+<span class="md-ellipsis">
+      
+        Entity extraction targets
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#implementation-notes">
+<span class="md-ellipsis">
+      
+        Implementation notes
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#phase-phase-2-initial-whatsapp-bot-phase-4-voice-advanced-nlu">
+<span class="md-ellipsis">
+      
+        Phase: Phase 2 (initial WhatsApp bot) / Phase 4 (voice, advanced NLU)
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-whatsapp-invoice-bot">
+<span class="md-ellipsis">
+      
+        2. WhatsApp Invoice Bot
+      
+    </span>
+</a>
+<nav aria-label="2. WhatsApp Invoice Bot" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#problem_1">
+<span class="md-ellipsis">
+      
+        Problem
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#specification_1">
+<span class="md-ellipsis">
+      
+        Specification
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#conversation-flows">
+<span class="md-ellipsis">
+      
+        Conversation flows
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#security-constraints">
+<span class="md-ellipsis">
+      
+        Security constraints
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#phase-phase-2">
+<span class="md-ellipsis">
+      
+        Phase: Phase 2
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-tax-auto-classification">
+<span class="md-ellipsis">
+      
+        3. Tax Auto-Classification
+      
+    </span>
+</a>
+<nav aria-label="3. Tax Auto-Classification" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#problem_2">
+<span class="md-ellipsis">
+      
+        Problem
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#specification_2">
+<span class="md-ellipsis">
+      
+        Specification
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tax-group-mapping-examples">
+<span class="md-ellipsis">
+      
+        Tax group mapping examples
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#training-data-sources">
+<span class="md-ellipsis">
+      
+        Training data sources
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#integration-point">
+<span class="md-ellipsis">
+      
+        Integration point
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#phase-phase-2-model-training-begins-with-phase-1-pilot-data">
+<span class="md-ellipsis">
+      
+        Phase: Phase 2 (model training begins with Phase 1 pilot data)
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#4-anomaly-detection">
+<span class="md-ellipsis">
+      
+        4. Anomaly Detection
+      
+    </span>
+</a>
+<nav aria-label="4. Anomaly Detection" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#problem_3">
+<span class="md-ellipsis">
+      
+        Problem
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#specification_3">
+<span class="md-ellipsis">
+      
+        Specification
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#detection-categories">
+<span class="md-ellipsis">
+      
+        Detection categories
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#model-approach">
+<span class="md-ellipsis">
+      
+        Model approach
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#phase-phase-2-rule-based-phase-4-ml-based">
+<span class="md-ellipsis">
+      
+        Phase: Phase 2 (rule-based) / Phase 4 (ML-based)
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#5-predictive-analytics">
+<span class="md-ellipsis">
+      
+        5. Predictive Analytics
+      
+    </span>
+</a>
+<nav aria-label="5. Predictive Analytics" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#problem_4">
+<span class="md-ellipsis">
+      
+        Problem
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#specification_4">
+<span class="md-ellipsis">
+      
+        Specification
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#dashboard-integration">
+<span class="md-ellipsis">
+      
+        Dashboard integration
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#api-access">
+<span class="md-ellipsis">
+      
+        API access
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#phase-phase-4-requires-sufficient-historical-data-from-phases-13">
+<span class="md-ellipsis">
+      
+        Phase: Phase 4 (requires sufficient historical data from Phases 1–3)
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#6-ocr-document-digitization">
+<span class="md-ellipsis">
+      
+        6. OCR &amp; Document Digitization
+      
+    </span>
+</a>
+<nav aria-label="6. OCR &amp; Document Digitization" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#problem_5">
+<span class="md-ellipsis">
+      
+        Problem
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#specification_5">
+<span class="md-ellipsis">
+      
+        Specification
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#processing-pipeline">
+<span class="md-ellipsis">
+      
+        Processing pipeline
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#constraints">
+<span class="md-ellipsis">
+      
+        Constraints
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#phase-phase-4">
+<span class="md-ellipsis">
+      
+        Phase: Phase 4
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#7-compliance-monitoring">
+<span class="md-ellipsis">
+      
+        7. Compliance Monitoring
+      
+    </span>
+</a>
+<nav aria-label="7. Compliance Monitoring" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#problem_6">
+<span class="md-ellipsis">
+      
+        Problem
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#specification_6">
+<span class="md-ellipsis">
+      
+        Specification
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#alert-examples">
+<span class="md-ellipsis">
+      
+        Alert examples
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#phase-phase-4-monitoring-ongoing-manual-review-by-compliance-team-from-phase-1">
+<span class="md-ellipsis">
+      
+        Phase: Phase 4 (monitoring) / Ongoing (manual review by compliance team from Phase 1)
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#8-smart-search-insights">
+<span class="md-ellipsis">
+      
+        8. Smart Search &amp; Insights
+      
+    </span>
+</a>
+<nav aria-label="8. Smart Search &amp; Insights" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#problem_7">
+<span class="md-ellipsis">
+      
+        Problem
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#specification_7">
+<span class="md-ellipsis">
+      
+        Specification
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#query-examples">
+<span class="md-ellipsis">
+      
+        Query examples
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#architecture">
+<span class="md-ellipsis">
+      
+        Architecture
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#phase-phase-4_1">
+<span class="md-ellipsis">
+      
+        Phase: Phase 4
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#api-surface-summary">
+<span class="md-ellipsis">
+      
+        API surface summary
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#model-hosting-infrastructure">
+<span class="md-ellipsis">
+      
+        Model hosting &amp; infrastructure
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#privacy-data-governance">
+<span class="md-ellipsis">
+      
+        Privacy &amp; data governance
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#phasing-summary">
+<span class="md-ellipsis">
+      
+        Phasing summary
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../integrations/">
+<span class="md-ellipsis">
+    
+  
+    Integrations
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_7" type="checkbox"/>
+<label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Regulatory
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_7_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_7">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Regulatory
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../regulatory/legal-framework/">
+<span class="md-ellipsis">
+    
+  
+    DRC Legal Framework
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../regulatory/arretes/">
+<span class="md-ellipsis">
+    
+  
+    Arrêté Summary
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../regulatory/sfe-specs/">
+<span class="md-ellipsis">
+    
+  
+    SFE Specifications
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_8" type="checkbox"/>
+<label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    ADRs
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_8_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_8">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    ADRs
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../adr/">
+<span class="md-ellipsis">
+    
+  
+    Index
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../adr/adr-0001/">
+<span class="md-ellipsis">
+    
+  
+    0001 - Two-Phase Commit
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../adr/adr-0002/">
+<span class="md-ellipsis">
+    
+  
+    0002 - Signature Algorithm
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../adr/adr-0003/">
+<span class="md-ellipsis">
+    
+  
+    0003 - Platform Technology Stack
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../adr/adr-0004/">
+<span class="md-ellipsis">
+    
+  
+    0004 - Cloud Fiscal Signing
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../adr/adr-0005/">
+<span class="md-ellipsis">
+    
+  
+    0005 - Strategic Pivot
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_9" type="checkbox"/>
+<label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_9_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_9">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    API Reference
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../api/cloud/">
+<span class="md-ellipsis">
+    
+  
+    Cloud API
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../api/invoicing-sdk/">
+<span class="md-ellipsis">
+    
+  
+    Invoicing SDK
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_10" type="checkbox"/>
+<label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Implementation
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_10_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_10">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Implementation
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../implementation/roadmap/">
+<span class="md-ellipsis">
+    
+  
+    Roadmap
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../implementation/phase-1/">
+<span class="md-ellipsis">
+    
+  
+    Phase 1 - Software Invoicing
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../implementation/phase-2/">
+<span class="md-ellipsis">
+    
+  
+    Phase 2 - POS &amp; Retail
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../implementation/phase-3/">
+<span class="md-ellipsis">
+    
+  
+    Phase 3 - USB Hardware
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../implementation/phase-4/">
+<span class="md-ellipsis">
+    
+  
+    Phase 4 - Enterprise
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#design-principles">
+<span class="md-ellipsis">
+      
+        Design principles
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#capability-map">
+<span class="md-ellipsis">
+      
+        Capability map
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-natural-language-invoice-creation">
+<span class="md-ellipsis">
+      
+        1. Natural Language Invoice Creation
+      
+    </span>
+</a>
+<nav aria-label="1. Natural Language Invoice Creation" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#problem">
+<span class="md-ellipsis">
+      
+        Problem
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#specification">
+<span class="md-ellipsis">
+      
+        Specification
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#data-flow">
+<span class="md-ellipsis">
+      
+        Data flow
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#entity-extraction-targets">
+<span class="md-ellipsis">
+      
+        Entity extraction targets
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#implementation-notes">
+<span class="md-ellipsis">
+      
+        Implementation notes
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#phase-phase-2-initial-whatsapp-bot-phase-4-voice-advanced-nlu">
+<span class="md-ellipsis">
+      
+        Phase: Phase 2 (initial WhatsApp bot) / Phase 4 (voice, advanced NLU)
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-whatsapp-invoice-bot">
+<span class="md-ellipsis">
+      
+        2. WhatsApp Invoice Bot
+      
+    </span>
+</a>
+<nav aria-label="2. WhatsApp Invoice Bot" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#problem_1">
+<span class="md-ellipsis">
+      
+        Problem
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#specification_1">
+<span class="md-ellipsis">
+      
+        Specification
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#conversation-flows">
+<span class="md-ellipsis">
+      
+        Conversation flows
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#security-constraints">
+<span class="md-ellipsis">
+      
+        Security constraints
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#phase-phase-2">
+<span class="md-ellipsis">
+      
+        Phase: Phase 2
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-tax-auto-classification">
+<span class="md-ellipsis">
+      
+        3. Tax Auto-Classification
+      
+    </span>
+</a>
+<nav aria-label="3. Tax Auto-Classification" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#problem_2">
+<span class="md-ellipsis">
+      
+        Problem
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#specification_2">
+<span class="md-ellipsis">
+      
+        Specification
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tax-group-mapping-examples">
+<span class="md-ellipsis">
+      
+        Tax group mapping examples
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#training-data-sources">
+<span class="md-ellipsis">
+      
+        Training data sources
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#integration-point">
+<span class="md-ellipsis">
+      
+        Integration point
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#phase-phase-2-model-training-begins-with-phase-1-pilot-data">
+<span class="md-ellipsis">
+      
+        Phase: Phase 2 (model training begins with Phase 1 pilot data)
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#4-anomaly-detection">
+<span class="md-ellipsis">
+      
+        4. Anomaly Detection
+      
+    </span>
+</a>
+<nav aria-label="4. Anomaly Detection" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#problem_3">
+<span class="md-ellipsis">
+      
+        Problem
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#specification_3">
+<span class="md-ellipsis">
+      
+        Specification
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#detection-categories">
+<span class="md-ellipsis">
+      
+        Detection categories
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#model-approach">
+<span class="md-ellipsis">
+      
+        Model approach
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#phase-phase-2-rule-based-phase-4-ml-based">
+<span class="md-ellipsis">
+      
+        Phase: Phase 2 (rule-based) / Phase 4 (ML-based)
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#5-predictive-analytics">
+<span class="md-ellipsis">
+      
+        5. Predictive Analytics
+      
+    </span>
+</a>
+<nav aria-label="5. Predictive Analytics" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#problem_4">
+<span class="md-ellipsis">
+      
+        Problem
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#specification_4">
+<span class="md-ellipsis">
+      
+        Specification
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#dashboard-integration">
+<span class="md-ellipsis">
+      
+        Dashboard integration
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#api-access">
+<span class="md-ellipsis">
+      
+        API access
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#phase-phase-4-requires-sufficient-historical-data-from-phases-13">
+<span class="md-ellipsis">
+      
+        Phase: Phase 4 (requires sufficient historical data from Phases 1–3)
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#6-ocr-document-digitization">
+<span class="md-ellipsis">
+      
+        6. OCR &amp; Document Digitization
+      
+    </span>
+</a>
+<nav aria-label="6. OCR &amp; Document Digitization" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#problem_5">
+<span class="md-ellipsis">
+      
+        Problem
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#specification_5">
+<span class="md-ellipsis">
+      
+        Specification
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#processing-pipeline">
+<span class="md-ellipsis">
+      
+        Processing pipeline
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#constraints">
+<span class="md-ellipsis">
+      
+        Constraints
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#phase-phase-4">
+<span class="md-ellipsis">
+      
+        Phase: Phase 4
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#7-compliance-monitoring">
+<span class="md-ellipsis">
+      
+        7. Compliance Monitoring
+      
+    </span>
+</a>
+<nav aria-label="7. Compliance Monitoring" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#problem_6">
+<span class="md-ellipsis">
+      
+        Problem
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#specification_6">
+<span class="md-ellipsis">
+      
+        Specification
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#alert-examples">
+<span class="md-ellipsis">
+      
+        Alert examples
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#phase-phase-4-monitoring-ongoing-manual-review-by-compliance-team-from-phase-1">
+<span class="md-ellipsis">
+      
+        Phase: Phase 4 (monitoring) / Ongoing (manual review by compliance team from Phase 1)
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#8-smart-search-insights">
+<span class="md-ellipsis">
+      
+        8. Smart Search &amp; Insights
+      
+    </span>
+</a>
+<nav aria-label="8. Smart Search &amp; Insights" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#problem_7">
+<span class="md-ellipsis">
+      
+        Problem
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#specification_7">
+<span class="md-ellipsis">
+      
+        Specification
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#query-examples">
+<span class="md-ellipsis">
+      
+        Query examples
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#architecture">
+<span class="md-ellipsis">
+      
+        Architecture
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#phase-phase-4_1">
+<span class="md-ellipsis">
+      
+        Phase: Phase 4
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#api-surface-summary">
+<span class="md-ellipsis">
+      
+        API surface summary
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#model-hosting-infrastructure">
+<span class="md-ellipsis">
+      
+        Model hosting &amp; infrastructure
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#privacy-data-governance">
+<span class="md-ellipsis">
+      
+        Privacy &amp; data governance
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#phasing-summary">
+<span class="md-ellipsis">
+      
+        Phasing summary
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-content" data-md-component="content">
+<article class="md-content__inner md-typeset">
+<h1 id="ai-natural-language-capabilities">AI &amp; Natural Language Capabilities<a class="headerlink" href="#ai-natural-language-capabilities" title="Permanent link">¶</a></h1>
+<p>Bono Pay embeds AI and natural language processing directly into its fiscal invoicing infrastructure so merchants, cashiers, and compliance teams interact with the platform in the language they already speak — French, Lingala, Swahili, or Tshiluba — rather than through forms and dropdowns. This page specifies every AI surface, its data flow, trust boundary rules, and phased rollout.</p>
+<h2 id="design-principles">Design principles<a class="headerlink" href="#design-principles" title="Permanent link">¶</a></h2>
+<ul>
+<li><strong>AI assists, the Cloud Signing Service decides.</strong> AI models suggest tax groups, parse natural language, and flag anomalies, but the Cloud Signing Service (HSM) remains the sole authority for fiscal numbers, signatures, timestamps, and QR codes. No AI output bypasses the trust boundary.</li>
+<li><strong>Human-in-the-loop by default.</strong> AI suggestions (tax classification, anomaly flags, compliance alerts) are presented for review before becoming fiscal events. Confidence thresholds gate auto-approval.</li>
+<li><strong>Multilingual-first.</strong> All NLP models support French (primary), Lingala, Swahili, and Tshiluba. English is supported for international clients and developers.</li>
+<li><strong>Privacy-preserving.</strong> Invoice data fed to AI models stays within Bono Pay's cloud boundary. No customer data is sent to third-party model providers unless the merchant explicitly opts in and a data processing agreement is signed.</li>
+</ul>
+<h2 id="capability-map">Capability map<a class="headerlink" href="#capability-map" title="Permanent link">¶</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    NL["Natural Language Input\n(WhatsApp, Chat, Voice)"]
+    OCR["OCR &amp; Document Scan"]
+    NL --&gt; PARSE["NL Invoice Parser"]
+    OCR --&gt; PARSE
+    PARSE --&gt; CANON["Canonical Payload Builder"]
+    CANON --&gt; VALIDATE["Tax Engine\n(14 DGI Groups)"]
+    VALIDATE --&gt; SIGN["Cloud Signing Service\n(HSM)"]
+
+    LEDGER["Fiscal Ledger"] --&gt; ANOMALY["Anomaly Detection"]
+    LEDGER --&gt; PREDICT["Predictive Analytics"]
+    LEDGER --&gt; SEARCH["Smart Search &amp; Insights"]
+    ANOMALY --&gt; ALERTS["Alert Center"]
+    PREDICT --&gt; DASH["Dashboard &amp; Reports"]
+    SEARCH --&gt; DASH
+
+    CLASSIFY["Tax Auto-Classifier"] --&gt; VALIDATE
+    COMPLY["Compliance Monitor"] --&gt; ALERTS</code></pre>
+<hr/>
+<h2 id="1-natural-language-invoice-creation">1. Natural Language Invoice Creation<a class="headerlink" href="#1-natural-language-invoice-creation" title="Permanent link">¶</a></h2>
+<h3 id="problem">Problem<a class="headerlink" href="#problem" title="Permanent link">¶</a></h3>
+<p>Merchants in DRC markets — small traders, school bursars, wholesale distributors — don't want to fill in 15 form fields. They want to say or type what happened ("Vendez 3 sacs de ciment à 45 000 FC chacun à Établissement Kabila, payé moitié mobile money moitié cash") and get a sealed invoice back.</p>
+<h3 id="specification">Specification<a class="headerlink" href="#specification" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Input channels</strong></td>
+<td>WhatsApp Business API, Web dashboard chat widget, REST API (<code>/api/v1/invoices/natural</code>), Voice (speech-to-text pipeline)</td>
+</tr>
+<tr>
+<td><strong>Languages</strong></td>
+<td>French, Lingala, Swahili, Tshiluba, English</td>
+</tr>
+<tr>
+<td><strong>Output</strong></td>
+<td>Canonical JSON payload ready for the Tax Engine and Cloud Signing Service</td>
+</tr>
+<tr>
+<td><strong>Confidence threshold</strong></td>
+<td>≥ 0.85 → auto-submit for signing; &lt; 0.85 → present draft for review</td>
+</tr>
+<tr>
+<td><strong>Fallback</strong></td>
+<td>If confidence &lt; 0.60, prompt the user for clarification ("Quel est le NIF du client?")</td>
+</tr>
+</tbody>
+</table>
+<h3 id="data-flow">Data flow<a class="headerlink" href="#data-flow" title="Permanent link">¶</a></h3>
+<pre class="mermaid"><code>sequenceDiagram
+    participant M as Merchant (WhatsApp / Chat)
+    participant NLP as NL Invoice Parser
+    participant CAT as Product Catalog
+    participant TAX as Tax Engine
+    participant CSS as Cloud Signing Service (HSM)
+
+    M-&gt;&gt;NLP: "Vends 3 sacs ciment 45000 FC à Ets Kabila, moitié MoMo moitié cash"
+    NLP-&gt;&gt;CAT: Resolve "sacs ciment" → SKU, unit price, tax group
+    CAT--&gt;&gt;NLP: SKU-0042, TG01 (TVA 16%)
+    NLP-&gt;&gt;NLP: Extract: qty=3, unit_price=45000, client="Ets Kabila", payments=[mobile_money: 67500, cash: 67500]
+    NLP--&gt;&gt;M: Draft preview (confidence 0.91) — "Confirm or edit?"
+    M-&gt;&gt;NLP: ✅ Confirm
+    NLP-&gt;&gt;TAX: Canonical payload
+    TAX-&gt;&gt;CSS: Validated payload
+    CSS--&gt;&gt;M: Sealed invoice (fiscal_number, QR, auth_code)</code></pre>
+<h3 id="entity-extraction-targets">Entity extraction targets<a class="headerlink" href="#entity-extraction-targets" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Entity</th>
+<th>Examples</th>
+<th>Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Items</strong></td>
+<td>"3 sacs ciment", "10 cahiers"</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><strong>Unit price</strong></td>
+<td>"45 000 FC", "$12.50"</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><strong>Client</strong></td>
+<td>"Ets Kabila", "M. Tshisekedi"</td>
+<td>No (defaults to anonymous individual)</td>
+</tr>
+<tr>
+<td><strong>Payment methods</strong></td>
+<td>"cash", "MoMo", "moitié-moitié"</td>
+<td>No (defaults to cash)</td>
+</tr>
+<tr>
+<td><strong>Currency</strong></td>
+<td>"FC", "USD", "dollars"</td>
+<td>No (defaults to CDF)</td>
+</tr>
+<tr>
+<td><strong>Tax group override</strong></td>
+<td>"exonéré", "export"</td>
+<td>No (auto-classified from catalog)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="implementation-notes">Implementation notes<a class="headerlink" href="#implementation-notes" title="Permanent link">¶</a></h3>
+<ul>
+<li>Use a fine-tuned multilingual LLM (e.g., mT5 or Mistral-based) for entity extraction, with a retrieval-augmented generation (RAG) layer backed by the merchant's product catalog.</li>
+<li>Catalog matching uses fuzzy search (Levenshtein + embedding similarity) so "ciment" matches "Ciment Portland CPA 42.5 50kg".</li>
+<li>The parser outputs a confidence score per field plus an aggregate score. Fields below 0.70 confidence are highlighted in the draft preview.</li>
+<li>Voice input runs through Whisper (multilingual) → text → same NLP pipeline.</li>
+</ul>
+<h3 id="phase-phase-2-initial-whatsapp-bot-phase-4-voice-advanced-nlu">Phase: <strong>Phase 2</strong> (initial WhatsApp bot) / <strong>Phase 4</strong> (voice, advanced NLU)<a class="headerlink" href="#phase-phase-2-initial-whatsapp-bot-phase-4-voice-advanced-nlu" title="Permanent link">¶</a></h3>
+<hr/>
+<h2 id="2-whatsapp-invoice-bot">2. WhatsApp Invoice Bot<a class="headerlink" href="#2-whatsapp-invoice-bot" title="Permanent link">¶</a></h2>
+<h3 id="problem_1">Problem<a class="headerlink" href="#problem_1" title="Permanent link">¶</a></h3>
+<p>WhatsApp is the dominant communication channel in DRC. Merchants already discuss transactions over WhatsApp — Bono Pay should meet them there.</p>
+<h3 id="specification_1">Specification<a class="headerlink" href="#specification_1" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Platform</strong></td>
+<td>WhatsApp Business API (Cloud API)</td>
+</tr>
+<tr>
+<td><strong>Capabilities</strong></td>
+<td>Create invoices, query invoice status, download receipts (PDF), request Z/X reports, check DGI sync status</td>
+</tr>
+<tr>
+<td><strong>Authentication</strong></td>
+<td>Phone number linked to merchant account + OTP verification on first use</td>
+</tr>
+<tr>
+<td><strong>Languages</strong></td>
+<td>French, Lingala (others via NL pipeline)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="conversation-flows">Conversation flows<a class="headerlink" href="#conversation-flows" title="Permanent link">¶</a></h3>
+<p><strong>Invoice creation:</strong></p>
+<div class="highlight"><pre><span></span><code>Merchant: Facture pour Ets Mwamba, 5 cartons savon 12000 FC
+Bot: 📝 Brouillon créé:
+     Client: Ets Mwamba
+     - 5× Savon Multi-Usage (TG01 TVA 16%) — 60 000 FC
+     - TVA: 9 600 FC
+     - Total: 69 600 FC
+     Paiement: Cash
+     ✅ Confirmer | ✏️ Modifier | ❌ Annuler
+Merchant: ✅
+Bot: ✅ Facture scellée — N° Fiscal: 001-2026-004821
+     📎 [Télécharger PDF] | 📱 [Voir QR]
+</code></pre></div>
+<p><strong>Status query:</strong></p>
+<div class="highlight"><pre><span></span><code>Merchant: Statut facture 004821
+Bot: ✅ Facture 001-2026-004821
+     Scellée: 2026-06-15 14:32 UTC
+     DGI: Synchronisé ✅
+     Client: Ets Mwamba — 69 600 FC
+</code></pre></div>
+<p><strong>Report request:</strong></p>
+<div class="highlight"><pre><span></span><code>Merchant: Rapport Z aujourd'hui
+Bot: 📊 Rapport Z — 15 juin 2026
+     Factures: 47 | Total HT: 3 240 000 FC | TVA: 518 400 FC
+     📎 [Télécharger PDF] | 📊 [Voir détails]
+</code></pre></div>
+<h3 id="security-constraints">Security constraints<a class="headerlink" href="#security-constraints" title="Permanent link">¶</a></h3>
+<ul>
+<li>The bot never displays or transmits signing keys, HSM credentials, or raw auth codes in conversation.</li>
+<li>Receipts sent as PDF attachments include the QR code and fiscal number but the bot does not render the raw cryptographic signature.</li>
+<li>Session timeout: 15 minutes of inactivity.</li>
+<li>All bot interactions are logged in the audit trail with <code>source: "whatsapp_bot"</code>.</li>
+</ul>
+<h3 id="phase-phase-2">Phase: <strong>Phase 2</strong><a class="headerlink" href="#phase-phase-2" title="Permanent link">¶</a></h3>
+<hr/>
+<h2 id="3-tax-auto-classification">3. Tax Auto-Classification<a class="headerlink" href="#3-tax-auto-classification" title="Permanent link">¶</a></h2>
+<h3 id="problem_2">Problem<a class="headerlink" href="#problem_2" title="Permanent link">¶</a></h3>
+<p>DRC's 14 DGI tax groups are nuanced. Merchants frequently mis-classify items, leading to tax errors, compliance risk, and rejected returns. AI can suggest the correct tax group from the item description or HS code.</p>
+<h3 id="specification_2">Specification<a class="headerlink" href="#specification_2" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Input</strong></td>
+<td>Item description (free text), HS code (optional), product category</td>
+</tr>
+<tr>
+<td><strong>Output</strong></td>
+<td>Suggested tax group (TG01–TG14), confidence score, explanation</td>
+</tr>
+<tr>
+<td><strong>Model</strong></td>
+<td>Classification model trained on DRC customs tariff schedule, DGI circulars, and historical Bono Pay transaction data</td>
+</tr>
+<tr>
+<td><strong>Threshold</strong></td>
+<td>≥ 0.90 → auto-apply; 0.70–0.90 → suggest with explanation; &lt; 0.70 → manual classification required</td>
+</tr>
+</tbody>
+</table>
+<h3 id="tax-group-mapping-examples">Tax group mapping examples<a class="headerlink" href="#tax-group-mapping-examples" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Item description</th>
+<th>Suggested TG</th>
+<th>Confidence</th>
+<th>Explanation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>"Ciment Portland 50kg"</td>
+<td>TG01 (TVA 16%)</td>
+<td>0.97</td>
+<td>Construction materials — standard rate</td>
+</tr>
+<tr>
+<td>"Cahiers scolaires A4"</td>
+<td>TG04 (TVA 0% — exonéré)</td>
+<td>0.94</td>
+<td>School supplies — exempt per DGI circular 2024/03</td>
+</tr>
+<tr>
+<td>"Bière Primus 72cl"</td>
+<td>TG07 (Accise + TVA)</td>
+<td>0.96</td>
+<td>Alcoholic beverages — excise + VAT</td>
+</tr>
+<tr>
+<td>"Consulting juridique"</td>
+<td>TG01 (TVA 16%)</td>
+<td>0.88</td>
+<td>Professional services — standard rate</td>
+</tr>
+<tr>
+<td>"Matériel médical importé"</td>
+<td>TG05 (TVA 0% — exonéré)</td>
+<td>0.72</td>
+<td>Medical equipment — review needed, exemption depends on end-use certificate</td>
+</tr>
+</tbody>
+</table>
+<h3 id="training-data-sources">Training data sources<a class="headerlink" href="#training-data-sources" title="Permanent link">¶</a></h3>
+<ol>
+<li><strong>DRC customs tariff schedule</strong> (tarif douanier) — thousands of HS code → duty/tax mappings.</li>
+<li><strong>DGI circulars and arrêtés</strong> — exemptions, special rates, and reclassifications.</li>
+<li><strong>Bono Pay transaction history</strong> — real-world item descriptions with confirmed tax groups (post-Phase 1 pilot).</li>
+<li><strong>Merchant product catalogs</strong> — uploaded during onboarding.</li>
+</ol>
+<h3 id="integration-point">Integration point<a class="headerlink" href="#integration-point" title="Permanent link">¶</a></h3>
+<p>The Tax Auto-Classifier sits between the canonical payload builder and the Tax Engine. It runs during invoice creation (API, dashboard, or NL pipeline) and is also available as a standalone endpoint:</p>
+<div class="highlight"><pre><span></span><code>POST /api/v1/tax/classify
+{
+  "items": [
+    { "description": "Ciment Portland 50kg", "hs_code": "2523.29" },
+    { "description": "Service de nettoyage" }
+  ]
+}
+
+Response:
+{
+  "classifications": [
+    { "description": "Ciment Portland 50kg", "tax_group": "TG01", "confidence": 0.97, "explanation": "Construction materials — standard VAT rate" },
+    { "description": "Service de nettoyage", "tax_group": "TG01", "confidence": 0.91, "explanation": "Cleaning services — standard VAT rate" }
+  ]
+}
+</code></pre></div>
+<h3 id="phase-phase-2-model-training-begins-with-phase-1-pilot-data">Phase: <strong>Phase 2</strong> (model training begins with Phase 1 pilot data)<a class="headerlink" href="#phase-phase-2-model-training-begins-with-phase-1-pilot-data" title="Permanent link">¶</a></h3>
+<hr/>
+<h2 id="4-anomaly-detection">4. Anomaly Detection<a class="headerlink" href="#4-anomaly-detection" title="Permanent link">¶</a></h2>
+<h3 id="problem_3">Problem<a class="headerlink" href="#problem_3" title="Permanent link">¶</a></h3>
+<p>Fiscal fraud, numbering irregularities, and operational errors are difficult to catch manually at scale. AI monitors the Fiscal Ledger for patterns that indicate problems.</p>
+<h3 id="specification_3">Specification<a class="headerlink" href="#specification_3" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Data source</strong></td>
+<td>Fiscal Ledger (append-only, hash-chained), invoice metadata, sync logs</td>
+</tr>
+<tr>
+<td><strong>Detection types</strong></td>
+<td>See table below</td>
+</tr>
+<tr>
+<td><strong>Alert channels</strong></td>
+<td>Dashboard alert center, email, webhook (<code>anomaly.detected</code> event), WhatsApp bot</td>
+</tr>
+<tr>
+<td><strong>Response</strong></td>
+<td>Alert → human review → flag/dismiss/investigate</td>
+</tr>
+</tbody>
+</table>
+<h3 id="detection-categories">Detection categories<a class="headerlink" href="#detection-categories" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Pattern</th>
+<th>Severity</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Numbering anomaly</strong></td>
+<td>Gap in fiscal number sequence, duplicate fiscal numbers, counter rollback</td>
+<td>Critical</td>
+<td>Fiscal number jumps from 004821 to 004823 — missing 004822</td>
+</tr>
+<tr>
+<td><strong>Velocity anomaly</strong></td>
+<td>Unusual spike or drop in invoice volume for an outlet</td>
+<td>High</td>
+<td>Outlet invoiced 500 items in 1 hour vs. daily average of 50</td>
+</tr>
+<tr>
+<td><strong>Amount anomaly</strong></td>
+<td>Invoice total significantly exceeds historical norms</td>
+<td>High</td>
+<td>Single invoice for 50M FC when outlet's max is typically 500K FC</td>
+</tr>
+<tr>
+<td><strong>Timing anomaly</strong></td>
+<td>Invoices generated outside business hours or in suspicious patterns</td>
+<td>Medium</td>
+<td>200 invoices sealed between 02:00–03:00 AM</td>
+</tr>
+<tr>
+<td><strong>Tax group anomaly</strong></td>
+<td>Sudden shift in tax group distribution suggesting mis-classification</td>
+<td>Medium</td>
+<td>Outlet switches 80% of items from TG01 to TG04 (exempt) in one week</td>
+</tr>
+<tr>
+<td><strong>Void/refund anomaly</strong></td>
+<td>Excessive void or refund rate relative to sales</td>
+<td>High</td>
+<td>40% void rate in a single shift</td>
+</tr>
+<tr>
+<td><strong>Sync delay anomaly</strong></td>
+<td>Invoices stuck in offline queue beyond grace period</td>
+<td>Medium</td>
+<td>500 drafts queued for 72+ hours without sync</td>
+</tr>
+</tbody>
+</table>
+<h3 id="model-approach">Model approach<a class="headerlink" href="#model-approach" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Statistical baselines:</strong> Establish per-outlet, per-cashier, and per-time-period baselines using rolling 30-day windows.</li>
+<li><strong>Isolation Forest / Autoencoder:</strong> Unsupervised anomaly detection on multivariate features (invoice count, total, tax group distribution, void rate, sync latency).</li>
+<li><strong>Rule-based triggers:</strong> Hard rules for critical anomalies (numbering gaps, duplicate fiscal numbers) that bypass ML and alert immediately.</li>
+</ul>
+<h3 id="phase-phase-2-rule-based-phase-4-ml-based">Phase: <strong>Phase 2</strong> (rule-based) / <strong>Phase 4</strong> (ML-based)<a class="headerlink" href="#phase-phase-2-rule-based-phase-4-ml-based" title="Permanent link">¶</a></h3>
+<hr/>
+<h2 id="5-predictive-analytics">5. Predictive Analytics<a class="headerlink" href="#5-predictive-analytics" title="Permanent link">¶</a></h2>
+<h3 id="problem_4">Problem<a class="headerlink" href="#problem_4" title="Permanent link">¶</a></h3>
+<p>Finance teams need forward-looking insights — projected tax liability, revenue trends, seasonal patterns — not just backward-looking reports.</p>
+<h3 id="specification_4">Specification<a class="headerlink" href="#specification_4" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Report</th>
+<th>Description</th>
+<th>Model</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Tax liability forecast</strong></td>
+<td>Projected monthly/quarterly tax obligations based on current invoicing velocity and seasonal patterns</td>
+<td>Time-series forecasting (Prophet / ARIMA)</td>
+</tr>
+<tr>
+<td><strong>Revenue projection</strong></td>
+<td>Revenue forecast by outlet, product category, and client segment</td>
+<td>Time-series + regression</td>
+</tr>
+<tr>
+<td><strong>Seasonal demand</strong></td>
+<td>Identify peak/trough periods for inventory and staffing</td>
+<td>Seasonal decomposition</td>
+</tr>
+<tr>
+<td><strong>Cash flow prediction</strong></td>
+<td>Predict when mobile money vs. cash payments will be collected</td>
+<td>Classification + time-series</td>
+</tr>
+<tr>
+<td><strong>Compliance risk score</strong></td>
+<td>Per-outlet risk score based on anomaly history, sync reliability, and tax classification accuracy</td>
+<td>Logistic regression / gradient boosting</td>
+</tr>
+</tbody>
+</table>
+<h3 id="dashboard-integration">Dashboard integration<a class="headerlink" href="#dashboard-integration" title="Permanent link">¶</a></h3>
+<p>Predictive insights surface in the web dashboard as:</p>
+<ul>
+<li><strong>Forecast cards</strong> — "Estimated TVA liability for March: 2.4M FC (±8%)" on the dashboard home.</li>
+<li><strong>Trend charts</strong> — Revenue and tax projections overlaid on historical data with confidence intervals.</li>
+<li><strong>Risk indicators</strong> — Color-coded compliance risk scores per outlet in the fleet view.</li>
+<li><strong>Alerts</strong> — "Tax liability projected to exceed 10M FC this quarter — review TG distribution" in the alert center.</li>
+</ul>
+<h3 id="api-access">API access<a class="headerlink" href="#api-access" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code>GET /api/v1/analytics/forecast?outlet_id=OUT-001&amp;metric=tax_liability&amp;period=quarterly
+</code></pre></div>
+<h3 id="phase-phase-4-requires-sufficient-historical-data-from-phases-13">Phase: <strong>Phase 4</strong> (requires sufficient historical data from Phases 1–3)<a class="headerlink" href="#phase-phase-4-requires-sufficient-historical-data-from-phases-13" title="Permanent link">¶</a></h3>
+<hr/>
+<h2 id="6-ocr-document-digitization">6. OCR &amp; Document Digitization<a class="headerlink" href="#6-ocr-document-digitization" title="Permanent link">¶</a></h2>
+<h3 id="problem_5">Problem<a class="headerlink" href="#problem_5" title="Permanent link">¶</a></h3>
+<p>Many DRC businesses have years of paper invoices that are not in any digital system. Bono Pay can ingest these as historical records (not fiscally sealed — they're already issued) or convert incoming paper invoices from suppliers into structured data.</p>
+<h3 id="specification_5">Specification<a class="headerlink" href="#specification_5" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Input</strong></td>
+<td>Camera photo, scanned PDF, uploaded image</td>
+</tr>
+<tr>
+<td><strong>Output</strong></td>
+<td>Structured invoice data (items, amounts, tax groups, client info)</td>
+</tr>
+<tr>
+<td><strong>Languages</strong></td>
+<td>French, English</td>
+</tr>
+<tr>
+<td><strong>Accuracy target</strong></td>
+<td>≥ 95% character accuracy, ≥ 90% field extraction accuracy</td>
+</tr>
+<tr>
+<td><strong>Use cases</strong></td>
+<td>(1) Digitize historical paper invoices for record-keeping. (2) Extract data from supplier invoices for purchase ledger entry.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="processing-pipeline">Processing pipeline<a class="headerlink" href="#processing-pipeline" title="Permanent link">¶</a></h3>
+<pre class="mermaid"><code>flowchart LR
+    SCAN["Photo / PDF Upload"] --&gt; PREPROCESS["Image Preprocessing\n(deskew, denoise, contrast)"]
+    PREPROCESS --&gt; OCR["OCR Engine\n(Tesseract / Cloud Vision)"]
+    OCR --&gt; EXTRACT["Field Extractor\n(NER + layout analysis)"]
+    EXTRACT --&gt; REVIEW["Human Review UI"]
+    REVIEW --&gt; STORE["Store as\ndigitized record\nor draft invoice"]</code></pre>
+<h3 id="constraints">Constraints<a class="headerlink" href="#constraints" title="Permanent link">¶</a></h3>
+<ul>
+<li>OCR-digitized invoices are stored as <code>source: "ocr_scan"</code> and are <strong>not</strong> fiscally sealed unless the merchant explicitly requests a new fiscal event.</li>
+<li>The system never fabricates fiscal numbers for scanned historical invoices — they are informational records only.</li>
+<li>Low-quality scans (blurry, torn, partial) are flagged for manual entry.</li>
+</ul>
+<h3 id="phase-phase-4">Phase: <strong>Phase 4</strong><a class="headerlink" href="#phase-phase-4" title="Permanent link">¶</a></h3>
+<hr/>
+<h2 id="7-compliance-monitoring">7. Compliance Monitoring<a class="headerlink" href="#7-compliance-monitoring" title="Permanent link">¶</a></h2>
+<h3 id="problem_6">Problem<a class="headerlink" href="#problem_6" title="Permanent link">¶</a></h3>
+<p>DRC tax regulations change — new arrêtés, updated tax rates, revised exemption lists. Merchants need to know when changes affect their invoicing.</p>
+<h3 id="specification_6">Specification<a class="headerlink" href="#specification_6" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Sources</strong></td>
+<td>DGI website, official gazette (Journal Officiel), ministry circulars, partner legal advisors</td>
+</tr>
+<tr>
+<td><strong>Detection</strong></td>
+<td>NLP-based document analysis that identifies changes to tax rates, exemptions, invoicing requirements, and reporting obligations</td>
+</tr>
+<tr>
+<td><strong>Output</strong></td>
+<td>Alert with summary, affected tax groups, recommended action, and link to source document</td>
+</tr>
+<tr>
+<td><strong>Review</strong></td>
+<td>Bono Pay compliance team reviews and confirms before pushing to merchants</td>
+</tr>
+</tbody>
+</table>
+<h3 id="alert-examples">Alert examples<a class="headerlink" href="#alert-examples" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Change detected</th>
+<th>Affected TG</th>
+<th>Recommended action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>New arrêté exempts agricultural inputs from TVA</td>
+<td>TG01 → TG04 for qualifying items</td>
+<td>Review product catalog and reclassify agricultural inputs</td>
+</tr>
+<tr>
+<td>DGI increases TVA rate from 16% to 18%</td>
+<td>TG01</td>
+<td>Update tax engine rate; effective date: 2027-01-01</td>
+</tr>
+<tr>
+<td>New reporting requirement: monthly electronic submission mandatory</td>
+<td>All</td>
+<td>Update Sync Agent schedule from weekly to daily batch</td>
+</tr>
+</tbody>
+</table>
+<h3 id="phase-phase-4-monitoring-ongoing-manual-review-by-compliance-team-from-phase-1">Phase: <strong>Phase 4</strong> (monitoring) / <strong>Ongoing</strong> (manual review by compliance team from Phase 1)<a class="headerlink" href="#phase-phase-4-monitoring-ongoing-manual-review-by-compliance-team-from-phase-1" title="Permanent link">¶</a></h3>
+<hr/>
+<h2 id="8-smart-search-insights">8. Smart Search &amp; Insights<a class="headerlink" href="#8-smart-search-insights" title="Permanent link">¶</a></h2>
+<h3 id="problem_7">Problem<a class="headerlink" href="#problem_7" title="Permanent link">¶</a></h3>
+<p>Finance teams and auditors ask questions like "How much TVA did we collect on cement sales in Q3?" or "Show me all invoices for Ets Mwamba over 500,000 FC." Today they export data and use spreadsheets. Natural language search lets them ask directly.</p>
+<h3 id="specification_7">Specification<a class="headerlink" href="#specification_7" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Input</strong></td>
+<td>Natural language query in the dashboard search bar or via API</td>
+</tr>
+<tr>
+<td><strong>Languages</strong></td>
+<td>French, English</td>
+</tr>
+<tr>
+<td><strong>Data source</strong></td>
+<td>Fiscal Ledger, invoice metadata, reports, analytics</td>
+</tr>
+<tr>
+<td><strong>Output</strong></td>
+<td>Structured answer (table, chart, or summary) with source citations</td>
+</tr>
+</tbody>
+</table>
+<h3 id="query-examples">Query examples<a class="headerlink" href="#query-examples" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Natural language query</th>
+<th>Structured interpretation</th>
+<th>Result type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>"Total TVA pour ciment en Q3 2026"</td>
+<td><code>SUM(tax_amount) WHERE item LIKE 'ciment%' AND tax_group='TG01' AND date BETWEEN '2026-07-01' AND '2026-09-30'</code></td>
+<td>Number + breakdown table</td>
+</tr>
+<tr>
+<td>"Factures Ets Mwamba &gt; 500 000 FC"</td>
+<td><code>SELECT * FROM invoices WHERE client='Ets Mwamba' AND total &gt; 500000</code></td>
+<td>Invoice list</td>
+</tr>
+<tr>
+<td>"Quel caissier a le plus de factures annulées ce mois?"</td>
+<td><code>SELECT cashier_id, COUNT(*) FROM invoices WHERE type='void' AND month=current GROUP BY cashier_id ORDER BY count DESC LIMIT 1</code></td>
+<td>Ranked list</td>
+</tr>
+<tr>
+<td>"Compare revenue outlet Gombe vs Limete this quarter"</td>
+<td>Multi-outlet revenue comparison</td>
+<td>Bar chart</td>
+</tr>
+</tbody>
+</table>
+<h3 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Text-to-SQL / Text-to-Query</strong> layer translates natural language into structured queries against the Fiscal Ledger read replica.</li>
+<li><strong>Guardrails</strong> prevent queries that could expose raw signing keys, HSM credentials, or other merchants' data.</li>
+<li>Queries are scoped to the authenticated merchant's data and respect role-based access control.</li>
+<li>Complex queries that would scan more than 1M rows are queued and run async with progress indication.</li>
+</ul>
+<h3 id="phase-phase-4_1">Phase: <strong>Phase 4</strong><a class="headerlink" href="#phase-phase-4_1" title="Permanent link">¶</a></h3>
+<hr/>
+<h2 id="api-surface-summary">API surface summary<a class="headerlink" href="#api-surface-summary" title="Permanent link">¶</a></h2>
+<table>
+<thead>
+<tr>
+<th>Endpoint</th>
+<th>Method</th>
+<th>Description</th>
+<th>Phase</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/api/v1/invoices/natural</code></td>
+<td>POST</td>
+<td>Create invoice from natural language text</td>
+<td>Phase 2</td>
+</tr>
+<tr>
+<td><code>/api/v1/tax/classify</code></td>
+<td>POST</td>
+<td>Classify items into tax groups</td>
+<td>Phase 2</td>
+</tr>
+<tr>
+<td><code>/api/v1/analytics/forecast</code></td>
+<td>GET</td>
+<td>Retrieve predictive forecasts</td>
+<td>Phase 4</td>
+</tr>
+<tr>
+<td><code>/api/v1/analytics/anomalies</code></td>
+<td>GET</td>
+<td>List detected anomalies</td>
+<td>Phase 2</td>
+</tr>
+<tr>
+<td><code>/api/v1/ocr/scan</code></td>
+<td>POST</td>
+<td>Upload document for OCR extraction</td>
+<td>Phase 4</td>
+</tr>
+<tr>
+<td><code>/api/v1/search/query</code></td>
+<td>POST</td>
+<td>Natural language search over fiscal data</td>
+<td>Phase 4</td>
+</tr>
+</tbody>
+</table>
+<p>All AI endpoints inherit the same authentication (Bearer token), rate limiting, and tenant isolation as the core invoicing API.</p>
+<h2 id="model-hosting-infrastructure">Model hosting &amp; infrastructure<a class="headerlink" href="#model-hosting-infrastructure" title="Permanent link">¶</a></h2>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Technology</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>NL Invoice Parser</strong></td>
+<td>Fine-tuned multilingual LLM (mT5 / Mistral) + RAG</td>
+<td>Hosted within Bono Pay cloud boundary</td>
+</tr>
+<tr>
+<td><strong>Tax Auto-Classifier</strong></td>
+<td>Gradient-boosted classifier + embedding similarity</td>
+<td>Trained on DRC tariff schedule + transaction history</td>
+</tr>
+<tr>
+<td><strong>Anomaly Detection</strong></td>
+<td>Isolation Forest + rule engine</td>
+<td>Statistical baselines per outlet</td>
+</tr>
+<tr>
+<td><strong>Predictive Analytics</strong></td>
+<td>Prophet / ARIMA time-series models</td>
+<td>Runs on Fiscal Ledger read replica</td>
+</tr>
+<tr>
+<td><strong>OCR</strong></td>
+<td>Tesseract + Cloud Vision API (opt-in)</td>
+<td>Image preprocessing pipeline</td>
+</tr>
+<tr>
+<td><strong>Smart Search</strong></td>
+<td>Text-to-SQL (fine-tuned CodeLlama / StarCoder)</td>
+<td>Sandboxed query execution</td>
+</tr>
+<tr>
+<td><strong>Compliance Monitor</strong></td>
+<td>NLP document classifier + change detector</td>
+<td>Semi-automated with human review</td>
+</tr>
+</tbody>
+</table>
+<p>All models run on dedicated compute within the Bono Pay cloud boundary. Inference latency targets: &lt; 2 s for NL parsing, &lt; 500 ms for tax classification, &lt; 1 s for search queries.</p>
+<h2 id="privacy-data-governance">Privacy &amp; data governance<a class="headerlink" href="#privacy-data-governance" title="Permanent link">¶</a></h2>
+<ul>
+<li><strong>Data residency:</strong> All training data and model weights stay within the Bono Pay cloud boundary (same region as the Fiscal Ledger).</li>
+<li><strong>No cross-tenant training:</strong> Models are fine-tuned per merchant or on anonymized aggregate data. One merchant's invoice data never trains another merchant's model.</li>
+<li><strong>Audit trail:</strong> Every AI suggestion, confidence score, and human override is logged with <code>ai_suggestion_id</code>, <code>model_version</code>, and <code>accepted: true/false</code>.</li>
+<li><strong>Opt-in for cloud AI:</strong> Merchants who prefer not to use AI features can disable them at the outlet level. Tax classification falls back to manual selection.</li>
+<li><strong>Data retention for training:</strong> Transaction data used for model training follows the same 10-year regulatory retention requirement as the Fiscal Ledger.</li>
+</ul>
+<h2 id="phasing-summary">Phasing summary<a class="headerlink" href="#phasing-summary" title="Permanent link">¶</a></h2>
+<table>
+<thead>
+<tr>
+<th>Capability</th>
+<th>Phase 1</th>
+<th>Phase 2</th>
+<th>Phase 4</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Natural Language Invoice Creation</td>
+<td>—</td>
+<td>WhatsApp bot + chat widget</td>
+<td>Voice input, advanced NLU</td>
+</tr>
+<tr>
+<td>WhatsApp Invoice Bot</td>
+<td>—</td>
+<td>Core flows (create, status, reports)</td>
+<td>Extended (analytics, alerts)</td>
+</tr>
+<tr>
+<td>Tax Auto-Classification</td>
+<td>—</td>
+<td>Model training + API</td>
+<td>Auto-apply with high confidence</td>
+</tr>
+<tr>
+<td>Anomaly Detection</td>
+<td>—</td>
+<td>Rule-based alerts</td>
+<td>ML-based + compliance scoring</td>
+</tr>
+<tr>
+<td>Predictive Analytics</td>
+<td>—</td>
+<td>—</td>
+<td>Full forecasting suite</td>
+</tr>
+<tr>
+<td>OCR &amp; Document Digitization</td>
+<td>—</td>
+<td>—</td>
+<td>Camera + PDF pipeline</td>
+</tr>
+<tr>
+<td>Compliance Monitoring</td>
+<td>Manual review</td>
+<td>Manual review</td>
+<td>NLP-assisted monitoring</td>
+</tr>
+<tr>
+<td>Smart Search &amp; Insights</td>
+<td>—</td>
+<td>—</td>
+<td>Text-to-SQL search</td>
+</tr>
+</tbody>
+</table>
+</article>
+</div>
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+</div>
+</main>
+<footer class="md-footer">
+<div class="md-footer-meta md-typeset">
+<div class="md-footer-meta__inner md-grid">
+<div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" rel="noopener" target="_blank">
+      Material for MkDocs
+    </a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+<div class="md-dialog" data-md-component="dialog">
+<div class="md-dialog__inner md-typeset"></div>
+</div>
+<script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+<script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+<script src="../../assets/mermaid-zoom.js"></script>
+</body>
+</html>

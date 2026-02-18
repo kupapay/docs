@@ -57,7 +57,7 @@ See [Phase 1 detail](phase-1.md) for epics, acceptance criteria, and dependencie
 
 ## Phase 2 — POS & Retail
 
-Extends the platform to physical retail by adding POS SDK integration, multi-terminal support, mobile money payments, and the webhook event system. Target: 100 retail outlets.
+Extends the platform to physical retail by adding POS SDK integration, multi-terminal support, mobile money payments, the webhook event system, and the first AI-powered capabilities. Target: 100 retail outlets.
 
 **Key deliverables:**
 
@@ -67,6 +67,10 @@ Extends the platform to physical retail by adding POS SDK integration, multi-ter
 - Webhook API for real-time event streaming to external systems
 - Enhanced dashboard with shift management and supervisor views
 - Observability and alerting for fleet operations
+- **WhatsApp Invoice Bot** — create, query, and receive sealed invoices via WhatsApp Business API (French, Lingala)
+- **Natural Language Invoice API** — submit invoices as free-text via `/api/v1/invoices/natural`
+- **Tax Auto-Classification API** — ML-assisted tax group suggestions for items and HS codes
+- **Rule-based anomaly detection** — real-time alerts for numbering gaps, velocity spikes, and void rate anomalies
 
 See [Phase 2 detail](phase-2.md) for epics, acceptance criteria, and dependencies.
 
@@ -86,7 +90,7 @@ See [Phase 3 detail](phase-3.md) for epics, acceptance criteria, and dependencie
 
 ## Phase 4 — Enterprise & Scale
 
-Enterprise-grade integrations, fleet management, and analytics for large-scale deployments with 1,000+ outlets.
+Enterprise-grade integrations, fleet management, advanced analytics, and the full AI suite for large-scale deployments with 1,000+ outlets.
 
 **Key deliverables:**
 
@@ -95,6 +99,12 @@ Enterprise-grade integrations, fleet management, and analytics for large-scale d
 - Advanced analytics (tax-group heatmaps, anomaly detection, trend analysis)
 - Automated compliance reporting and audit export scheduling
 - Multi-country expansion research (regulatory analysis for neighboring markets)
+- **ML-based anomaly detection** — Isolation Forest / Autoencoder models replacing Phase 2 rule-based triggers
+- **Predictive analytics** — tax liability forecasts, revenue projections, seasonal demand, and compliance risk scoring
+- **OCR & document digitization** — scan paper invoices into structured records via camera or PDF upload
+- **NLP compliance monitoring** — detect regulatory changes in DGI publications and alert merchants
+- **Smart Search** — natural language queries over fiscal data (text-to-SQL) in the dashboard and API
+- **Voice invoice creation** — speech-to-text pipeline feeding the NL Invoice Parser
 
 See [Phase 4 detail](phase-4.md) for epics, acceptance criteria, and dependencies.
 

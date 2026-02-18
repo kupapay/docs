@@ -1,0 +1,1043 @@
+
+<!DOCTYPE html>
+
+<html class="no-js" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<link href="../architecture/" rel="prev"/>
+<link href="../dgi-integration/" rel="next"/>
+<link href="../../assets/images/favicon.png" rel="icon"/>
+<meta content="mkdocs-1.6.1, mkdocs-material-9.7.1" name="generator"/>
+<title>Offline-First Sync - Bono Pay Technical Design</title>
+<link href="../../assets/stylesheets/main.484c7ddc.min.css" rel="stylesheet"/>
+<link href="../../assets/stylesheets/palette.ab4e12ef.min.css" rel="stylesheet"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
+<style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+<link href="../../assets/mermaid-zoom.css" rel="stylesheet"/>
+<script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+</head>
+<body data-md-color-accent="#3FFF00" data-md-color-primary="#3FFF00" data-md-color-scheme="slate" dir="ltr">
+<input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
+<input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
+<label class="md-overlay" for="__drawer"></label>
+<div data-md-component="skip">
+<a class="md-skip" href="#offline-first-sync-design">
+          Skip to content
+        </a>
+</div>
+<div data-md-component="announce">
+</div>
+<header class="md-header md-header--shadow" data-md-component="header">
+<nav aria-label="Header" class="md-header__inner md-grid">
+<a aria-label="Bono Pay Technical Design" class="md-header__button md-logo" data-md-component="logo" href="../.." title="Bono Pay Technical Design">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+<label class="md-header__button md-icon" for="__drawer">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+</label>
+<div class="md-header__title" data-md-component="header-title">
+<div class="md-header__ellipsis">
+<div class="md-header__topic">
+<span class="md-ellipsis">
+            Bono Pay Technical Design
+          </span>
+</div>
+<div class="md-header__topic" data-md-component="header-topic">
+<span class="md-ellipsis">
+            
+              Offline-First Sync
+            
+          </span>
+</div>
+</div>
+</div>
+<label class="md-header__button md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+</label>
+<div class="md-search" data-md-component="search" role="dialog">
+<label class="md-search__overlay" for="__search"></label>
+<div class="md-search__inner" role="search">
+<form class="md-search__form" name="search">
+<input aria-label="Search" autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="search-query" name="query" placeholder="Search" required="" spellcheck="false" type="text"/>
+<label class="md-search__icon md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+</label>
+<nav aria-label="Search" class="md-search__options">
+<button aria-label="Clear" class="md-search__icon md-icon" tabindex="-1" title="Clear" type="reset">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+</button>
+</nav>
+</form>
+<div class="md-search__output">
+<div class="md-search__scrollwrap" data-md-scrollfix="" tabindex="0">
+<div class="md-search-result" data-md-component="search-result">
+<div class="md-search-result__meta">
+            Initializing search
+          </div>
+<ol class="md-search-result__list" role="presentation"></ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+</nav>
+</header>
+<div class="md-container" data-md-component="container">
+<main class="md-main" data-md-component="main">
+<div class="md-main__inner md-grid">
+<div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Navigation" class="md-nav md-nav--primary" data-md-level="0">
+<label class="md-nav__title" for="__drawer">
+<a aria-label="Bono Pay Technical Design" class="md-nav__button md-logo" data-md-component="logo" href="../.." title="Bono Pay Technical Design">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+    Bono Pay Technical Design
+  </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../..">
+<span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_2" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_2_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_2">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Architecture
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../architecture/overview/">
+<span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../architecture/trust-boundary/">
+<span class="md-ellipsis">
+    
+  
+    Trust Boundary
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../architecture/components/">
+<span class="md-ellipsis">
+    
+  
+    Component Map
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../architecture/data-flow/">
+<span class="md-ellipsis">
+    
+  
+    Data Flow
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_3" type="checkbox"/>
+<label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Invoicing Platform
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_3_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_3">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Invoicing Platform
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../platform/overview/">
+<span class="md-ellipsis">
+    
+  
+    Product Overview
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../platform/api/">
+<span class="md-ellipsis">
+    
+  
+    Invoicing API
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../platform/dashboard/">
+<span class="md-ellipsis">
+    
+  
+    Web Dashboard
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../platform/sdk/">
+<span class="md-ellipsis">
+    
+  
+    SDK &amp; Libraries
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Fiscal Engine
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_4_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_4">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Fiscal Engine
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../fiscal/invoice-lifecycle/">
+<span class="md-ellipsis">
+    
+  
+    Invoice Lifecycle
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../fiscal/tax-engine/">
+<span class="md-ellipsis">
+    
+  
+    Tax Engine (14 Groups)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../fiscal/security-elements/">
+<span class="md-ellipsis">
+    
+  
+    Security Elements
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../fiscal/reports/">
+<span class="md-ellipsis">
+    
+  
+    Reports (Z/X/A)
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--active md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_5" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Cloud &amp; Sync
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="true" aria-labelledby="__nav_5_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_5">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Cloud &amp; Sync
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../architecture/">
+<span class="md-ellipsis">
+    
+  
+    Cloud Architecture
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--active">
+<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+<label class="md-nav__link md-nav__link--active" for="__toc">
+<span class="md-ellipsis">
+    
+  
+    Offline-First Sync
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<a class="md-nav__link md-nav__link--active" href="./">
+<span class="md-ellipsis">
+    
+  
+    Offline-First Sync
+  
+
+    
+  </span>
+</a>
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#offline-model-overview">
+<span class="md-ellipsis">
+      
+        Offline model overview
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#client-side-queue-architecture">
+<span class="md-ellipsis">
+      
+        Client-side queue architecture
+      
+    </span>
+</a>
+<nav aria-label="Client-side queue architecture" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#storage-backends">
+<span class="md-ellipsis">
+      
+        Storage backends
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#submission-flow">
+<span class="md-ellipsis">
+      
+        Submission flow
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#grace-period-audit-logging">
+<span class="md-ellipsis">
+      
+        Grace period &amp; audit logging
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#client-ui-offline-indicators">
+<span class="md-ellipsis">
+      
+        Client UI offline indicators
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#bandwidth-and-scheduling-optimizations">
+<span class="md-ellipsis">
+      
+        Bandwidth and scheduling optimizations
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../dgi-integration/">
+<span class="md-ellipsis">
+    
+  
+    DGI Integration
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_6" type="checkbox"/>
+<label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Platform &amp; Integrations
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_6_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_6">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Platform &amp; Integrations
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../platform/multi-user/">
+<span class="md-ellipsis">
+    
+  
+    Multi-User Access
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../platform/integrations/">
+<span class="md-ellipsis">
+    
+  
+    Integrations
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_7" type="checkbox"/>
+<label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Regulatory
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_7_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_7">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Regulatory
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../regulatory/legal-framework/">
+<span class="md-ellipsis">
+    
+  
+    DRC Legal Framework
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../regulatory/arretes/">
+<span class="md-ellipsis">
+    
+  
+    Arrêté Summary
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../regulatory/sfe-specs/">
+<span class="md-ellipsis">
+    
+  
+    SFE Specifications
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_8" type="checkbox"/>
+<label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    ADRs
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_8_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_8">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    ADRs
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../adr/">
+<span class="md-ellipsis">
+    
+  
+    Index
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../adr/adr-0001/">
+<span class="md-ellipsis">
+    
+  
+    0001 - Two-Phase Commit
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../adr/adr-0002/">
+<span class="md-ellipsis">
+    
+  
+    0002 - Signature Algorithm
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../adr/adr-0003/">
+<span class="md-ellipsis">
+    
+  
+    0003 - Platform Technology Stack
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../adr/adr-0004/">
+<span class="md-ellipsis">
+    
+  
+    0004 - Cloud Fiscal Signing
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../adr/adr-0005/">
+<span class="md-ellipsis">
+    
+  
+    0005 - Strategic Pivot
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_9" type="checkbox"/>
+<label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_9_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_9">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    API Reference
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../api/cloud/">
+<span class="md-ellipsis">
+    
+  
+    Cloud API
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../api/invoicing-sdk/">
+<span class="md-ellipsis">
+    
+  
+    Invoicing SDK
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_10" type="checkbox"/>
+<label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Implementation
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_10_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_10">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Implementation
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../implementation/roadmap/">
+<span class="md-ellipsis">
+    
+  
+    Roadmap
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../implementation/phase-1/">
+<span class="md-ellipsis">
+    
+  
+    Phase 1 - Software Invoicing
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../implementation/phase-2/">
+<span class="md-ellipsis">
+    
+  
+    Phase 2 - POS &amp; Retail
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../implementation/phase-3/">
+<span class="md-ellipsis">
+    
+  
+    Phase 3 - USB Hardware
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../implementation/phase-4/">
+<span class="md-ellipsis">
+    
+  
+    Phase 4 - Enterprise
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#offline-model-overview">
+<span class="md-ellipsis">
+      
+        Offline model overview
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#client-side-queue-architecture">
+<span class="md-ellipsis">
+      
+        Client-side queue architecture
+      
+    </span>
+</a>
+<nav aria-label="Client-side queue architecture" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#storage-backends">
+<span class="md-ellipsis">
+      
+        Storage backends
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#submission-flow">
+<span class="md-ellipsis">
+      
+        Submission flow
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#grace-period-audit-logging">
+<span class="md-ellipsis">
+      
+        Grace period &amp; audit logging
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#client-ui-offline-indicators">
+<span class="md-ellipsis">
+      
+        Client UI offline indicators
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#bandwidth-and-scheduling-optimizations">
+<span class="md-ellipsis">
+      
+        Bandwidth and scheduling optimizations
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-content" data-md-component="content">
+<article class="md-content__inner md-typeset">
+<h1 id="offline-first-sync-design">Offline-First Sync Design<a class="headerlink" href="#offline-first-sync-design" title="Permanent link">¶</a></h1>
+<p>Every invoice issued in the DRC must survive the most hostile networks. Bono Pay's architecture addresses this with a <strong>client-side offline queue</strong>: when the cloud is unreachable, client applications (web dashboard, API consumers, SDK integrators) queue unsigned canonical payloads locally (IndexedDB for web, SQLite for native/SDK) and submit them in order once connectivity returns. <strong>Fiscalization only happens when the Cloud Signing Service (HSM) processes the request</strong> — offline payloads are drafts, not fiscal events.</p>
+<h2 id="offline-model-overview">Offline model overview<a class="headerlink" href="#offline-model-overview" title="Permanent link">¶</a></h2>
+<pre class="mermaid"><code>stateDiagram-v2
+    [*] --&gt; DRAFT : Client creates invoice (offline)
+    DRAFT --&gt; QUEUED : Saved to local queue
+    QUEUED --&gt; SUBMITTING : Connectivity restored
+    SUBMITTING --&gt; SEALED : Cloud Signing Service signs
+    SUBMITTING --&gt; RETRY : Network error
+    RETRY --&gt; SUBMITTING : Backoff timer expires
+    RETRY --&gt; FAILED : Max retries exceeded
+    FAILED --&gt; RETRY : Manual resume
+    SEALED --&gt; [*]</code></pre>
+<div class="admonition warning">
+<p class="admonition-title">Offline issuance is not a compliance loophole</p>
+<p>Offline is allowed because merchants cannot halt commerce during connectivity outages. However, the locally queued payload is an <strong>unsigned draft</strong> — it carries no fiscal number, signature, or timestamp. The Cloud Signing Service must seal it before it becomes a fiscal event. The system emits alerts when drafts linger past the configured grace period (e.g., 24 hours) so field teams can investigate before auditors do.</p>
+</div>
+<h2 id="client-side-queue-architecture">Client-side queue architecture<a class="headerlink" href="#client-side-queue-architecture" title="Permanent link">¶</a></h2>
+<p>Each client application maintains a local queue of unsigned canonical payloads. Each entry stores:</p>
+<ul>
+<li><strong>canonical payload</strong> — the full invoice payload in deterministic field order (merchant_nif, outlet_id, items, tax_groups, totals, payments, timestamp).</li>
+<li><strong>payload hash</strong> — detects duplicates across reconnect attempts and prevents double-submission.</li>
+<li><strong>client metadata</strong> (outlet_id, user_id / api_key_id, source) — supplies traceability for multi-user scenarios.</li>
+<li><strong>queue position</strong> — the local slot referenced by the sync state machine (QUEUED, SUBMITTING, RETRY, etc.).</li>
+<li><strong>created_at</strong> — client-side timestamp for grace period monitoring (not used for fiscal purposes).</li>
+</ul>
+<h3 id="storage-backends">Storage backends<a class="headerlink" href="#storage-backends" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Client type</th>
+<th>Storage</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Web Dashboard</td>
+<td>IndexedDB + Service Worker</td>
+<td>Service Worker intercepts <code>POST /invoices</code> when offline, stores the payload in IndexedDB, and replays when online.</td>
+</tr>
+<tr>
+<td>REST API consumer</td>
+<td>Caller's responsibility</td>
+<td>API clients should implement their own retry queue. The SDK provides a built-in queue.</td>
+</tr>
+<tr>
+<td>SDK (JavaScript/Python)</td>
+<td>SQLite / IndexedDB</td>
+<td>Built-in <code>OfflineQueue</code> class manages storage, ordering, and submission.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="submission-flow">Submission flow<a class="headerlink" href="#submission-flow" title="Permanent link">¶</a></h2>
+<p>When connectivity returns, the client's sync worker submits queued payloads <strong>in creation order</strong> to the Bono Pay Cloud API:</p>
+<ol>
+<li><strong>Pick the oldest QUEUED entry</strong> and transition it to SUBMITTING.</li>
+<li><strong>POST the canonical payload</strong> to <code>/api/v1/invoices</code> with the API key / bearer token.</li>
+<li><strong>On success (201):</strong> The Cloud Signing Service returns the sealed response (fiscal_number, auth_code, timestamp, qr_payload). Store the sealed response locally, transition to SEALED, and move to the next entry.</li>
+<li><strong>On transient failure (5xx, timeout):</strong> Transition to RETRY with exponential backoff (initial: 5s, max: 5min, jitter: ±20%). After <code>max_retries</code> (default: 10), transition to FAILED and raise an alert.</li>
+<li><strong>On validation failure (4xx):</strong> Log the error, transition to FAILED, and surface the validation error to the user. Do not retry — the payload needs correction.</li>
+</ol>
+<div class="admonition tip">
+<p class="admonition-title">Idempotency</p>
+<p>Each submission includes the <code>payload_hash</code> in an <code>Idempotency-Key</code> header. If the cloud has already sealed this exact payload (e.g., after a network timeout where the server processed the request but the client didn't receive the response), it returns the existing sealed response instead of creating a duplicate fiscal event.</p>
+</div>
+<h2 id="grace-period-audit-logging">Grace period &amp; audit logging<a class="headerlink" href="#grace-period-audit-logging" title="Permanent link">¶</a></h2>
+<p>The DGI expects "guaranteed eventual transmission," not best-effort delivery. As soon as a client regains connectivity, the queue flushes payloads in order and records the delay reason (network outage, user session expired, app backgrounded). Each submission attempt appends an audit record that includes:</p>
+<ul>
+<li>Out-of-band delay duration</li>
+<li>The client/user that triggered the retry</li>
+<li>Resulting status (SEALED, RETRY, FAILED)</li>
+</ul>
+<p>These logs are part of the "transmission delays are logged and auditable" requirement, so regulators can prove no invoice vanished during long offline spells.</p>
+<p>Grace periods should be configurable per deployment, but the default should align with DRC regulators' intolerance for extended "suspicious offline" windows. When the queue detects that a draft has lingered longer than the grace period, it surfaces a warning in the UI and raises a compliance alarm through the cloud dashboard.</p>
+<h2 id="client-ui-offline-indicators">Client UI offline indicators<a class="headerlink" href="#client-ui-offline-indicators" title="Permanent link">¶</a></h2>
+<p>Client applications should mirror the queue state in the UI. Every draft/invoice shows a badge:</p>
+<ol>
+<li><strong>Draft</strong> (gray) — queued in local storage; not yet submitted to the cloud. No fiscal number.</li>
+<li><strong>Submitting</strong> (amber) — the sync worker is sending the payload to the Cloud Signing Service.</li>
+<li><strong>Sealed</strong> (green) — the Cloud Signing Service returned the fiscal response. The invoice is now a fiscal event.</li>
+<li><strong>Retrying</strong> (orange) — transient error; the sync worker will retry after backoff.</li>
+<li><strong>Failed</strong> (red) — submission failed after max retries or validation error. Requires manual intervention.</li>
+</ol>
+<p>These indicators also drive network status chips (green/amber/red) and action buttons ("Retry now", "Edit and resubmit") to honor the principle that offline is acceptable but must be observable.</p>
+<h2 id="bandwidth-and-scheduling-optimizations">Bandwidth and scheduling optimizations<a class="headerlink" href="#bandwidth-and-scheduling-optimizations" title="Permanent link">¶</a></h2>
+<p>Low-bandwidth deployments benefit from batching and compression:</p>
+<ul>
+<li><strong>Batch submissions:</strong> Group queued payloads by outlet and submit them as a batch envelope to <code>/api/v1/invoices/batch</code>. The cloud processes each payload individually but returns all sealed responses in one HTTP response.</li>
+<li><strong>Compression:</strong> Use gzip/Brotli for request/response bodies to reduce bandwidth.</li>
+<li><strong>Throttling:</strong> Spread submissions over the grace period to avoid burst uploads during peak GSM charges. Apply jitter to backoff timers.</li>
+<li><strong>Deduplication:</strong> The <code>payload_hash</code> + <code>Idempotency-Key</code> mechanism prevents duplicate fiscal events even when the client reconnects and replays the queue.</li>
+</ul>
+<div class="admonition tip">
+<p class="admonition-title">Treat the queue like a compliance ledger</p>
+<p>Every state transition is proof that the invoice draft existed and was delivered responsibly. Because the Cloud Signing Service never releases a fiscal number until it processes the payload, the queue can safely replay unsigned drafts without risking duplicate issuance. Keep telemetry dashboards on this queue so auditors can reconstruct the whole story if needed.</p>
+</div>
+</article>
+</div>
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+</div>
+</main>
+<footer class="md-footer">
+<div class="md-footer-meta md-typeset">
+<div class="md-footer-meta__inner md-grid">
+<div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" rel="noopener" target="_blank">
+      Material for MkDocs
+    </a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+<div class="md-dialog" data-md-component="dialog">
+<div class="md-dialog__inner md-typeset"></div>
+</div>
+<script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+<script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+<script src="../../assets/mermaid-zoom.js"></script>
+</body>
+</html>

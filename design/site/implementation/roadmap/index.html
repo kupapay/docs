@@ -15,6 +15,7 @@
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
 <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+<link href="../../assets/mermaid-zoom.css" rel="stylesheet"/>
 <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
 </head>
 <body data-md-color-accent="#3FFF00" data-md-color-primary="#3FFF00" data-md-color-scheme="slate" dir="ltr">
@@ -423,6 +424,18 @@
     
   
     Multi-User Access
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../platform/ai-capabilities/">
+<span class="md-ellipsis">
+    
+  
+    AI &amp; Natural Language
   
 
     
@@ -955,7 +968,7 @@
 </ul>
 <p>See <a href="../phase-1/">Phase 1 detail</a> for epics, acceptance criteria, and dependencies.</p>
 <h2 id="phase-2-pos-retail">Phase 2 — POS &amp; Retail<a class="headerlink" href="#phase-2-pos-retail" title="Permanent link">¶</a></h2>
-<p>Extends the platform to physical retail by adding POS SDK integration, multi-terminal support, mobile money payments, and the webhook event system. Target: 100 retail outlets.</p>
+<p>Extends the platform to physical retail by adding POS SDK integration, multi-terminal support, mobile money payments, the webhook event system, and the first AI-powered capabilities. Target: 100 retail outlets.</p>
 <p><strong>Key deliverables:</strong></p>
 <ul>
 <li>POS SDK that wraps the Cloud API with receipt rendering and offline queue</li>
@@ -964,6 +977,10 @@
 <li>Webhook API for real-time event streaming to external systems</li>
 <li>Enhanced dashboard with shift management and supervisor views</li>
 <li>Observability and alerting for fleet operations</li>
+<li><strong>WhatsApp Invoice Bot</strong> — create, query, and receive sealed invoices via WhatsApp Business API (French, Lingala)</li>
+<li><strong>Natural Language Invoice API</strong> — submit invoices as free-text via <code>/api/v1/invoices/natural</code></li>
+<li><strong>Tax Auto-Classification API</strong> — ML-assisted tax group suggestions for items and HS codes</li>
+<li><strong>Rule-based anomaly detection</strong> — real-time alerts for numbering gaps, velocity spikes, and void rate anomalies</li>
 </ul>
 <p>See <a href="../phase-2/">Phase 2 detail</a> for epics, acceptance criteria, and dependencies.</p>
 <h2 id="phase-3-usb-hardware">Phase 3 — USB Hardware<a class="headerlink" href="#phase-3-usb-hardware" title="Permanent link">¶</a></h2>
@@ -978,7 +995,7 @@
 </ul>
 <p>See <a href="../phase-3/">Phase 3 detail</a> for epics, acceptance criteria, and dependencies.</p>
 <h2 id="phase-4-enterprise-scale">Phase 4 — Enterprise &amp; Scale<a class="headerlink" href="#phase-4-enterprise-scale" title="Permanent link">¶</a></h2>
-<p>Enterprise-grade integrations, fleet management, and analytics for large-scale deployments with 1,000+ outlets.</p>
+<p>Enterprise-grade integrations, fleet management, advanced analytics, and the full AI suite for large-scale deployments with 1,000+ outlets.</p>
 <p><strong>Key deliverables:</strong></p>
 <ul>
 <li>ERP connectors (SAP S/4HANA, Odoo) with tax group mapping</li>
@@ -986,6 +1003,12 @@
 <li>Advanced analytics (tax-group heatmaps, anomaly detection, trend analysis)</li>
 <li>Automated compliance reporting and audit export scheduling</li>
 <li>Multi-country expansion research (regulatory analysis for neighboring markets)</li>
+<li><strong>ML-based anomaly detection</strong> — Isolation Forest / Autoencoder models replacing Phase 2 rule-based triggers</li>
+<li><strong>Predictive analytics</strong> — tax liability forecasts, revenue projections, seasonal demand, and compliance risk scoring</li>
+<li><strong>OCR &amp; document digitization</strong> — scan paper invoices into structured records via camera or PDF upload</li>
+<li><strong>NLP compliance monitoring</strong> — detect regulatory changes in DGI publications and alert merchants</li>
+<li><strong>Smart Search</strong> — natural language queries over fiscal data (text-to-SQL) in the dashboard and API</li>
+<li><strong>Voice invoice creation</strong> — speech-to-text pipeline feeding the NL Invoice Parser</li>
 </ul>
 <p>See <a href="../phase-4/">Phase 4 detail</a> for epics, acceptance criteria, and dependencies.</p>
 <h2 id="monitoring-validation">Monitoring &amp; Validation<a class="headerlink" href="#monitoring-validation" title="Permanent link">¶</a></h2>
@@ -1021,5 +1044,6 @@
 </div>
 <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
 <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+<script src="../../assets/mermaid-zoom.js"></script>
 </body>
 </html>

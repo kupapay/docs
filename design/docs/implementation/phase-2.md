@@ -79,6 +79,65 @@ Phase 1 proved that the Cloud Signing Service, REST API, and web dashboard can d
 **Estimated effort:** 2 weeks for dashboards/playbooks + 1 week for training.
 **Dependencies:** `design/docs/cloud/architecture.md`, `design/docs/cloud/offline-sync.md`.
 
+### 6. WhatsApp Invoice Bot
+
+**Description:** Deploy a WhatsApp Business API integration that allows merchants to create invoices, query status, download receipts, and request reports by sending natural language messages in French or Lingala.
+
+**Acceptance criteria:**
+
+- Merchant sends a free-text message describing a sale; the NL Invoice Parser extracts items, quantities, prices, client, and payment methods.
+- Bot presents a draft preview with confidence score; merchant confirms or edits before fiscalization.
+- Bot supports status queries ("statut facture 004821"), receipt downloads (PDF attachment), and Z report requests.
+- Phone number linked to merchant account via OTP on first use.
+- All bot interactions logged in the audit trail with `source: "whatsapp_bot"`.
+- Session timeout: 15 minutes of inactivity.
+
+**Estimated effort:** 3 weeks for bot engine + 1 week for NL parser integration.
+**Dependencies:** `design/docs/platform/ai-capabilities.md`.
+
+### 7. Natural Language Invoice API
+
+**Description:** Expose a REST endpoint (`/api/v1/invoices/natural`) that accepts free-text invoice descriptions in French, Lingala, Swahili, or English and returns a canonical payload for signing.
+
+**Acceptance criteria:**
+
+- Endpoint accepts `{ "text": "...", "language": "fr" }` and returns a structured canonical payload.
+- Confidence score ≥ 0.85 triggers auto-submission to the Cloud Signing Service; below 0.85 returns a draft for review.
+- Entity extraction covers items, quantities, unit prices, client name, payment methods, and currency.
+- Fuzzy matching against the merchant's product catalog resolves item names to SKUs and tax groups.
+- Supports the same authentication and rate limiting as the core invoicing API.
+
+**Estimated effort:** 3 weeks (model fine-tuning + RAG catalog integration).
+**Dependencies:** `design/docs/platform/ai-capabilities.md`, `design/docs/fiscal/tax-engine.md`.
+
+### 8. Tax Auto-Classification API
+
+**Description:** Expose a classification endpoint (`/api/v1/tax/classify`) that suggests the correct DGI tax group (TG01–TG14) for items based on description, HS code, or product category.
+
+**Acceptance criteria:**
+
+- Classifier trained on DRC customs tariff schedule, DGI circulars, and pilot transaction data.
+- Confidence ≥ 0.90 → auto-apply; 0.70–0.90 → suggest with explanation; < 0.70 → require manual classification.
+- Available as a standalone API and integrated into the invoice creation flow (API, dashboard, and NL pipeline).
+- Model accuracy ≥ 85% on a held-out test set of 1,000 classified items.
+
+**Estimated effort:** 2 weeks (model training + API integration).
+**Dependencies:** `design/docs/fiscal/tax-engine.md`, `design/docs/platform/ai-capabilities.md`.
+
+### 9. Rule-Based Anomaly Detection
+
+**Description:** Implement real-time rule-based anomaly detection on the Fiscal Ledger to catch numbering gaps, velocity spikes, excessive void rates, and suspicious timing patterns.
+
+**Acceptance criteria:**
+
+- Hard rules trigger immediately for critical anomalies (numbering gaps, duplicate fiscal numbers, counter rollback).
+- Statistical baselines (30-day rolling window) detect velocity, amount, and tax group distribution anomalies per outlet.
+- Alerts surface in the dashboard alert center, via email, and through `anomaly.detected` webhook events.
+- Each alert includes severity, description, affected outlet/cashier, and recommended action.
+
+**Estimated effort:** 2 weeks.
+**Dependencies:** `design/docs/platform/ai-capabilities.md`, `design/docs/fiscal/reports.md`.
+
 ## Risks
 
 !!! warning "Phase 2 Risks"
