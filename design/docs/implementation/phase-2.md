@@ -1,11 +1,10 @@
 # Phase 2 — POS & Retail
 
-Phase 1 proved that the Cloud Signing Service, REST API, and web dashboard can deliver fiscally compliant invoices for B2B clients. Phase 2 extends the platform to **physical retail and restaurant environments** with POS SDK integration, multi-terminal support, mobile money payments, and the webhook event system. Target: **100 retail outlets over 3 months** (June–August 2026).
+Phase 1 proved that the Cloud Signing Service, REST API, and web dashboard can deliver fiscally compliant invoices for B2B clients. Phase 2 extends the platform to **physical retail and restaurant environments** with POS SDK integration, multi-terminal support, mobile money payments, and the webhook event system.
 
 ## Objectives
 
-- **Target:** Onboard 100 retail/restaurant outlets (multi-lane counters, mobile waitstaff, fast-service kiosks) using the same cloud fiscal authority from Phase 1.
-- **Duration:** 3-month sprint with monthly milestones.
+- Onboard retail and restaurant outlets (multi-lane counters, mobile waitstaff, fast-service kiosks) using the same cloud fiscal authority from Phase 1.
 - **New capabilities:** POS SDK, multi-terminal concurrency, mobile money integration, webhook API, enhanced dashboard views, and fleet observability.
 
 ## Epics
@@ -21,7 +20,6 @@ Phase 1 proved that the Cloud Signing Service, REST API, and web dashboard can d
 - Each invoice carries `pos_terminal_id` and `cashier_id` for traceability.
 - Receipt templates include all five security elements (fiscal number, fiscal authority ID, auth code, timestamp, QR code).
 
-**Estimated effort:** 3 weeks for SDK + 1 week for multi-terminal QA.
 **Dependencies:** `design/docs/platform/multi-user.md`, `design/docs/api/invoicing-sdk.md`.
 
 ### 2. Mobile money integration
@@ -34,7 +32,6 @@ Phase 1 proved that the Cloud Signing Service, REST API, and web dashboard can d
 - Invoices can be sealed before or after payment confirmation (payment status does not block fiscalization).
 - Dashboard shows payment status alongside invoice status.
 
-**Estimated effort:** 2 weeks per provider + 1 week for integration testing.
 **Dependencies:** `design/docs/platform/integrations.md`.
 
 ### 3. Webhook event system
@@ -48,7 +45,6 @@ Phase 1 proved that the Cloud Signing Service, REST API, and web dashboard can d
 - Retry with exponential backoff on delivery failure (max 5 retries).
 - Dashboard UI for webhook management (create, test, view delivery logs).
 
-**Estimated effort:** 2 weeks for delivery engine + 1 week for dashboard UI.
 **Dependencies:** `design/docs/platform/integrations.md`.
 
 ### 4. Enhanced dashboard & supervisor views
@@ -62,12 +58,11 @@ Phase 1 proved that the Cloud Signing Service, REST API, and web dashboard can d
 - Fleet overview page (for multi-outlet merchants) with aggregate health metrics.
 - Offline client alerts with draft counts and ages.
 
-**Estimated effort:** 2 weeks.
 **Dependencies:** `design/docs/platform/dashboard.md`.
 
 ### 5. Observability, onboarding & fleet operations
 
-**Description:** Instrument the platform for 100-outlet scale with monitoring, alerting, and onboarding playbooks for retail staff.
+**Description:** Instrument the platform with monitoring, alerting, and onboarding playbooks for retail staff.
 
 **Acceptance criteria:**
 
@@ -76,7 +71,6 @@ Phase 1 proved that the Cloud Signing Service, REST API, and web dashboard can d
 - Onboarding documentation for retail merchants: outlet setup, API key creation, POS SDK installation, tax group configuration.
 - Automated regression tests for offline queue, multi-terminal concurrency, and mobile money flows.
 
-**Estimated effort:** 2 weeks for dashboards/playbooks + 1 week for training.
 **Dependencies:** `design/docs/cloud/architecture.md`, `design/docs/cloud/offline-sync.md`.
 
 ### 6. WhatsApp Invoice Bot
@@ -92,7 +86,6 @@ Phase 1 proved that the Cloud Signing Service, REST API, and web dashboard can d
 - All bot interactions logged in the audit trail with `source: "whatsapp_bot"`.
 - Session timeout: 15 minutes of inactivity.
 
-**Estimated effort:** 3 weeks for bot engine + 1 week for NL parser integration.
 **Dependencies:** `design/docs/platform/ai-capabilities.md`.
 
 ### 7. Natural Language Invoice API
@@ -107,7 +100,6 @@ Phase 1 proved that the Cloud Signing Service, REST API, and web dashboard can d
 - Fuzzy matching against the merchant's product catalog resolves item names to SKUs and tax groups.
 - Supports the same authentication and rate limiting as the core invoicing API.
 
-**Estimated effort:** 3 weeks (model fine-tuning + RAG catalog integration).
 **Dependencies:** `design/docs/platform/ai-capabilities.md`, `design/docs/fiscal/tax-engine.md`.
 
 ### 8. Tax Auto-Classification API
@@ -121,7 +113,6 @@ Phase 1 proved that the Cloud Signing Service, REST API, and web dashboard can d
 - Available as a standalone API and integrated into the invoice creation flow (API, dashboard, and NL pipeline).
 - Model accuracy ≥ 85% on a held-out test set of 1,000 classified items.
 
-**Estimated effort:** 2 weeks (model training + API integration).
 **Dependencies:** `design/docs/fiscal/tax-engine.md`, `design/docs/platform/ai-capabilities.md`.
 
 ### 9. Rule-Based Anomaly Detection
@@ -135,7 +126,6 @@ Phase 1 proved that the Cloud Signing Service, REST API, and web dashboard can d
 - Alerts surface in the dashboard alert center, via email, and through `anomaly.detected` webhook events.
 - Each alert includes severity, description, affected outlet/cashier, and recommended action.
 
-**Estimated effort:** 2 weeks.
 **Dependencies:** `design/docs/platform/ai-capabilities.md`, `design/docs/fiscal/reports.md`.
 
 ## Risks
@@ -144,4 +134,4 @@ Phase 1 proved that the Cloud Signing Service, REST API, and web dashboard can d
     - POS environments have unreliable connectivity; the offline queue must handle 48–72h outages without data loss or duplicate fiscal events.
     - Mobile money provider APIs have variable reliability and documentation quality; build provider-agnostic abstractions.
     - DGI readiness for automated uploads may still be pending — maintain manual compliance tooling as a fallback.
-    - Scaling from 10 to 100 outlets may expose performance bottlenecks in the signing pipeline or Fiscal Ledger writes.
+    - Scaling to many outlets may expose performance bottlenecks in the signing pipeline or Fiscal Ledger writes.

@@ -1,12 +1,10 @@
 # Phase 1 — Software Invoicing
 
-Phase 1 proves that the Bono Pay Cloud can deliver sealed, fiscally compliant invoices through an API-first platform. This 3-month sprint targets **10 B2B pilot clients** (service companies, wholesalers, schools) using the Cloud Signing Service (HSM) as the trusted fiscal authority, with a web dashboard, REST API, and SDKs.
+Phase 1 proves that the Bono Pay Cloud can deliver sealed, fiscally compliant invoices through an API-first platform, using the Cloud Signing Service (HSM) as the trusted fiscal authority, with a web dashboard, REST API, and SDKs.
 
-## Pilot targets
+## Scope
 
-- **Duration:** 3 months (March through May 2026).
-- **Clients:** 10 B2B pilot partners who need invoice sealing, tax compliance, and regulatory reporting.
-- **Scope:** Cloud Signing Service + REST API + Web Dashboard + JavaScript/Python SDK + Z/X/A reports + manual DGI compliance tooling.
+Cloud Signing Service + REST API + Web Dashboard + JavaScript/Python SDK + Z/X/A reports + manual DGI compliance tooling + public invoice verification portal.
 
 ## Epics
 
@@ -21,7 +19,6 @@ Phase 1 proves that the Bono Pay Cloud can deliver sealed, fiscally compliant in
 - Fiscal Ledger stores hash-chained entries; each entry references the previous hash for tamper detection.
 - Invoice mutations (void, refund, credit note) create new fiscal events — nothing is deleted.
 
-**Estimated effort:** 4 weeks.
 **Dependencies:** `spec/architecture-kutapay-system-1.md`, `design/docs/architecture/trust-boundary.md`.
 
 ### 2. REST API + Tax Engine
@@ -36,7 +33,6 @@ Phase 1 proves that the Bono Pay Cloud can deliver sealed, fiscally compliant in
 - Error responses include actionable validation messages.
 - Rate limiting (100 req/s per API key) and idempotency keys prevent abuse and duplicates.
 
-**Estimated effort:** 3 weeks for API + 1 week for tax engine integration.
 **Dependencies:** `spec/schema-tax-engine-1.md`, `design/docs/fiscal/tax-engine.md`.
 
 ### 3. Web Dashboard MVP
@@ -51,7 +47,6 @@ Phase 1 proves that the Bono Pay Cloud can deliver sealed, fiscally compliant in
 - Z/X/A report generation and download.
 - Offline indicators for queued drafts.
 
-**Estimated effort:** 3 weeks for core UI + 1 week for polish.
 **Dependencies:** `design/docs/platform/dashboard.md`, `design/docs/platform/multi-user.md`.
 
 ### 4. JavaScript & Python SDK
@@ -65,12 +60,11 @@ Phase 1 proves that the Bono Pay Cloud can deliver sealed, fiscally compliant in
 - Tax engine helpers for building valid `tax_groups` and `tax_summary` arrays.
 - Event callbacks for queue state transitions (synced, failed, grace exceeded).
 
-**Estimated effort:** 2 weeks per SDK.
 **Dependencies:** `design/docs/api/cloud.md`, `design/docs/api/invoicing-sdk.md`.
 
-### 5. Manual compliance tooling & pilot onboarding
+### 5. Manual compliance tooling & onboarding
 
-**Description:** Provide compliance tools for pilot clients to submit fiscal data to the DGI before automated MCF/e-MCF uploads are available.
+**Description:** Provide compliance tools to submit fiscal data to the DGI before automated MCF/e-MCF uploads are available.
 
 **Acceptance criteria:**
 
@@ -80,15 +74,14 @@ Phase 1 proves that the Bono Pay Cloud can deliver sealed, fiscally compliant in
 - **Verification API** (`/api/v1/verify/{fiscal_number}`) available as a public, rate-limited endpoint for programmatic verification.
 - **SDK verification helpers** (`verify()`, `verifyQR()`, `verifySignatureOffline()`) shipped in JavaScript and Python SDKs.
 - **Public key distribution** via `/.well-known/fiscal-keys.json` so the DGI and auditors can verify signatures independently.
-- Onboard 10 pilot clients with documentation, API keys, and training.
-- Collect pilot feedback and validate offline queue behavior under real-world conditions.
+- Onboard initial clients with documentation, API keys, and training.
+- Collect feedback and validate offline queue behavior under real-world conditions.
 
-**Estimated effort:** 2 weeks for tooling + 2 weeks for onboarding.
 **Dependencies:** `design/docs/fiscal/reports.md`, `design/docs/cloud/dgi-integration.md`.
 
 ## Risks
 
 !!! warning "Phase 1 Risks"
-    - The DGI MCF/e-MCF API remains undefined, so manual compliance tooling is required for the pilot. Automated uploads come in Phase 2 or when the DGI publishes the spec.
+    - The DGI MCF/e-MCF API remains undefined, so manual compliance tooling is required initially. Automated uploads come in Phase 2 or when the DGI publishes the spec.
     - HSM provider selection and key provisioning may introduce lead time. Evaluate cloud HSM offerings (AWS CloudHSM, Azure Managed HSM) early.
     - Field testing in DRC conditions may expose unexpected latency and connectivity patterns. The offline queue must handle extended outages gracefully.

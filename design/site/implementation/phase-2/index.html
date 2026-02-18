@@ -1031,11 +1031,10 @@
 <div class="md-content" data-md-component="content">
 <article class="md-content__inner md-typeset">
 <h1 id="phase-2-pos-retail">Phase 2 — POS &amp; Retail<a class="headerlink" href="#phase-2-pos-retail" title="Permanent link">¶</a></h1>
-<p>Phase 1 proved that the Cloud Signing Service, REST API, and web dashboard can deliver fiscally compliant invoices for B2B clients. Phase 2 extends the platform to <strong>physical retail and restaurant environments</strong> with POS SDK integration, multi-terminal support, mobile money payments, and the webhook event system. Target: <strong>100 retail outlets over 3 months</strong> (June–August 2026).</p>
+<p>Phase 1 proved that the Cloud Signing Service, REST API, and web dashboard can deliver fiscally compliant invoices for B2B clients. Phase 2 extends the platform to <strong>physical retail and restaurant environments</strong> with POS SDK integration, multi-terminal support, mobile money payments, and the webhook event system.</p>
 <h2 id="objectives">Objectives<a class="headerlink" href="#objectives" title="Permanent link">¶</a></h2>
 <ul>
-<li><strong>Target:</strong> Onboard 100 retail/restaurant outlets (multi-lane counters, mobile waitstaff, fast-service kiosks) using the same cloud fiscal authority from Phase 1.</li>
-<li><strong>Duration:</strong> 3-month sprint with monthly milestones.</li>
+<li>Onboard retail and restaurant outlets (multi-lane counters, mobile waitstaff, fast-service kiosks) using the same cloud fiscal authority from Phase 1.</li>
 <li><strong>New capabilities:</strong> POS SDK, multi-terminal concurrency, mobile money integration, webhook API, enhanced dashboard views, and fleet observability.</li>
 </ul>
 <h2 id="epics">Epics<a class="headerlink" href="#epics" title="Permanent link">¶</a></h2>
@@ -1048,8 +1047,7 @@
 <li>Each invoice carries <code>pos_terminal_id</code> and <code>cashier_id</code> for traceability.</li>
 <li>Receipt templates include all five security elements (fiscal number, fiscal authority ID, auth code, timestamp, QR code).</li>
 </ul>
-<p><strong>Estimated effort:</strong> 3 weeks for SDK + 1 week for multi-terminal QA.
-<strong>Dependencies:</strong> <code>design/docs/platform/multi-user.md</code>, <code>design/docs/api/invoicing-sdk.md</code>.</p>
+<p><strong>Dependencies:</strong> <code>design/docs/platform/multi-user.md</code>, <code>design/docs/api/invoicing-sdk.md</code>.</p>
 <h3 id="2-mobile-money-integration">2. Mobile money integration<a class="headerlink" href="#2-mobile-money-integration" title="Permanent link">¶</a></h3>
 <p><strong>Description:</strong> Support mobile money (M-Pesa, Airtel Money, Orange Money) as payment methods within invoices. Payment confirmation callbacks trigger invoice submission or update payment status on existing invoices.</p>
 <p><strong>Acceptance criteria:</strong></p>
@@ -1058,8 +1056,7 @@
 <li>Invoices can be sealed before or after payment confirmation (payment status does not block fiscalization).</li>
 <li>Dashboard shows payment status alongside invoice status.</li>
 </ul>
-<p><strong>Estimated effort:</strong> 2 weeks per provider + 1 week for integration testing.
-<strong>Dependencies:</strong> <code>design/docs/platform/integrations.md</code>.</p>
+<p><strong>Dependencies:</strong> <code>design/docs/platform/integrations.md</code>.</p>
 <h3 id="3-webhook-event-system">3. Webhook event system<a class="headerlink" href="#3-webhook-event-system" title="Permanent link">¶</a></h3>
 <p><strong>Description:</strong> Build the webhook delivery system that pushes signed event notifications to external endpoints when invoices are sealed, reports are generated, or sync errors occur.</p>
 <p><strong>Acceptance criteria:</strong></p>
@@ -1069,8 +1066,7 @@
 <li>Retry with exponential backoff on delivery failure (max 5 retries).</li>
 <li>Dashboard UI for webhook management (create, test, view delivery logs).</li>
 </ul>
-<p><strong>Estimated effort:</strong> 2 weeks for delivery engine + 1 week for dashboard UI.
-<strong>Dependencies:</strong> <code>design/docs/platform/integrations.md</code>.</p>
+<p><strong>Dependencies:</strong> <code>design/docs/platform/integrations.md</code>.</p>
 <h3 id="4-enhanced-dashboard-supervisor-views">4. Enhanced dashboard &amp; supervisor views<a class="headerlink" href="#4-enhanced-dashboard-supervisor-views" title="Permanent link">¶</a></h3>
 <p><strong>Description:</strong> Add shift management, supervisor drill-downs, and fleet health views to the web dashboard for retail operations.</p>
 <p><strong>Acceptance criteria:</strong></p>
@@ -1080,10 +1076,9 @@
 <li>Fleet overview page (for multi-outlet merchants) with aggregate health metrics.</li>
 <li>Offline client alerts with draft counts and ages.</li>
 </ul>
-<p><strong>Estimated effort:</strong> 2 weeks.
-<strong>Dependencies:</strong> <code>design/docs/platform/dashboard.md</code>.</p>
+<p><strong>Dependencies:</strong> <code>design/docs/platform/dashboard.md</code>.</p>
 <h3 id="5-observability-onboarding-fleet-operations">5. Observability, onboarding &amp; fleet operations<a class="headerlink" href="#5-observability-onboarding-fleet-operations" title="Permanent link">¶</a></h3>
-<p><strong>Description:</strong> Instrument the platform for 100-outlet scale with monitoring, alerting, and onboarding playbooks for retail staff.</p>
+<p><strong>Description:</strong> Instrument the platform with monitoring, alerting, and onboarding playbooks for retail staff.</p>
 <p><strong>Acceptance criteria:</strong></p>
 <ul>
 <li>Dashboards showing API latency, signing throughput, sync queue depth, and error rates.</li>
@@ -1091,8 +1086,7 @@
 <li>Onboarding documentation for retail merchants: outlet setup, API key creation, POS SDK installation, tax group configuration.</li>
 <li>Automated regression tests for offline queue, multi-terminal concurrency, and mobile money flows.</li>
 </ul>
-<p><strong>Estimated effort:</strong> 2 weeks for dashboards/playbooks + 1 week for training.
-<strong>Dependencies:</strong> <code>design/docs/cloud/architecture.md</code>, <code>design/docs/cloud/offline-sync.md</code>.</p>
+<p><strong>Dependencies:</strong> <code>design/docs/cloud/architecture.md</code>, <code>design/docs/cloud/offline-sync.md</code>.</p>
 <h3 id="6-whatsapp-invoice-bot">6. WhatsApp Invoice Bot<a class="headerlink" href="#6-whatsapp-invoice-bot" title="Permanent link">¶</a></h3>
 <p><strong>Description:</strong> Deploy a WhatsApp Business API integration that allows merchants to create invoices, query status, download receipts, and request reports by sending natural language messages in French or Lingala.</p>
 <p><strong>Acceptance criteria:</strong></p>
@@ -1104,8 +1098,7 @@
 <li>All bot interactions logged in the audit trail with <code>source: "whatsapp_bot"</code>.</li>
 <li>Session timeout: 15 minutes of inactivity.</li>
 </ul>
-<p><strong>Estimated effort:</strong> 3 weeks for bot engine + 1 week for NL parser integration.
-<strong>Dependencies:</strong> <code>design/docs/platform/ai-capabilities.md</code>.</p>
+<p><strong>Dependencies:</strong> <code>design/docs/platform/ai-capabilities.md</code>.</p>
 <h3 id="7-natural-language-invoice-api">7. Natural Language Invoice API<a class="headerlink" href="#7-natural-language-invoice-api" title="Permanent link">¶</a></h3>
 <p><strong>Description:</strong> Expose a REST endpoint (<code>/api/v1/invoices/natural</code>) that accepts free-text invoice descriptions in French, Lingala, Swahili, or English and returns a canonical payload for signing.</p>
 <p><strong>Acceptance criteria:</strong></p>
@@ -1116,8 +1109,7 @@
 <li>Fuzzy matching against the merchant's product catalog resolves item names to SKUs and tax groups.</li>
 <li>Supports the same authentication and rate limiting as the core invoicing API.</li>
 </ul>
-<p><strong>Estimated effort:</strong> 3 weeks (model fine-tuning + RAG catalog integration).
-<strong>Dependencies:</strong> <code>design/docs/platform/ai-capabilities.md</code>, <code>design/docs/fiscal/tax-engine.md</code>.</p>
+<p><strong>Dependencies:</strong> <code>design/docs/platform/ai-capabilities.md</code>, <code>design/docs/fiscal/tax-engine.md</code>.</p>
 <h3 id="8-tax-auto-classification-api">8. Tax Auto-Classification API<a class="headerlink" href="#8-tax-auto-classification-api" title="Permanent link">¶</a></h3>
 <p><strong>Description:</strong> Expose a classification endpoint (<code>/api/v1/tax/classify</code>) that suggests the correct DGI tax group (TG01–TG14) for items based on description, HS code, or product category.</p>
 <p><strong>Acceptance criteria:</strong></p>
@@ -1127,8 +1119,7 @@
 <li>Available as a standalone API and integrated into the invoice creation flow (API, dashboard, and NL pipeline).</li>
 <li>Model accuracy ≥ 85% on a held-out test set of 1,000 classified items.</li>
 </ul>
-<p><strong>Estimated effort:</strong> 2 weeks (model training + API integration).
-<strong>Dependencies:</strong> <code>design/docs/fiscal/tax-engine.md</code>, <code>design/docs/platform/ai-capabilities.md</code>.</p>
+<p><strong>Dependencies:</strong> <code>design/docs/fiscal/tax-engine.md</code>, <code>design/docs/platform/ai-capabilities.md</code>.</p>
 <h3 id="9-rule-based-anomaly-detection">9. Rule-Based Anomaly Detection<a class="headerlink" href="#9-rule-based-anomaly-detection" title="Permanent link">¶</a></h3>
 <p><strong>Description:</strong> Implement real-time rule-based anomaly detection on the Fiscal Ledger to catch numbering gaps, velocity spikes, excessive void rates, and suspicious timing patterns.</p>
 <p><strong>Acceptance criteria:</strong></p>
@@ -1138,8 +1129,7 @@
 <li>Alerts surface in the dashboard alert center, via email, and through <code>anomaly.detected</code> webhook events.</li>
 <li>Each alert includes severity, description, affected outlet/cashier, and recommended action.</li>
 </ul>
-<p><strong>Estimated effort:</strong> 2 weeks.
-<strong>Dependencies:</strong> <code>design/docs/platform/ai-capabilities.md</code>, <code>design/docs/fiscal/reports.md</code>.</p>
+<p><strong>Dependencies:</strong> <code>design/docs/platform/ai-capabilities.md</code>, <code>design/docs/fiscal/reports.md</code>.</p>
 <h2 id="risks">Risks<a class="headerlink" href="#risks" title="Permanent link">¶</a></h2>
 <div class="admonition warning">
 <p class="admonition-title">Phase 2 Risks</p>
@@ -1147,7 +1137,7 @@
 <li>POS environments have unreliable connectivity; the offline queue must handle 48–72h outages without data loss or duplicate fiscal events.</li>
 <li>Mobile money provider APIs have variable reliability and documentation quality; build provider-agnostic abstractions.</li>
 <li>DGI readiness for automated uploads may still be pending — maintain manual compliance tooling as a fallback.</li>
-<li>Scaling from 10 to 100 outlets may expose performance bottlenecks in the signing pipeline or Fiscal Ledger writes.</li>
+<li>Scaling to many outlets may expose performance bottlenecks in the signing pipeline or Fiscal Ledger writes.</li>
 </ul>
 </div>
 </article>

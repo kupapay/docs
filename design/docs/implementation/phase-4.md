@@ -1,12 +1,11 @@
 # Phase 4 — Enterprise & Integrations
 
-Phase 4 extends Bono Pay into enterprise environments with ERP connectors, fleet management, advanced analytics, and multi-country expansion research. This 6-month phase (March 2027 – August 2027) builds on the mature API, SDKs, and dual-mode signing infrastructure delivered in Phases 1–3.
+Phase 4 extends Bono Pay into enterprise environments with ERP connectors, fleet management, advanced analytics, and multi-country expansion research. This phase builds on the mature API, SDKs, and dual-mode signing infrastructure delivered in Phases 1–3.
 
 ## Objectives
 
 - **Scope:** ERP connectors, fleet management dashboard, webhook/event streaming enhancements, advanced analytics, and multi-country regulatory research.
 - **Target:** Large enterprises, ERP integrators, and government agencies.
-- **Duration:** 6 months with quarterly milestones.
 
 ## Epics
 
@@ -31,7 +30,6 @@ Phase 4 extends Bono Pay into enterprise environments with ERP connectors, fleet
 - Error mapping: ERP-side validation errors are translated into meaningful messages.
 - Installation guide, configuration reference, and troubleshooting docs for each connector.
 
-**Estimated effort:** 4 weeks per connector.
 **Dependencies:** `api/cloud.md`, `api/invoicing-sdk.md`.
 
 ### 2. Fleet management dashboard
@@ -52,7 +50,6 @@ Phase 4 extends Bono Pay into enterprise environments with ERP connectors, fleet
 - Real-time status updates via WebSocket or SSE (≤ 5 s latency).
 - Role-based access: fleet manager role can view all outlets but cannot issue invoices.
 
-**Estimated effort:** 6 weeks.
 **Dependencies:** `platform/multi-user.md`, `cloud/architecture.md`.
 
 ### 3. Advanced analytics
@@ -78,7 +75,6 @@ Phase 4 extends Bono Pay into enterprise environments with ERP connectors, fleet
 - API endpoint for programmatic access to analytics data.
 - Data retention: analytics data available for at least 10 years (regulatory requirement).
 
-**Estimated effort:** 4 weeks.
 **Dependencies:** `fiscal/reports.md`.
 
 ### 4. Webhook & event streaming enhancements
@@ -99,7 +95,6 @@ Phase 4 extends Bono Pay into enterprise environments with ERP connectors, fleet
 - Replay covers at least 30 days of event history.
 - Dead letter queue is accessible via API and dashboard.
 
-**Estimated effort:** 3 weeks.
 **Dependencies:** `platform/integrations.md`.
 
 ### 5. Multi-country regulatory research
@@ -122,22 +117,20 @@ Phase 4 extends Bono Pay into enterprise environments with ERP connectors, fleet
 - Architecture impact assessment: multi-country tax engine, multi-currency, localization.
 - Go/no-go recommendation for each country.
 
-**Estimated effort:** 4 weeks of research + 2 weeks for documentation.
-
 ### 6. AI-Powered Capabilities (Full Suite)
 
 **Description:** Deploy the full AI suite that builds on Phase 2's foundation (WhatsApp bot, NL invoicing, tax classifier, rule-based anomaly detection) with advanced ML models, OCR, compliance monitoring, and natural language search.
 
 **Components:**
 
-| Component | Description | Effort |
-|-----------|-------------|--------|
-| **ML Anomaly Detection** | Replace Phase 2 rule-based triggers with Isolation Forest / Autoencoder models trained on per-outlet baselines. Detect velocity, amount, timing, tax group, and void/refund anomalies with higher precision. | 3 weeks |
-| **Predictive Analytics Engine** | Time-series forecasting (Prophet / ARIMA) for tax liability, revenue projection, seasonal demand, and cash flow prediction. Dashboard forecast cards with confidence intervals. | 3 weeks |
-| **OCR & Document Digitization** | Camera/PDF upload → preprocessing → Tesseract/Cloud Vision OCR → field extraction (NER + layout analysis) → human review → stored as digitized record. Historical paper invoices are informational records only — never fabricate fiscal numbers for scanned documents. | 4 weeks |
-| **NLP Compliance Monitoring** | Monitor DGI website, official gazette, and ministry circulars for regulatory changes. NLP document classifier detects changes to tax rates, exemptions, and reporting obligations. Alerts reviewed by compliance team before pushing to merchants. | 3 weeks |
-| **Smart Search (Text-to-SQL)** | Natural language queries over fiscal data via dashboard search bar and `/api/v1/search/query`. Fine-tuned CodeLlama/StarCoder translates French/English questions into sandboxed SQL queries against the Fiscal Ledger read replica. Role-based access control enforced. | 3 weeks |
-| **Voice Invoice Creation** | Speech-to-text (Whisper multilingual) → text → NL Invoice Parser pipeline. Supports French, Lingala, Swahili. | 2 weeks |
+| Component | Description |
+|-----------|-------------|
+| **ML Anomaly Detection** | Replace Phase 2 rule-based triggers with Isolation Forest / Autoencoder models trained on per-outlet baselines. Detect velocity, amount, timing, tax group, and void/refund anomalies with higher precision. |
+| **Predictive Analytics Engine** | Time-series forecasting (Prophet / ARIMA) for tax liability, revenue projection, seasonal demand, and cash flow prediction. Dashboard forecast cards with confidence intervals. |
+| **OCR & Document Digitization** | Camera/PDF upload → preprocessing → Tesseract/Cloud Vision OCR → field extraction (NER + layout analysis) → human review → stored as digitized record. Historical paper invoices are informational records only — never fabricate fiscal numbers for scanned documents. |
+| **NLP Compliance Monitoring** | Monitor DGI website, official gazette, and ministry circulars for regulatory changes. NLP document classifier detects changes to tax rates, exemptions, and reporting obligations. Alerts reviewed by compliance team before pushing to merchants. |
+| **Smart Search (Text-to-SQL)** | Natural language queries over fiscal data via dashboard search bar and `/api/v1/search/query`. Fine-tuned CodeLlama/StarCoder translates French/English questions into sandboxed SQL queries against the Fiscal Ledger read replica. Role-based access control enforced. |
+| **Voice Invoice Creation** | Speech-to-text (Whisper multilingual) → text → NL Invoice Parser pipeline. Supports French, Lingala, Swahili. |
 
 **Acceptance criteria:**
 
@@ -149,7 +142,6 @@ Phase 4 extends Bono Pay into enterprise environments with ERP connectors, fleet
 - Voice input achieves ≥ 85% entity extraction accuracy for supported languages.
 - All AI models run within the Bono Pay cloud boundary. No cross-tenant training.
 
-**Estimated effort:** 18 weeks total (components can be parallelized across teams).
 **Dependencies:** `platform/ai-capabilities.md`, `fiscal/reports.md`, `cloud/architecture.md`.
 
 See [AI & Natural Language Capabilities](../platform/ai-capabilities.md) for full specifications, data flows, and privacy governance.
@@ -167,11 +159,11 @@ See [AI & Natural Language Capabilities](../platform/ai-capabilities.md) for ful
 
 ## Success criteria
 
-- At least 2 ERP connectors certified and deployed with enterprise customers.
-- Fleet dashboard supports 3+ enterprise merchants with 50+ outlets each.
-- Analytics reports are used by at least 5 merchants for tax planning.
-- Multi-country research delivers go/no-go recommendations for at least 2 countries.
-- WhatsApp bot and NL Invoice API handle ≥ 500 invoices/month across all merchants.
+- ERP connectors certified and deployed with enterprise customers.
+- Fleet dashboard supports enterprise merchants with multi-outlet operations.
+- Analytics reports are used by merchants for tax planning.
+- Multi-country research delivers go/no-go recommendations.
+- WhatsApp bot and NL Invoice API handle production invoice volumes.
 - Tax Auto-Classifier accuracy ≥ 85% on production items.
 - Anomaly detection surfaces real issues with < 5% false positive rate.
 - Smart Search resolves ≥ 90% of natural language finance queries correctly.

@@ -9,39 +9,36 @@ This document lays out the phased rollout for Bono Pay's fiscal invoicing platfo
 ```mermaid
 gantt
     title Bono Pay Implementation Roadmap
-    dateFormat  YYYY-MM-DD
-    axisFormat  %b %d
+    dateFormat  YYYY-Q
+    axisFormat  %Y
 
-    section Phase 1 — Software Invoicing (3 months)
-    Cloud Signing Service + Fiscal Ledger MVP :crit, 2026-03-01, 90d
-    REST API + Tax Engine (14 DGI groups) :active, 2026-03-01, 90d
-    Web Dashboard MVP : 2026-03-15, 75d
-    JavaScript and Python SDK : 2026-04-01, 60d
-    B2B pilot — 10 clients : 2026-05-01, 30d
+    section Phase 1 — Software Invoicing
+    Cloud Signing Service + Fiscal Ledger MVP :crit, 2026-Q1, 1q
+    REST API + Tax Engine (14 DGI groups) :active, 2026-Q1, 1q
+    Web Dashboard MVP : 2026-Q1, 1q
+    JavaScript and Python SDK : 2026-Q1, 1q
 
-    section Phase 2 — POS and Retail (3 months)
-    POS SDK + multi-terminal support : 2026-06-01, 90d
-    Offline queue hardening : 2026-06-15, 60d
-    Mobile money integration : 2026-07-01, 60d
-    Webhook event system : 2026-07-15, 45d
-    Retail pilot — 100 outlets : 2026-08-01, 30d
+    section Phase 2 — POS and Retail
+    POS SDK + multi-terminal support : 2026-Q2, 1q
+    Mobile money integration : 2026-Q2, 1q
+    Webhook event system : 2026-Q2, 1q
+    WhatsApp Invoice Bot + NL API : 2026-Q2, 1q
 
-    section Phase 3 — USB Hardware (6 months)
-    USB Fiscal Memory firmware : 2026-09-01, 120d
-    DEF homologation prep : 2026-10-01, 90d
-    Cloud + DEF dual-mode signing : 2026-11-01, 90d
-    DGI hardware certification : 2027-01-01, 60d
+    section Phase 3 — USB Hardware
+    USB Fiscal Memory firmware : 2026-Q3, 2q
+    Cloud + DEF dual-mode signing : 2026-Q3, 2q
+    DGI hardware certification : 2027-Q1, 1q
 
-    section Phase 4 — Enterprise (6 months)
-    ERP connectors — SAP and Odoo : 2027-03-01, 120d
-    Fleet management dashboard : 2027-04-01, 90d
-    Advanced analytics : 2027-05-01, 90d
-    Multi-country expansion research : 2027-06-01, 60d
+    section Phase 4 — Enterprise
+    ERP connectors — SAP and Odoo : 2027-Q1, 2q
+    Fleet management dashboard : 2027-Q2, 1q
+    Advanced analytics + AI suite : 2027-Q2, 2q
+    Multi-country expansion research : 2027-Q3, 1q
 ```
 
 ## Phase 1 — Software Invoicing
 
-The foundation phase. Delivers the API-first invoicing platform with cloud fiscal signing, the tax engine, web dashboard, and SDKs. Target: 10 B2B pilot clients (service companies, wholesalers, schools).
+The foundation phase. Delivers the API-first invoicing platform with cloud fiscal signing, the tax engine, web dashboard, and SDKs.
 
 **Key deliverables:**
 
@@ -57,7 +54,7 @@ See [Phase 1 detail](phase-1.md) for epics, acceptance criteria, and dependencie
 
 ## Phase 2 — POS & Retail
 
-Extends the platform to physical retail by adding POS SDK integration, multi-terminal support, mobile money payments, the webhook event system, and the first AI-powered capabilities. Target: 100 retail outlets.
+Extends the platform to physical retail by adding POS SDK integration, multi-terminal support, mobile money payments, the webhook event system, and the first AI-powered capabilities.
 
 **Key deliverables:**
 
@@ -90,7 +87,7 @@ See [Phase 3 detail](phase-3.md) for epics, acceptance criteria, and dependencie
 
 ## Phase 4 — Enterprise & Scale
 
-Enterprise-grade integrations, fleet management, advanced analytics, and the full AI suite for large-scale deployments with 1,000+ outlets.
+Enterprise-grade integrations, fleet management, advanced analytics, and the full AI suite for large-scale deployments.
 
 **Key deliverables:**
 

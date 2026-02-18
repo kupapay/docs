@@ -1,12 +1,11 @@
 # Phase 3 — USB Hardware (DEF Homologation)
 
-Phase 3 introduces the **USB Fiscal Memory device (DEF)** as an optional trust anchor for merchants who need full hardware homologation with the DGI. The Cloud Signing Service remains first-class — the DEF is an alternative signer that can replace or augment the cloud HSM for specific outlets. This 6-month phase (September 2026 – February 2027) delivers the firmware, dual-mode signing architecture, and DGI certification.
+Phase 3 introduces the **USB Fiscal Memory device (DEF)** as an optional trust anchor for merchants who need full hardware homologation with the DGI. The Cloud Signing Service remains first-class — the DEF is an alternative signer that can replace or augment the cloud HSM for specific outlets. This phase delivers the firmware, dual-mode signing architecture, and DGI certification.
 
 ## Objectives
 
 - **Scope:** USB Fiscal Memory firmware, dual-mode signing (Cloud HSM or DEF), device provisioning, and DGI hardware certification.
 - **Target:** Merchants requiring DEF homologation; cloud-only merchants remain unaffected.
-- **Duration:** 6 months with monthly milestones.
 
 ## Dual-mode signing architecture
 
@@ -38,7 +37,6 @@ Each outlet is configured with a signing mode (`cloud` or `def`). The API routes
 - Firmware generates Z reports from the local journal with sequence ranges, per-tax-group totals, and journal hashes.
 - Power-loss recovery: interrupted COMMIT does not produce orphan fiscal numbers.
 
-**Estimated effort:** 8 weeks of firmware development + 2 weeks of hardware-in-the-loop testing.
 **Dependencies:** Hardware docs in `docs-archive/hardware/`, `spec/protocol-usb-fiscal-device-1.md`.
 
 ### 2. USB Device Proxy service
@@ -52,7 +50,6 @@ Each outlet is configured with a signing mode (`cloud` or `def`). The API routes
 - Reports device health (counter, firmware version, free memory) back to the cloud for dashboard display.
 - Auto-starts at boot; reconnects on USB disconnect.
 
-**Estimated effort:** 3 weeks.
 **Dependencies:** `spec/protocol-usb-fiscal-device-1.md`.
 
 ### 3. Device provisioning & certificate management
@@ -66,7 +63,6 @@ Each outlet is configured with a signing mode (`cloud` or `def`). The API routes
 - Certificate rotation and revocation flows are documented and automated.
 - Dashboard shows device status, certificate expiry, and firmware version.
 
-**Estimated effort:** 2 weeks.
 **Dependencies:** `design/docs/cloud/architecture.md`.
 
 ### 4. Dual-mode integration & testing
@@ -79,8 +75,6 @@ Each outlet is configured with a signing mode (`cloud` or `def`). The API routes
 - Fiscal Ledger, reports, and audit exports are agnostic to signing source.
 - Switching an outlet from cloud to DEF mode (or vice versa) is seamless — counter continuity is maintained.
 
-**Estimated effort:** 2 weeks for integration testing.
-
 ### 5. DGI hardware homologation
 
 **Description:** Prepare and submit the DEF for DGI homologation, including documentation, test evidence, and physical device submission.
@@ -91,7 +85,6 @@ Each outlet is configured with a signing mode (`cloud` or `def`). The API routes
 - DEF passes DGI technical committee review.
 - Contingency plan: merchants can operate in cloud mode while homologation is pending.
 
-**Estimated effort:** 4 weeks for documentation + 4 weeks for DGI review cycle.
 **Dependencies:** `design/docs/regulatory/legal-framework.md`, `design/docs/regulatory/arretes.md`.
 
 ## Risks

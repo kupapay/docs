@@ -977,12 +977,11 @@
 <div class="md-content" data-md-component="content">
 <article class="md-content__inner md-typeset">
 <h1 id="phase-3-usb-hardware-def-homologation">Phase 3 — USB Hardware (DEF Homologation)<a class="headerlink" href="#phase-3-usb-hardware-def-homologation" title="Permanent link">¶</a></h1>
-<p>Phase 3 introduces the <strong>USB Fiscal Memory device (DEF)</strong> as an optional trust anchor for merchants who need full hardware homologation with the DGI. The Cloud Signing Service remains first-class — the DEF is an alternative signer that can replace or augment the cloud HSM for specific outlets. This 6-month phase (September 2026 – February 2027) delivers the firmware, dual-mode signing architecture, and DGI certification.</p>
+<p>Phase 3 introduces the <strong>USB Fiscal Memory device (DEF)</strong> as an optional trust anchor for merchants who need full hardware homologation with the DGI. The Cloud Signing Service remains first-class — the DEF is an alternative signer that can replace or augment the cloud HSM for specific outlets. This phase delivers the firmware, dual-mode signing architecture, and DGI certification.</p>
 <h2 id="objectives">Objectives<a class="headerlink" href="#objectives" title="Permanent link">¶</a></h2>
 <ul>
 <li><strong>Scope:</strong> USB Fiscal Memory firmware, dual-mode signing (Cloud HSM or DEF), device provisioning, and DGI hardware certification.</li>
 <li><strong>Target:</strong> Merchants requiring DEF homologation; cloud-only merchants remain unaffected.</li>
-<li><strong>Duration:</strong> 6 months with monthly milestones.</li>
 </ul>
 <h2 id="dual-mode-signing-architecture">Dual-mode signing architecture<a class="headerlink" href="#dual-mode-signing-architecture" title="Permanent link">¶</a></h2>
 <pre class="mermaid"><code>flowchart LR
@@ -1006,8 +1005,7 @@
 <li>Firmware generates Z reports from the local journal with sequence ranges, per-tax-group totals, and journal hashes.</li>
 <li>Power-loss recovery: interrupted COMMIT does not produce orphan fiscal numbers.</li>
 </ul>
-<p><strong>Estimated effort:</strong> 8 weeks of firmware development + 2 weeks of hardware-in-the-loop testing.
-<strong>Dependencies:</strong> Hardware docs in <code>docs-archive/hardware/</code>, <code>spec/protocol-usb-fiscal-device-1.md</code>.</p>
+<p><strong>Dependencies:</strong> Hardware docs in <code>docs-archive/hardware/</code>, <code>spec/protocol-usb-fiscal-device-1.md</code>.</p>
 <h3 id="2-usb-device-proxy-service">2. USB Device Proxy service<a class="headerlink" href="#2-usb-device-proxy-service" title="Permanent link">¶</a></h3>
 <p><strong>Description:</strong> Build a local daemon/service that bridges the Cloud API to the USB device via USB CDC. The proxy receives canonical payloads from the cloud, executes PREPARE/COMMIT on the DEF, and returns the sealed response.</p>
 <p><strong>Acceptance criteria:</strong></p>
@@ -1017,8 +1015,7 @@
 <li>Reports device health (counter, firmware version, free memory) back to the cloud for dashboard display.</li>
 <li>Auto-starts at boot; reconnects on USB disconnect.</li>
 </ul>
-<p><strong>Estimated effort:</strong> 3 weeks.
-<strong>Dependencies:</strong> <code>spec/protocol-usb-fiscal-device-1.md</code>.</p>
+<p><strong>Dependencies:</strong> <code>spec/protocol-usb-fiscal-device-1.md</code>.</p>
 <h3 id="3-device-provisioning-certificate-management">3. Device provisioning &amp; certificate management<a class="headerlink" href="#3-device-provisioning-certificate-management" title="Permanent link">¶</a></h3>
 <p><strong>Description:</strong> Build the provisioning workflow that registers a DEF with the Cloud, binds it to an outlet, provisions its signing certificate, and manages key rotation.</p>
 <p><strong>Acceptance criteria:</strong></p>
@@ -1028,8 +1025,7 @@
 <li>Certificate rotation and revocation flows are documented and automated.</li>
 <li>Dashboard shows device status, certificate expiry, and firmware version.</li>
 </ul>
-<p><strong>Estimated effort:</strong> 2 weeks.
-<strong>Dependencies:</strong> <code>design/docs/cloud/architecture.md</code>.</p>
+<p><strong>Dependencies:</strong> <code>design/docs/cloud/architecture.md</code>.</p>
 <h3 id="4-dual-mode-integration-testing">4. Dual-mode integration &amp; testing<a class="headerlink" href="#4-dual-mode-integration-testing" title="Permanent link">¶</a></h3>
 <p><strong>Description:</strong> Ensure that Cloud HSM and DEF signers produce interchangeable sealed responses and that reports, audit exports, and DGI uploads work identically regardless of signing mode.</p>
 <p><strong>Acceptance criteria:</strong></p>
@@ -1038,7 +1034,6 @@
 <li>Fiscal Ledger, reports, and audit exports are agnostic to signing source.</li>
 <li>Switching an outlet from cloud to DEF mode (or vice versa) is seamless — counter continuity is maintained.</li>
 </ul>
-<p><strong>Estimated effort:</strong> 2 weeks for integration testing.</p>
 <h3 id="5-dgi-hardware-homologation">5. DGI hardware homologation<a class="headerlink" href="#5-dgi-hardware-homologation" title="Permanent link">¶</a></h3>
 <p><strong>Description:</strong> Prepare and submit the DEF for DGI homologation, including documentation, test evidence, and physical device submission.</p>
 <p><strong>Acceptance criteria:</strong></p>
@@ -1047,8 +1042,7 @@
 <li>DEF passes DGI technical committee review.</li>
 <li>Contingency plan: merchants can operate in cloud mode while homologation is pending.</li>
 </ul>
-<p><strong>Estimated effort:</strong> 4 weeks for documentation + 4 weeks for DGI review cycle.
-<strong>Dependencies:</strong> <code>design/docs/regulatory/legal-framework.md</code>, <code>design/docs/regulatory/arretes.md</code>.</p>
+<p><strong>Dependencies:</strong> <code>design/docs/regulatory/legal-framework.md</code>, <code>design/docs/regulatory/arretes.md</code>.</p>
 <h2 id="risks">Risks<a class="headerlink" href="#risks" title="Permanent link">¶</a></h2>
 <div class="admonition warning">
 <p class="admonition-title">Phase 3 Risks</p>

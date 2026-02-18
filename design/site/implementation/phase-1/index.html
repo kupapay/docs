@@ -744,10 +744,10 @@
     </label>
 <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="#pilot-targets">
+<a class="md-nav__link" href="#scope">
 <span class="md-ellipsis">
       
-        Pilot targets
+        Scope
       
     </span>
 </a>
@@ -799,10 +799,10 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#5-manual-compliance-tooling-pilot-onboarding">
+<a class="md-nav__link" href="#5-manual-compliance-tooling-onboarding">
 <span class="md-ellipsis">
       
-        5. Manual compliance tooling &amp; pilot onboarding
+        5. Manual compliance tooling &amp; onboarding
       
     </span>
 </a>
@@ -876,10 +876,10 @@
     </label>
 <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="#pilot-targets">
+<a class="md-nav__link" href="#scope">
 <span class="md-ellipsis">
       
-        Pilot targets
+        Scope
       
     </span>
 </a>
@@ -931,10 +931,10 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#5-manual-compliance-tooling-pilot-onboarding">
+<a class="md-nav__link" href="#5-manual-compliance-tooling-onboarding">
 <span class="md-ellipsis">
       
-        5. Manual compliance tooling &amp; pilot onboarding
+        5. Manual compliance tooling &amp; onboarding
       
     </span>
 </a>
@@ -959,13 +959,9 @@
 <div class="md-content" data-md-component="content">
 <article class="md-content__inner md-typeset">
 <h1 id="phase-1-software-invoicing">Phase 1 — Software Invoicing<a class="headerlink" href="#phase-1-software-invoicing" title="Permanent link">¶</a></h1>
-<p>Phase 1 proves that the Bono Pay Cloud can deliver sealed, fiscally compliant invoices through an API-first platform. This 3-month sprint targets <strong>10 B2B pilot clients</strong> (service companies, wholesalers, schools) using the Cloud Signing Service (HSM) as the trusted fiscal authority, with a web dashboard, REST API, and SDKs.</p>
-<h2 id="pilot-targets">Pilot targets<a class="headerlink" href="#pilot-targets" title="Permanent link">¶</a></h2>
-<ul>
-<li><strong>Duration:</strong> 3 months (March through May 2026).</li>
-<li><strong>Clients:</strong> 10 B2B pilot partners who need invoice sealing, tax compliance, and regulatory reporting.</li>
-<li><strong>Scope:</strong> Cloud Signing Service + REST API + Web Dashboard + JavaScript/Python SDK + Z/X/A reports + manual DGI compliance tooling.</li>
-</ul>
+<p>Phase 1 proves that the Bono Pay Cloud can deliver sealed, fiscally compliant invoices through an API-first platform, using the Cloud Signing Service (HSM) as the trusted fiscal authority, with a web dashboard, REST API, and SDKs.</p>
+<h2 id="scope">Scope<a class="headerlink" href="#scope" title="Permanent link">¶</a></h2>
+<p>Cloud Signing Service + REST API + Web Dashboard + JavaScript/Python SDK + Z/X/A reports + manual DGI compliance tooling + public invoice verification portal.</p>
 <h2 id="epics">Epics<a class="headerlink" href="#epics" title="Permanent link">¶</a></h2>
 <h3 id="1-cloud-signing-service-mvp">1. Cloud Signing Service MVP<a class="headerlink" href="#1-cloud-signing-service-mvp" title="Permanent link">¶</a></h3>
 <p><strong>Description:</strong> Build the HSM-backed Cloud Signing Service that assigns sequential fiscal numbers, signs canonical payloads with ECDSA, generates QR codes, and stores everything in the append-only Fiscal Ledger.</p>
@@ -976,8 +972,7 @@
 <li>Fiscal Ledger stores hash-chained entries; each entry references the previous hash for tamper detection.</li>
 <li>Invoice mutations (void, refund, credit note) create new fiscal events — nothing is deleted.</li>
 </ul>
-<p><strong>Estimated effort:</strong> 4 weeks.
-<strong>Dependencies:</strong> <code>spec/architecture-kutapay-system-1.md</code>, <code>design/docs/architecture/trust-boundary.md</code>.</p>
+<p><strong>Dependencies:</strong> <code>spec/architecture-kutapay-system-1.md</code>, <code>design/docs/architecture/trust-boundary.md</code>.</p>
 <h3 id="2-rest-api-tax-engine">2. REST API + Tax Engine<a class="headerlink" href="#2-rest-api-tax-engine" title="Permanent link">¶</a></h3>
 <p><strong>Description:</strong> Build the REST API that accepts canonical payloads, validates them through the tax engine (14 DGI groups + client classification), routes them to the Cloud Signing Service, and returns sealed responses.</p>
 <p><strong>Acceptance criteria:</strong></p>
@@ -988,8 +983,7 @@
 <li>Error responses include actionable validation messages.</li>
 <li>Rate limiting (100 req/s per API key) and idempotency keys prevent abuse and duplicates.</li>
 </ul>
-<p><strong>Estimated effort:</strong> 3 weeks for API + 1 week for tax engine integration.
-<strong>Dependencies:</strong> <code>spec/schema-tax-engine-1.md</code>, <code>design/docs/fiscal/tax-engine.md</code>.</p>
+<p><strong>Dependencies:</strong> <code>spec/schema-tax-engine-1.md</code>, <code>design/docs/fiscal/tax-engine.md</code>.</p>
 <h3 id="3-web-dashboard-mvp">3. Web Dashboard MVP<a class="headerlink" href="#3-web-dashboard-mvp" title="Permanent link">¶</a></h3>
 <p><strong>Description:</strong> Deliver the web dashboard for invoice management, outlet administration, user/API key management, and report generation.</p>
 <p><strong>Acceptance criteria:</strong></p>
@@ -1000,8 +994,7 @@
 <li>Z/X/A report generation and download.</li>
 <li>Offline indicators for queued drafts.</li>
 </ul>
-<p><strong>Estimated effort:</strong> 3 weeks for core UI + 1 week for polish.
-<strong>Dependencies:</strong> <code>design/docs/platform/dashboard.md</code>, <code>design/docs/platform/multi-user.md</code>.</p>
+<p><strong>Dependencies:</strong> <code>design/docs/platform/dashboard.md</code>, <code>design/docs/platform/multi-user.md</code>.</p>
 <h3 id="4-javascript-python-sdk">4. JavaScript &amp; Python SDK<a class="headerlink" href="#4-javascript-python-sdk" title="Permanent link">¶</a></h3>
 <p><strong>Description:</strong> Ship official client libraries with type-safe models, offline queue support, and receipt rendering helpers.</p>
 <p><strong>Acceptance criteria:</strong></p>
@@ -1011,10 +1004,9 @@
 <li>Tax engine helpers for building valid <code>tax_groups</code> and <code>tax_summary</code> arrays.</li>
 <li>Event callbacks for queue state transitions (synced, failed, grace exceeded).</li>
 </ul>
-<p><strong>Estimated effort:</strong> 2 weeks per SDK.
-<strong>Dependencies:</strong> <code>design/docs/api/cloud.md</code>, <code>design/docs/api/invoicing-sdk.md</code>.</p>
-<h3 id="5-manual-compliance-tooling-pilot-onboarding">5. Manual compliance tooling &amp; pilot onboarding<a class="headerlink" href="#5-manual-compliance-tooling-pilot-onboarding" title="Permanent link">¶</a></h3>
-<p><strong>Description:</strong> Provide compliance tools for pilot clients to submit fiscal data to the DGI before automated MCF/e-MCF uploads are available.</p>
+<p><strong>Dependencies:</strong> <code>design/docs/api/cloud.md</code>, <code>design/docs/api/invoicing-sdk.md</code>.</p>
+<h3 id="5-manual-compliance-tooling-onboarding">5. Manual compliance tooling &amp; onboarding<a class="headerlink" href="#5-manual-compliance-tooling-onboarding" title="Permanent link">¶</a></h3>
+<p><strong>Description:</strong> Provide compliance tools to submit fiscal data to the DGI before automated MCF/e-MCF uploads are available.</p>
 <p><strong>Acceptance criteria:</strong></p>
 <ul>
 <li>Generate DGI-ready CSV/Excel exports containing sealed invoice metadata, fiscal numbers, tax summaries, and security elements.</li>
@@ -1023,16 +1015,15 @@
 <li><strong>Verification API</strong> (<code>/api/v1/verify/{fiscal_number}</code>) available as a public, rate-limited endpoint for programmatic verification.</li>
 <li><strong>SDK verification helpers</strong> (<code>verify()</code>, <code>verifyQR()</code>, <code>verifySignatureOffline()</code>) shipped in JavaScript and Python SDKs.</li>
 <li><strong>Public key distribution</strong> via <code>/.well-known/fiscal-keys.json</code> so the DGI and auditors can verify signatures independently.</li>
-<li>Onboard 10 pilot clients with documentation, API keys, and training.</li>
-<li>Collect pilot feedback and validate offline queue behavior under real-world conditions.</li>
+<li>Onboard initial clients with documentation, API keys, and training.</li>
+<li>Collect feedback and validate offline queue behavior under real-world conditions.</li>
 </ul>
-<p><strong>Estimated effort:</strong> 2 weeks for tooling + 2 weeks for onboarding.
-<strong>Dependencies:</strong> <code>design/docs/fiscal/reports.md</code>, <code>design/docs/cloud/dgi-integration.md</code>.</p>
+<p><strong>Dependencies:</strong> <code>design/docs/fiscal/reports.md</code>, <code>design/docs/cloud/dgi-integration.md</code>.</p>
 <h2 id="risks">Risks<a class="headerlink" href="#risks" title="Permanent link">¶</a></h2>
 <div class="admonition warning">
 <p class="admonition-title">Phase 1 Risks</p>
 <ul>
-<li>The DGI MCF/e-MCF API remains undefined, so manual compliance tooling is required for the pilot. Automated uploads come in Phase 2 or when the DGI publishes the spec.</li>
+<li>The DGI MCF/e-MCF API remains undefined, so manual compliance tooling is required initially. Automated uploads come in Phase 2 or when the DGI publishes the spec.</li>
 <li>HSM provider selection and key provisioning may introduce lead time. Evaluate cloud HSM offerings (AWS CloudHSM, Azure Managed HSM) early.</li>
 <li>Field testing in DRC conditions may expose unexpected latency and connectivity patterns. The offline queue must handle extended outages gracefully.</li>
 </ul>

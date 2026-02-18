@@ -994,12 +994,11 @@
 <div class="md-content" data-md-component="content">
 <article class="md-content__inner md-typeset">
 <h1 id="phase-4-enterprise-integrations">Phase 4 — Enterprise &amp; Integrations<a class="headerlink" href="#phase-4-enterprise-integrations" title="Permanent link">¶</a></h1>
-<p>Phase 4 extends Bono Pay into enterprise environments with ERP connectors, fleet management, advanced analytics, and multi-country expansion research. This 6-month phase (March 2027 – August 2027) builds on the mature API, SDKs, and dual-mode signing infrastructure delivered in Phases 1–3.</p>
+<p>Phase 4 extends Bono Pay into enterprise environments with ERP connectors, fleet management, advanced analytics, and multi-country expansion research. This phase builds on the mature API, SDKs, and dual-mode signing infrastructure delivered in Phases 1–3.</p>
 <h2 id="objectives">Objectives<a class="headerlink" href="#objectives" title="Permanent link">¶</a></h2>
 <ul>
 <li><strong>Scope:</strong> ERP connectors, fleet management dashboard, webhook/event streaming enhancements, advanced analytics, and multi-country regulatory research.</li>
 <li><strong>Target:</strong> Large enterprises, ERP integrators, and government agencies.</li>
-<li><strong>Duration:</strong> 6 months with quarterly milestones.</li>
 </ul>
 <h2 id="epics">Epics<a class="headerlink" href="#epics" title="Permanent link">¶</a></h2>
 <h3 id="1-erp-connectors">1. ERP connectors<a class="headerlink" href="#1-erp-connectors" title="Permanent link">¶</a></h3>
@@ -1044,8 +1043,7 @@
 <li>Error mapping: ERP-side validation errors are translated into meaningful messages.</li>
 <li>Installation guide, configuration reference, and troubleshooting docs for each connector.</li>
 </ul>
-<p><strong>Estimated effort:</strong> 4 weeks per connector.
-<strong>Dependencies:</strong> <code>api/cloud.md</code>, <code>api/invoicing-sdk.md</code>.</p>
+<p><strong>Dependencies:</strong> <code>api/cloud.md</code>, <code>api/invoicing-sdk.md</code>.</p>
 <h3 id="2-fleet-management-dashboard">2. Fleet management dashboard<a class="headerlink" href="#2-fleet-management-dashboard" title="Permanent link">¶</a></h3>
 <p><strong>Description:</strong> A dedicated dashboard view for enterprises managing many outlets, terminals, and (optionally) DEF devices across multiple locations.</p>
 <p><strong>Features:</strong></p>
@@ -1062,8 +1060,7 @@
 <li>Real-time status updates via WebSocket or SSE (≤ 5 s latency).</li>
 <li>Role-based access: fleet manager role can view all outlets but cannot issue invoices.</li>
 </ul>
-<p><strong>Estimated effort:</strong> 6 weeks.
-<strong>Dependencies:</strong> <code>platform/multi-user.md</code>, <code>cloud/architecture.md</code>.</p>
+<p><strong>Dependencies:</strong> <code>platform/multi-user.md</code>, <code>cloud/architecture.md</code>.</p>
 <h3 id="3-advanced-analytics">3. Advanced analytics<a class="headerlink" href="#3-advanced-analytics" title="Permanent link">¶</a></h3>
 <p><strong>Description:</strong> Analytics engine that transforms Fiscal Ledger data into actionable insights for merchants and compliance teams, powered by ML-based anomaly detection, predictive forecasting, and natural language search.</p>
 <p><strong>Reports:</strong></p>
@@ -1112,8 +1109,7 @@
 <li>API endpoint for programmatic access to analytics data.</li>
 <li>Data retention: analytics data available for at least 10 years (regulatory requirement).</li>
 </ul>
-<p><strong>Estimated effort:</strong> 4 weeks.
-<strong>Dependencies:</strong> <code>fiscal/reports.md</code>.</p>
+<p><strong>Dependencies:</strong> <code>fiscal/reports.md</code>.</p>
 <h3 id="4-webhook-event-streaming-enhancements">4. Webhook &amp; event streaming enhancements<a class="headerlink" href="#4-webhook-event-streaming-enhancements" title="Permanent link">¶</a></h3>
 <p><strong>Description:</strong> Upgrade the webhook system to support event streaming for high-throughput integrations and real-time data pipelines.</p>
 <p><strong>Features:</strong></p>
@@ -1130,8 +1126,7 @@
 <li>Replay covers at least 30 days of event history.</li>
 <li>Dead letter queue is accessible via API and dashboard.</li>
 </ul>
-<p><strong>Estimated effort:</strong> 3 weeks.
-<strong>Dependencies:</strong> <code>platform/integrations.md</code>.</p>
+<p><strong>Dependencies:</strong> <code>platform/integrations.md</code>.</p>
 <h3 id="5-multi-country-regulatory-research">5. Multi-country regulatory research<a class="headerlink" href="#5-multi-country-regulatory-research" title="Permanent link">¶</a></h3>
 <p><strong>Description:</strong> Research and document the regulatory requirements for expanding Bono Pay beyond the DRC. Identify common patterns and country-specific adaptations.</p>
 <p><strong>Target countries (research only):</strong></p>
@@ -1173,7 +1168,6 @@
 <li>Architecture impact assessment: multi-country tax engine, multi-currency, localization.</li>
 <li>Go/no-go recommendation for each country.</li>
 </ul>
-<p><strong>Estimated effort:</strong> 4 weeks of research + 2 weeks for documentation.</p>
 <h3 id="6-ai-powered-capabilities-full-suite">6. AI-Powered Capabilities (Full Suite)<a class="headerlink" href="#6-ai-powered-capabilities-full-suite" title="Permanent link">¶</a></h3>
 <p><strong>Description:</strong> Deploy the full AI suite that builds on Phase 2's foundation (WhatsApp bot, NL invoicing, tax classifier, rule-based anomaly detection) with advanced ML models, OCR, compliance monitoring, and natural language search.</p>
 <p><strong>Components:</strong></p>
@@ -1182,39 +1176,32 @@
 <tr>
 <th>Component</th>
 <th>Description</th>
-<th>Effort</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><strong>ML Anomaly Detection</strong></td>
 <td>Replace Phase 2 rule-based triggers with Isolation Forest / Autoencoder models trained on per-outlet baselines. Detect velocity, amount, timing, tax group, and void/refund anomalies with higher precision.</td>
-<td>3 weeks</td>
 </tr>
 <tr>
 <td><strong>Predictive Analytics Engine</strong></td>
 <td>Time-series forecasting (Prophet / ARIMA) for tax liability, revenue projection, seasonal demand, and cash flow prediction. Dashboard forecast cards with confidence intervals.</td>
-<td>3 weeks</td>
 </tr>
 <tr>
 <td><strong>OCR &amp; Document Digitization</strong></td>
 <td>Camera/PDF upload → preprocessing → Tesseract/Cloud Vision OCR → field extraction (NER + layout analysis) → human review → stored as digitized record. Historical paper invoices are informational records only — never fabricate fiscal numbers for scanned documents.</td>
-<td>4 weeks</td>
 </tr>
 <tr>
 <td><strong>NLP Compliance Monitoring</strong></td>
 <td>Monitor DGI website, official gazette, and ministry circulars for regulatory changes. NLP document classifier detects changes to tax rates, exemptions, and reporting obligations. Alerts reviewed by compliance team before pushing to merchants.</td>
-<td>3 weeks</td>
 </tr>
 <tr>
 <td><strong>Smart Search (Text-to-SQL)</strong></td>
 <td>Natural language queries over fiscal data via dashboard search bar and <code>/api/v1/search/query</code>. Fine-tuned CodeLlama/StarCoder translates French/English questions into sandboxed SQL queries against the Fiscal Ledger read replica. Role-based access control enforced.</td>
-<td>3 weeks</td>
 </tr>
 <tr>
 <td><strong>Voice Invoice Creation</strong></td>
 <td>Speech-to-text (Whisper multilingual) → text → NL Invoice Parser pipeline. Supports French, Lingala, Swahili.</td>
-<td>2 weeks</td>
 </tr>
 </tbody>
 </table>
@@ -1228,8 +1215,7 @@
 <li>Voice input achieves ≥ 85% entity extraction accuracy for supported languages.</li>
 <li>All AI models run within the Bono Pay cloud boundary. No cross-tenant training.</li>
 </ul>
-<p><strong>Estimated effort:</strong> 18 weeks total (components can be parallelized across teams).
-<strong>Dependencies:</strong> <code>platform/ai-capabilities.md</code>, <code>fiscal/reports.md</code>, <code>cloud/architecture.md</code>.</p>
+<p><strong>Dependencies:</strong> <code>platform/ai-capabilities.md</code>, <code>fiscal/reports.md</code>, <code>cloud/architecture.md</code>.</p>
 <p>See <a href="../../platform/ai-capabilities/">AI &amp; Natural Language Capabilities</a> for full specifications, data flows, and privacy governance.</p>
 <h2 id="risks">Risks<a class="headerlink" href="#risks" title="Permanent link">¶</a></h2>
 <div class="admonition warning">
@@ -1246,11 +1232,11 @@
 </div>
 <h2 id="success-criteria">Success criteria<a class="headerlink" href="#success-criteria" title="Permanent link">¶</a></h2>
 <ul>
-<li>At least 2 ERP connectors certified and deployed with enterprise customers.</li>
-<li>Fleet dashboard supports 3+ enterprise merchants with 50+ outlets each.</li>
-<li>Analytics reports are used by at least 5 merchants for tax planning.</li>
-<li>Multi-country research delivers go/no-go recommendations for at least 2 countries.</li>
-<li>WhatsApp bot and NL Invoice API handle ≥ 500 invoices/month across all merchants.</li>
+<li>ERP connectors certified and deployed with enterprise customers.</li>
+<li>Fleet dashboard supports enterprise merchants with multi-outlet operations.</li>
+<li>Analytics reports are used by merchants for tax planning.</li>
+<li>Multi-country research delivers go/no-go recommendations.</li>
+<li>WhatsApp bot and NL Invoice API handle production invoice volumes.</li>
 <li>Tax Auto-Classifier accuracy ≥ 85% on production items.</li>
 <li>Anomaly detection surfaces real issues with &lt; 5% false positive rate.</li>
 <li>Smart Search resolves ≥ 90% of natural language finance queries correctly.</li>
