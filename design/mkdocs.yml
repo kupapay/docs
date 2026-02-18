@@ -2,6 +2,8 @@ site_name: Bono Pay Technical Design
 
 theme:
   name: material
+  features:
+    - navigation.footer
   palette:
     scheme: slate
     primary: '#3FFF00'
