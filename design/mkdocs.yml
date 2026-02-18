@@ -48,6 +48,7 @@ nav:
     - Invoice Lifecycle: fiscal/invoice-lifecycle.md
     - Tax Engine (14 Groups): fiscal/tax-engine.md
     - Security Elements: fiscal/security-elements.md
+    - Invoice Verification: fiscal/invoice-verification.md
     - Reports (Z/X/A): fiscal/reports.md
   - Cloud & Sync:
     - Cloud Architecture: cloud/architecture.md

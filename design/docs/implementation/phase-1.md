@@ -76,6 +76,10 @@ Phase 1 proves that the Bono Pay Cloud can deliver sealed, fiscally compliant in
 
 - Generate DGI-ready CSV/Excel exports containing sealed invoice metadata, fiscal numbers, tax summaries, and security elements.
 - Produce Z/X/A reports and audit exports from the Fiscal Ledger.
+- **Public verification portal** at `verify.bonopay.cd` live with QR scanning, manual fiscal number lookup, and ECDSA signature validation. See [Invoice Verification](../fiscal/invoice-verification.md).
+- **Verification API** (`/api/v1/verify/{fiscal_number}`) available as a public, rate-limited endpoint for programmatic verification.
+- **SDK verification helpers** (`verify()`, `verifyQR()`, `verifySignatureOffline()`) shipped in JavaScript and Python SDKs.
+- **Public key distribution** via `/.well-known/fiscal-keys.json` so the DGI and auditors can verify signatures independently.
 - Onboard 10 pilot clients with documentation, API keys, and training.
 - Collect pilot feedback and validate offline queue behavior under real-world conditions.
 

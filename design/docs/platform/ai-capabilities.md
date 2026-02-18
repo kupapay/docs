@@ -102,7 +102,7 @@ WhatsApp is the dominant communication channel in DRC. Merchants already discuss
 | Attribute | Detail |
 |-----------|--------|
 | **Platform** | WhatsApp Business API (Cloud API) |
-| **Capabilities** | Create invoices, query invoice status, download receipts (PDF), request Z/X reports, check DGI sync status |
+| **Capabilities** | Create invoices, query invoice status, download receipts (PDF), request Z/X reports, check DGI sync status, **verify invoices** (text or QR photo) |
 | **Authentication** | Phone number linked to merchant account + OTP verification on first use |
 | **Languages** | French, Lingala (others via NL pipeline) |
 

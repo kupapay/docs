@@ -117,6 +117,17 @@ The Bono Pay SDK provides client libraries for **JavaScript** and **Python** tha
 | `delete(webhookId)` | Remove a webhook registration. |
 | `verifySignature(payload, signature, secret)` | Verify webhook payload signature (HMAC-SHA256). |
 
+### `client.verify`
+
+| Method | Description |
+|--------|-------------|
+| `verify(fiscalNumber, authCode)` | Verify a sealed invoice via the public Verification API — no API key required. Returns `status`, `signature_valid`, `dgi_status`. |
+| `verifyQR(qrData)` | Parse a QR code URL and verify the referenced invoice. |
+| `verifyBatch(invoices)` | Bulk-verify an array of `{ fiscal_number, auth_code }` pairs (requires API key). |
+| `verifySignatureOffline(payload, signature, publicKey)` | Verify the ECDSA signature locally without an API call — useful for auditors and air-gapped environments. |
+
+See [Invoice Verification](../fiscal/invoice-verification.md) for the full verification flow, portal, and anti-abuse protections.
+
 ## Offline queue
 
 The SDK includes a built-in offline queue that automatically handles connectivity issues:

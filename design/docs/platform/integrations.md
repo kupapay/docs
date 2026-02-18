@@ -48,6 +48,7 @@ The REST API is the foundation for all integrations. Key capabilities:
 | `/api/v1/reports` | POST | Generate Z/X/A reports |
 | `/api/v1/audit/export` | GET | Download hash-chained journal exports |
 | `/api/v1/outlets/{outlet_id}/status` | GET | Check outlet sync health and counter |
+| `/api/v1/verify/{fiscal_number}` | GET | **Public** — verify invoice authenticity (no auth required) |
 
 All endpoints require TLS 1.3+, `Authorization: Bearer <api_key>`, and return JSON responses. See the [Cloud API Reference](../api/cloud.md) for full request/response schemas.
 

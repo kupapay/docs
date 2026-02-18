@@ -19,6 +19,9 @@ The Bono Pay Cloud API is the primary interface for creating fiscalized invoices
 | `/api/v1/audit/export` | GET | Download hash-chained journal exports | `ledger_hash`, `entries`, signed downloads |
 | `/api/v1/webhooks` | POST | Register a webhook endpoint | `webhook_id`, `events`, `active` |
 | `/api/v1/api-keys` | POST | Create a scoped API key | `api_key_id`, `key`, `scopes` |
+| `/api/v1/verify/{fiscal_number}` | GET | **Public** — verify a sealed invoice by fiscal number + auth code | `status`, `signature_valid`, `dgi_status` |
+| `/api/v1/verify/qr` | POST | **Public** — verify by QR payload data | Same as above |
+| `/api/v1/verify/batch` | POST | Bulk-verify multiple invoices (authenticated) | Array of verification results |
 
 !!! info "Specification reference"
     The endpoint request/response schema definitions are based on `spec/design-cloud-api-1.md` (project root).

@@ -319,6 +319,18 @@
 </a>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="../../fiscal/invoice-verification/">
+<span class="md-ellipsis">
+    
+  
+    Invoice Verification
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="../../fiscal/reports/">
 <span class="md-ellipsis">
     
@@ -1007,6 +1019,10 @@
 <ul>
 <li>Generate DGI-ready CSV/Excel exports containing sealed invoice metadata, fiscal numbers, tax summaries, and security elements.</li>
 <li>Produce Z/X/A reports and audit exports from the Fiscal Ledger.</li>
+<li><strong>Public verification portal</strong> at <code>verify.bonopay.cd</code> live with QR scanning, manual fiscal number lookup, and ECDSA signature validation. See <a href="../../fiscal/invoice-verification/">Invoice Verification</a>.</li>
+<li><strong>Verification API</strong> (<code>/api/v1/verify/{fiscal_number}</code>) available as a public, rate-limited endpoint for programmatic verification.</li>
+<li><strong>SDK verification helpers</strong> (<code>verify()</code>, <code>verifyQR()</code>, <code>verifySignatureOffline()</code>) shipped in JavaScript and Python SDKs.</li>
+<li><strong>Public key distribution</strong> via <code>/.well-known/fiscal-keys.json</code> so the DGI and auditors can verify signatures independently.</li>
 <li>Onboard 10 pilot clients with documentation, API keys, and training.</li>
 <li>Collect pilot feedback and validate offline queue behavior under real-world conditions.</li>
 </ul>

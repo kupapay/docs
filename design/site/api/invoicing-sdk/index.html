@@ -319,6 +319,18 @@
 </a>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="../../fiscal/invoice-verification/">
+<span class="md-ellipsis">
+    
+  
+    Invoice Verification
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="../../fiscal/reports/">
 <span class="md-ellipsis">
     
@@ -754,6 +766,15 @@
     </span>
 </a>
 </li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#clientverify">
+<span class="md-ellipsis">
+      
+        client.verify
+      
+    </span>
+</a>
+</li>
 </ul>
 </nav>
 </li>
@@ -990,6 +1011,15 @@
 <span class="md-ellipsis">
       
         client.webhooks
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#clientverify">
+<span class="md-ellipsis">
+      
+        client.verify
       
     </span>
 </a>
@@ -1242,6 +1272,34 @@
 </tr>
 </tbody>
 </table>
+<h3 id="clientverify"><code>client.verify</code><a class="headerlink" href="#clientverify" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>verify(fiscalNumber, authCode)</code></td>
+<td>Verify a sealed invoice via the public Verification API — no API key required. Returns <code>status</code>, <code>signature_valid</code>, <code>dgi_status</code>.</td>
+</tr>
+<tr>
+<td><code>verifyQR(qrData)</code></td>
+<td>Parse a QR code URL and verify the referenced invoice.</td>
+</tr>
+<tr>
+<td><code>verifyBatch(invoices)</code></td>
+<td>Bulk-verify an array of <code>{ fiscal_number, auth_code }</code> pairs (requires API key).</td>
+</tr>
+<tr>
+<td><code>verifySignatureOffline(payload, signature, publicKey)</code></td>
+<td>Verify the ECDSA signature locally without an API call — useful for auditors and air-gapped environments.</td>
+</tr>
+</tbody>
+</table>
+<p>See <a href="../../fiscal/invoice-verification/">Invoice Verification</a> for the full verification flow, portal, and anti-abuse protections.</p>
 <h2 id="offline-queue">Offline queue<a class="headerlink" href="#offline-queue" title="Permanent link">¶</a></h2>
 <p>The SDK includes a built-in offline queue that automatically handles connectivity issues:</p>
 <pre class="mermaid"><code>flowchart LR

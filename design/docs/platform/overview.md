@@ -38,6 +38,8 @@ flowchart LR
 ## Security & compliance
 Bono Pay satisfies the SFE specifications: all five invoice types plus the 14 DGI tax groups run through the tax engine, client classification is mandatory, and every sealed invoice includes the fiscal number, fiscal authority ID, cryptographic auth code, trusted timestamp, and QR payload produced by the Cloud Signing Service (HSM). The Fiscal Ledger remains append-only, the Report Generator emits Z/X/A/audit exports, and voids/refunds become new fiscal events instead of deletions.
 
+Anyone — customers, auditors, DGI inspectors — can verify that an invoice is genuine by scanning the QR code on the receipt or entering the fiscal number at the **public verification portal** (`verify.bonopay.cd`). The verification service checks the ECDSA signature against the HSM's public key, confirms hash-chain integrity in the Fiscal Ledger, and reports DGI sync status — all without requiring login. See [Invoice Verification](../fiscal/invoice-verification.md).
+
 ## Delivery & reporting
 Receipt delivery is multi-channel (email, WhatsApp, PDF, thermal print) and always includes the fiscal number plus QR payload while the ledger and Report Generator power Z, X, A, and audit export data for inspectors and finance teams. The [WhatsApp Invoice Bot](ai-capabilities.md#2-whatsapp-invoice-bot) also serves as a delivery and query channel — merchants can check invoice status, download receipts, and request Z reports directly in their WhatsApp conversation. Offline-first clients queue invoices locally, surface queue depth indicators, and retry until Bono Pay Cloud seals the payload. The Sync Agent handles DGI integration (MCF/e-MCF) so authorized invoices and ledger hashes reach the ministry even when connectivity is intermittent.
 
