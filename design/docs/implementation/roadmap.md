@@ -7,33 +7,27 @@ This document lays out the phased rollout for Bono Pay's fiscal invoicing platfo
 ## Timeline
 
 ```mermaid
-gantt
+timeline
     title Bono Pay Implementation Roadmap
-    dateFormat  YYYY-Q
-    axisFormat  %Y
-
-    section Phase 1 — Software Invoicing
-    Cloud Signing Service + Fiscal Ledger MVP :crit, 2026-Q1, 1q
-    REST API + Tax Engine (14 DGI groups) :active, 2026-Q1, 1q
-    Web Dashboard MVP : 2026-Q1, 1q
-    JavaScript and Python SDK : 2026-Q1, 1q
-
-    section Phase 2 — POS and Retail
-    POS SDK + multi-terminal support : 2026-Q2, 1q
-    Mobile money integration : 2026-Q2, 1q
-    Webhook event system : 2026-Q2, 1q
-    WhatsApp Invoice Bot + NL API : 2026-Q2, 1q
-
-    section Phase 3 — USB Hardware
-    USB Fiscal Memory firmware : 2026-Q3, 2q
-    Cloud + DEF dual-mode signing : 2026-Q3, 2q
-    DGI hardware certification : 2027-Q1, 1q
-
-    section Phase 4 — Enterprise
-    ERP connectors — SAP and Odoo : 2027-Q1, 2q
-    Fleet management dashboard : 2027-Q2, 1q
-    Advanced analytics + AI suite : 2027-Q2, 2q
-    Multi-country expansion research : 2027-Q3, 1q
+    Phase 1 — Software Invoicing
+        : Cloud Signing Service + Fiscal Ledger MVP
+        : REST API + Tax Engine (14 DGI groups)
+        : Web Dashboard MVP
+        : JavaScript and Python SDK
+    Phase 2 — POS and Retail
+        : POS SDK + multi-terminal support
+        : Mobile money integration
+        : Webhook event system
+        : WhatsApp Invoice Bot + NL API
+    Phase 3 — USB Hardware
+        : USB Fiscal Memory firmware
+        : Cloud + DEF dual-mode signing
+        : DGI hardware certification
+    Phase 4 — Enterprise
+        : ERP connectors — SAP and Odoo
+        : Fleet management dashboard
+        : Advanced analytics + AI suite
+        : Multi-country expansion research
 ```
 
 ## Phase 1 — Software Invoicing
