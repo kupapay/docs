@@ -390,6 +390,55 @@
 </a>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="#hash-chain-integrity">
+<span class="md-ellipsis">
+      
+        Hash-chain integrity
+      
+    </span>
+</a>
+<nav aria-label="Hash-chain integrity" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#how-it-works">
+<span class="md-ellipsis">
+      
+        How it works
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#ledger-entry-structure">
+<span class="md-ellipsis">
+      
+        Ledger entry structure
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#chain-verification">
+<span class="md-ellipsis">
+      
+        Chain verification
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#immutability-guarantees">
+<span class="md-ellipsis">
+      
+        Immutability guarantees
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="#maintaining-compliance">
 <span class="md-ellipsis">
       
@@ -917,6 +966,55 @@
 </a>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="#hash-chain-integrity">
+<span class="md-ellipsis">
+      
+        Hash-chain integrity
+      
+    </span>
+</a>
+<nav aria-label="Hash-chain integrity" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#how-it-works">
+<span class="md-ellipsis">
+      
+        How it works
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#ledger-entry-structure">
+<span class="md-ellipsis">
+      
+        Ledger entry structure
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#chain-verification">
+<span class="md-ellipsis">
+      
+        Chain verification
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#immutability-guarantees">
+<span class="md-ellipsis">
+      
+        Immutability guarantees
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="#maintaining-compliance">
 <span class="md-ellipsis">
       
@@ -993,6 +1091,64 @@
   end
   merchant --&gt; fiscal --&gt; timestamp --&gt; signature --&gt; qr</code></pre>
 <p>The diagram above shows how the five security elements are grouped near the receipt header and security block so every printout carries the data inspectors need. The QR code encapsulates the entire sealed payload, making verification a single scan away.</p>
+<h2 id="hash-chain-integrity">Hash-chain integrity<a class="headerlink" href="#hash-chain-integrity" title="Permanent link">¶</a></h2>
+<p>Every entry in the Fiscal Ledger is hash-chained to its predecessor, creating a tamper-evident, append-only sequence that auditors and the DGI can verify independently.</p>
+<h3 id="how-it-works">How it works<a class="headerlink" href="#how-it-works" title="Permanent link">¶</a></h3>
+<ol>
+<li><strong>Genesis entry:</strong> The first invoice sealed for an outlet produces a ledger entry whose <code>previous_hash</code> is a well-known zero value (<code>0x00…00</code>). The Cloud Signing Service computes <code>entry_hash = SHA-256(fiscal_number ‖ canonical_payload_hash ‖ signature ‖ timestamp ‖ previous_hash)</code> and stores it alongside the sealed invoice.</li>
+<li><strong>Subsequent entries:</strong> Each new ledger entry includes the <code>entry_hash</code> of the immediately preceding entry as its <code>previous_hash</code>. The resulting chain means altering any past entry changes every hash that follows it.</li>
+<li><strong>Scope:</strong> Hash chains are maintained <strong>per outlet</strong> so each outlet has an independent, verifiable sequence aligned with its monotonic fiscal number counter.</li>
+</ol>
+<h3 id="ledger-entry-structure">Ledger entry structure<a class="headerlink" href="#ledger-entry-structure" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>fiscal_number</code></td>
+<td>Sequential invoice number for the outlet</td>
+</tr>
+<tr>
+<td><code>canonical_payload_hash</code></td>
+<td>SHA-256 of the deterministic canonical payload</td>
+</tr>
+<tr>
+<td><code>signature</code></td>
+<td>ECDSA signature produced by the Cloud Signing Service (HSM)</td>
+</tr>
+<tr>
+<td><code>timestamp</code></td>
+<td>Trusted UTC timestamp at the moment of signing</td>
+</tr>
+<tr>
+<td><code>previous_hash</code></td>
+<td><code>entry_hash</code> of the preceding ledger entry (<code>0x00…00</code> for the first)</td>
+</tr>
+<tr>
+<td><code>entry_hash</code></td>
+<td>SHA-256 of the concatenation of all fields above</td>
+</tr>
+</tbody>
+</table>
+<h3 id="chain-verification">Chain verification<a class="headerlink" href="#chain-verification" title="Permanent link">¶</a></h3>
+<pre class="mermaid"><code>flowchart LR
+  A["Entry N-1\nentry_hash: abc123"] --&gt;|previous_hash| B["Entry N\nentry_hash: def456"]
+  B --&gt;|previous_hash| C["Entry N+1\nentry_hash: ghi789"]</code></pre>
+<ul>
+<li><strong>Online verification:</strong> The <a href="../invoice-verification/">Invoice Verification</a> API checks that the entry's <code>previous_hash</code> matches the preceding entry's <code>entry_hash</code> and recomputes the hash to confirm integrity.</li>
+<li><strong>Audit verification:</strong> Z/X/A reports include the opening and closing <code>entry_hash</code> for the period. Auditors walk the chain between those anchors to confirm no entries were inserted, removed, or modified.</li>
+<li><strong>Tamper detection:</strong> If any entry is altered, every subsequent <code>entry_hash</code> becomes invalid. The anomaly detection system flags hash-chain breaks as critical alerts.</li>
+</ul>
+<h3 id="immutability-guarantees">Immutability guarantees<a class="headerlink" href="#immutability-guarantees" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Append-only:</strong> The Fiscal Ledger never updates or deletes entries. Voids, refunds, and credit notes are new fiscal events with their own fiscal numbers and chain links.</li>
+<li><strong>Gap detection:</strong> The Monotonic Counter Manager and hash chain together ensure that a missing fiscal number also breaks the chain, making gaps immediately detectable.</li>
+<li><strong>Cross-verification:</strong> The DGI receives both the sealed invoice and the <code>entry_hash</code> via the Sync Agent, enabling independent chain reconstruction and verification on the regulatory side.</li>
+</ul>
 <h2 id="maintaining-compliance">Maintaining compliance<a class="headerlink" href="#maintaining-compliance" title="Permanent link">¶</a></h2>
 <p>Client applications always send the canonical payload to the Cloud Signing Service, which returns the five sealed security elements. Even when a client is temporarily offline, it queues the unsigned payload locally (IndexedDB / SQLite) and submits it once connectivity returns — fiscalization only happens when the Cloud Signing Service processes the request. Missing elements, altered values, or attempts to generate them outside the Cloud Signing Service immediately invalidate the invoice and keep it out of the audit trail. If a submission fails (network timeout, validation error), the client retries the request so the Cloud Signing Service can issue all five elements together.</p>
 </article>

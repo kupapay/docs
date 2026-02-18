@@ -64,6 +64,45 @@ flowchart TB
 
 The diagram above shows how the five security elements are grouped near the receipt header and security block so every printout carries the data inspectors need. The QR code encapsulates the entire sealed payload, making verification a single scan away.
 
+## Hash-chain integrity
+
+Every entry in the Fiscal Ledger is hash-chained to its predecessor, creating a tamper-evident, append-only sequence that auditors and the DGI can verify independently.
+
+### How it works
+
+1. **Genesis entry:** The first invoice sealed for an outlet produces a ledger entry whose `previous_hash` is a well-known zero value (`0x00…00`). The Cloud Signing Service computes `entry_hash = SHA-256(fiscal_number ‖ canonical_payload_hash ‖ signature ‖ timestamp ‖ previous_hash)` and stores it alongside the sealed invoice.
+2. **Subsequent entries:** Each new ledger entry includes the `entry_hash` of the immediately preceding entry as its `previous_hash`. The resulting chain means altering any past entry changes every hash that follows it.
+3. **Scope:** Hash chains are maintained **per outlet** so each outlet has an independent, verifiable sequence aligned with its monotonic fiscal number counter.
+
+### Ledger entry structure
+
+| Field | Description |
+|-------|-------------|
+| `fiscal_number` | Sequential invoice number for the outlet |
+| `canonical_payload_hash` | SHA-256 of the deterministic canonical payload |
+| `signature` | ECDSA signature produced by the Cloud Signing Service (HSM) |
+| `timestamp` | Trusted UTC timestamp at the moment of signing |
+| `previous_hash` | `entry_hash` of the preceding ledger entry (`0x00…00` for the first) |
+| `entry_hash` | SHA-256 of the concatenation of all fields above |
+
+### Chain verification
+
+```mermaid
+flowchart LR
+  A["Entry N-1\nentry_hash: abc123"] -->|previous_hash| B["Entry N\nentry_hash: def456"]
+  B -->|previous_hash| C["Entry N+1\nentry_hash: ghi789"]
+```
+
+- **Online verification:** The [Invoice Verification](invoice-verification.md) API checks that the entry's `previous_hash` matches the preceding entry's `entry_hash` and recomputes the hash to confirm integrity.
+- **Audit verification:** Z/X/A reports include the opening and closing `entry_hash` for the period. Auditors walk the chain between those anchors to confirm no entries were inserted, removed, or modified.
+- **Tamper detection:** If any entry is altered, every subsequent `entry_hash` becomes invalid. The anomaly detection system flags hash-chain breaks as critical alerts.
+
+### Immutability guarantees
+
+- **Append-only:** The Fiscal Ledger never updates or deletes entries. Voids, refunds, and credit notes are new fiscal events with their own fiscal numbers and chain links.
+- **Gap detection:** The Monotonic Counter Manager and hash chain together ensure that a missing fiscal number also breaks the chain, making gaps immediately detectable.
+- **Cross-verification:** The DGI receives both the sealed invoice and the `entry_hash` via the Sync Agent, enabling independent chain reconstruction and verification on the regulatory side.
+
 ## Maintaining compliance
 
 Client applications always send the canonical payload to the Cloud Signing Service, which returns the five sealed security elements. Even when a client is temporarily offline, it queues the unsigned payload locally (IndexedDB / SQLite) and submits it once connectivity returns — fiscalization only happens when the Cloud Signing Service processes the request. Missing elements, altered values, or attempts to generate them outside the Cloud Signing Service immediately invalidate the invoice and keep it out of the audit trail. If a submission fails (network timeout, validation error), the client retries the request so the Cloud Signing Service can issue all five elements together.
