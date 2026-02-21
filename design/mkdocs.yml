@@ -42,6 +42,7 @@ nav:
     - Component Map: architecture/components.md
     - Data Flow: architecture/data-flow.md
     - Delegated Offline Token: architecture/delegated-offline-token.md
+    - Architectural Challenges: architecture/10-architectural-challenges.md
   - Invoicing Platform:
     - Product Overview: platform/overview.md
     - Invoicing API: platform/api.md
