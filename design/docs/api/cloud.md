@@ -10,6 +10,8 @@ The Bono Pay Cloud API is the primary interface for creating fiscalized invoices
 | Endpoint | Method | Purpose | Response highlights |
 |----------|--------|---------|---------------------|
 | `/api/v1/invoices` | POST | Submit a canonical payload for fiscalization | `fiscal_number`, `auth_code`, `timestamp`, `qr_payload` |
+| `/api/v1/invoices/reconcile` | POST | Reconcile locally-sealed invoices (Phase 1.5) | Array of reconciliation results |
+| `/api/v1/credentials/provision` | POST | Request Delegated Credential & block (Phase 1.5) | `vc_jwt`, `block_start`, `block_end`, `ttl` |
 | `/api/v1/invoices/{fiscal_number}` | GET | Retrieve a sealed invoice | Full sealed payload + `dgi_status` |
 | `/api/v1/invoices/batch` | POST | Submit multiple payloads in one request | Array of sealed responses |
 | `/api/v1/invoices/{fiscal_number}/status` | GET | Check DGI sync status | `dgi_status`, `acknowledged_at` |

@@ -41,6 +41,7 @@ nav:
     - Trust Boundary: architecture/trust-boundary.md
     - Component Map: architecture/components.md
     - Data Flow: architecture/data-flow.md
+    - Delegated Offline Token: architecture/delegated-offline-token.md
   - Invoicing Platform:
     - Product Overview: platform/overview.md
     - Invoicing API: platform/api.md
@@ -71,6 +72,7 @@ nav:
     - "0003 - Platform Technology Stack": adr/adr-0003.md
     - "0004 - Cloud Fiscal Signing": adr/adr-0004.md
     - "0005 - Strategic Pivot": adr/adr-0005.md
+    - "0006 - Delegated Offline Token": adr/adr-0006.md
   - API Reference:
     - Cloud API: api/cloud.md
     - Invoicing SDK: api/invoicing-sdk.md

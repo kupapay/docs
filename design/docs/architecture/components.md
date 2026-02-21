@@ -7,9 +7,10 @@ This page records the layered services, actors, and dependencies that deliver Bo
 
 ## Client Layer
 
-Bono Pay clients live in the untrusted zone. They prepare invoices with deterministic identifiers and tax data, queue drafts while offline, and hand canonical serializers the inputs that the platform services validate and fiscalize.
+Bono Pay clients live in the untrusted zone (with the exception of the Fiscal Extension, which is semi-trusted). They prepare invoices with deterministic identifiers and tax data, queue drafts while offline, and hand canonical serializers the inputs that the platform services validate and fiscalize.
 
 - `Web Dashboard (PWA)` — Tablet-friendly interface with service workers, IndexedDB queues, simplified invoice entry, and status indicators (green/yellow/red) for fiscalization progress.
+- `Bono Pay Fiscal Extension` — A Chrome/Edge browser extension that runs in an isolated sandbox. It holds short-lived Delegated Credentials and silently auto-signs invoices for the PWA when operating in Delegated Offline Mode.
 - `API Consumers` — Backend integrations (ERPs, e-commerce, ERP connectors) that call the Invoicing API with canonical payloads, metadata (merchant_nif, outlet_id, pos_terminal_id), and source headers.
 - `SDK & Libraries` — JavaScript/Python/PHP clients that enforce canonical ordering, handle offline queues (IndexedDB/SQLite), and surface callbacks for fiscalized/queued/error states.
 - `Mobile App (future PWA)` — Mobile-first UI that reuses the dashboard experience with push notifications and offline-first behavior.
@@ -30,7 +31,8 @@ Platform services normalize, secure, and route every request before the fiscal c
 The fiscal core contains the Cloud Signing Service and its supporting services that live behind the trust boundary.
 
 - `Cloud Signing Service (HSM)` — Assigns sequential fiscal numbers, generates authentication codes, anchors trusted timestamps, and builds QR payloads; all operations execute within the HSM so keys never leave the boundary.
-- `Monotonic Counter Manager` — Ensures strictly increasing fiscal numbers per outlet even with concurrent API/SDK/cashier activity via serializable database isolation.
+- `Delegated Credential Issuer` — Provisions short-lived Verifiable Credentials (sub-keys) to authorized POS terminals, enabling them to sign invoices locally when offline.
+- `Monotonic Counter Manager` — Ensures strictly increasing fiscal numbers per outlet even with concurrent API/SDK/cashier activity via serializable database isolation. Also handles block allocation for Delegated Credentials.
 - `Hash-Chained Fiscal Ledger` — Appends every invoice, void, refund, and report entry with a prev-hash so auditors can verify immutability.
 - `Report Generator (Z/X/A + audit)` — Derives compliance reports from the ledger (fiscal number ranges, auth codes, tax group totals) and surfaces downloads through the dashboard or API.
 
@@ -52,6 +54,7 @@ The diagram below shows how the client layer feeds canonical data into the platf
 flowchart LR
     subgraph "Client Layer"
         Dashboard["Web Dashboard (PWA)"]
+        FiscalExt["Fiscal Extension"]
         APIConsumers["API Consumers"]
         SDKs["SDK & Libraries"]
         MobileApp["Mobile App (future)"]
@@ -66,6 +69,7 @@ flowchart LR
     end
     subgraph "Fiscal Core (trusted)"
         CloudSigner["Cloud Signing Service (HSM)"]
+        CredIssuer["Credential Issuer"]
         Counter["Monotonic Counter Manager"]
         Ledger["Hash-Chained Fiscal Ledger"]
         Reports["Report Generator (Z/X/A + audit)"]
@@ -79,6 +83,8 @@ flowchart LR
         Payments["Notification & Payment Partners"]
     end
     Dashboard --> Canonical
+    Dashboard --> FiscalExt
+    FiscalExt --> Canonical
     APIConsumers --> Canonical
     SDKs --> Canonical
     MobileApp --> Canonical
@@ -88,6 +94,8 @@ flowchart LR
     InvoicingAPI --> TaxEngine
     TaxEngine --> CloudSigner
     InvoicingAPI --> CloudSigner
+    InvoicingAPI --> CredIssuer
+    CredIssuer --> Counter
     CloudSigner --> Counter
     CloudSigner --> Ledger
     Ledger --> Reports

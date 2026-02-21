@@ -108,6 +108,14 @@ All decimal values should be strings (fixed point) and follow the rounding rules
 
 `dgi_status` tracks whether the Sync Agent has uploaded the invoice to the DGI (`queued`, `synced`, `failed`). The Cloud Signing Service is responsible for the five security elements (fiscal number, fiscal authority ID, authentication code, trusted timestamp, QR payload).
 
+### Reconcile Locally-Sealed Invoices — `POST /api/v1/invoices/reconcile`
+
+**Purpose:** Submit locally-sealed invoices (signed by the Fiscal Extension in Phase 1.5) for verification and appending to the Fiscal Ledger.
+
+### Provision Delegated Credential — `POST /api/v1/credentials/provision`
+
+**Purpose:** Request a short-lived Delegated Credential (Verifiable Credential) and a block of fiscal numbers for offline signing by the Fiscal Extension.
+
 ### Retrieve — `GET /api/v1/invoices/{fiscal_number}`
 
 **Purpose:** Return the sealed invoice plus delivery metadata.

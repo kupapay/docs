@@ -42,6 +42,9 @@ When the Cloud API responds, the SDK surfaces the seal (`fiscal_number`, `auth_c
 
 ## Offline Queue & Retry
 
+!!! warning "Legal Compliance for Offline Receipts"
+    Pure offline queuing of unsigned drafts is not legally valid for printed receipts under Arrêté 033. For offline signing, POS applications must use the **Fiscal Extension (Phase 1.5)** or a hardware DEF (Phase 3). The SDK's offline queue is primarily for resilience against transient network errors, not for extended offline retail operations.
+
 - **Storage:** Browser builds use IndexedDB, newlines store each draft invoice with `status` (`draft`, `queued`, `fiscalized`, `error`). Native builds may use SQLite or file-backed JSON.
 - **Queue loop:** When connectivity returns, the SDK flushes invoices FIFO. Each retry fetches a fresh canonical payload (recomputing totals if the catalog changed) and resubmits to `POST /api/v1/invoices`.
 - **Retry policy:** Exponential backoff (100ms → 5s → 20s, max 3 retries) with a final alert when the queue is blocked. The SDK exposes hooks (`onQueued`, `onFiscalized`, `onError`) so UI layers can show green/yellow/red indicators like the dashboard does.

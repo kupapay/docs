@@ -26,7 +26,8 @@ The Bono Pay SDK provides client libraries for **JavaScript** and **Python** tha
     const client = new BonoPay({
       apiKey: process.env.BONO_API_KEY,
       outletId: 'OUTLET-001',
-      // Enable offline queue (uses IndexedDB in browser, SQLite in Node.js)
+      // Note: Pure offline queuing of unsigned drafts is not legally valid for printed receipts.
+      // For offline signing, use the Fiscal Extension (Phase 1.5) or a hardware DEF (Phase 3).
       offline: { enabled: true, gracePeriodMs: 24 * 60 * 60 * 1000 }
     });
 
@@ -56,6 +57,8 @@ The Bono Pay SDK provides client libraries for **JavaScript** and **Python** tha
     client = BonoPay(
         api_key=os.environ["BONO_API_KEY"],
         outlet_id="OUTLET-001",
+        # Note: Pure offline queuing of unsigned drafts is not legally valid for printed receipts.
+        # For offline signing, use the Fiscal Extension (Phase 1.5) or a hardware DEF (Phase 3).
         offline={"enabled": True, "grace_period_seconds": 86400}
     )
 

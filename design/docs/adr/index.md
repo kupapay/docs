@@ -15,5 +15,6 @@
 | [ADR-0003: Platform Technology Stack](adr-0003.md) | Accepted | Selects REST API + Web Dashboard + Client SDKs (JavaScript / Python) as the platform stack, replacing the original PWA + local fiscal daemon architecture. |
 | [ADR-0004: Cloud Fiscal Signing (HSM)](adr-0004.md) | Accepted | Adopts an HSM-backed Cloud Signing Service as the primary fiscal authority for Phase 1+, with the USB Fiscal Memory device as an optional alternative signer in Phase 3. |
 | [ADR-0005: Strategic Pivot — API-First](adr-0005.md) | Accepted | Documents the decision to pivot from POS-hardware-first to an API-first invoicing platform with phased hardware introduction. |
+| [ADR-0006: Delegated Offline Token Architecture](adr-0006.md) | Accepted | Introduces a Delegated Offline Token model (Verifiable Credentials + Browser Extension + Block Allocation) for Phase 1.5 to enable offline retail signing. |
 
 Add new ADRs by copying this page, updating the table, and linking to the supporting docs. Keep the "Status" column in sync with the implementation plan so readers can trace acceptance and deployment milestones.

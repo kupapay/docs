@@ -1,6 +1,6 @@
 # Invoice Verification
 
-Every sealed Bono Pay invoice carries a QR code that encodes the fiscal number, auth code, timestamp, and a verification URL. Invoice verification is the public-facing system that lets **anyone** — customers, auditors, DGI inspectors, or merchants themselves — confirm that an invoice was genuinely issued and sealed by the Cloud Signing Service (HSM). This page specifies the verification channels, API, cryptographic flow, and trust model.
+Every sealed Bono Pay invoice carries a QR code that encodes the fiscal number, auth code, timestamp, and a verification URL. Invoice verification is the public-facing system that lets **anyone** — customers, auditors, DGI inspectors, or merchants themselves — confirm that an invoice was genuinely issued and sealed by the Cloud Signing Service (HSM) or a trusted Fiscal Extension (Phase 1.5). This page specifies the verification channels, API, cryptographic flow, and trust model.
 
 ## Why verification matters
 

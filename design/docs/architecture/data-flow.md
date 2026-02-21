@@ -123,3 +123,37 @@ sequenceDiagram
     ReportGenerator-->>ReportingAPI: assemble report (JSON + PDF)
     ReportingAPI-->>Auditor: deliver report with fiscal_authority_id and ledger hash
 ```
+
+## 6. Delegated Offline Signing (Phase 1.5)
+
+To comply with Arrêté 033 in physical retail environments, POS terminals equipped with the Bono Pay Fiscal Extension can request a Delegated Credential while online. When offline, the extension signs invoices locally within its allocated block. When connectivity returns, the locally-sealed invoices are submitted to the Cloud for reconciliation.
+
+```mermaid
+sequenceDiagram
+    participant "POS (PWA)" as POS
+    participant "Fiscal Extension" as Ext
+    participant "Credential Issuer" as Issuer
+    participant "Cloud Signing Service" as CloudSigning
+    participant "Fiscal Ledger" as Ledger
+    participant "Sync Agent" as SyncAgent
+
+    Note over POS,Issuer: 1. Online Provisioning
+    POS->>Ext: Request Delegated Credential
+    Ext->>Issuer: Send Public Key + Request Block
+    Issuer->>Issuer: Allocate Block (#1000-#1500)
+    Issuer-->>Ext: Return VC + Block
+    
+    Note over POS,Ext: 2. Offline Signing
+    POS->>POS: Create Invoice JSON
+    POS->>Ext: Request Signature
+    Ext->>Ext: Validate Origin & Sign Payload
+    Ext-->>POS: Return Signature + VC
+    POS->>POS: Print Receipt (Locally Sealed)
+    
+    Note over POS,SyncAgent: 3. Online Reconciliation
+    POS->>CloudSigning: Submit Locally-Sealed Invoices
+    CloudSigning->>CloudSigning: Verify Signatures against VC
+    CloudSigning->>Ledger: Append to Hash-Chained Ledger
+    CloudSigning-->>POS: Reconciliation Complete
+    CloudSigning->>SyncAgent: Queue for DGI Upload
+```

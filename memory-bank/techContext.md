@@ -13,7 +13,7 @@
 
 - Trust boundary is cloud-first: client apps are untrusted, Cloud Signing Service is authority in Phase 1, USB hardware is optional Phase 3.
 - Canonical payload ordering is mandated for deterministic signatures; tax engine must handle all 14 DGI tax groups plus required client classifications.
-- Offline-first clients queue invoices locally and rely on cloud fiscalization when connectivity returns—no fiscalization occurs purely in-browser.
+- Offline-first clients use the **Fiscal Extension (Phase 1.5)** to sign invoices locally using a Delegated Credential. Purely unsigned drafts are not legally valid receipts.
 - Reports (Z, X, A, audit export) are derived from the cloud fiscal ledger but the USB device may mirror them in Phase 3.
 - Regulatory compliance requires 5 invoice types, canonical security elements, hash-chained storage, and open audit trails.
 

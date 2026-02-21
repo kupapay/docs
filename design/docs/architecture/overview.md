@@ -27,7 +27,13 @@ flowchart LR
 
 ## Trust Boundary
 
-The Cloud Signing Service (HSM-backed) is the sole trusted component in Phase 1. All client applications stay untrusted: Web Dashboard (PWA), API consumers, SDKs, and future POS terminals prepare canonical payloads (mandated identifiers, deterministic field ordering, 14 DGI tax groups), queue them locally when offline, and send them to Bono Pay Cloud. The Cloud Signing Service validates the payload, consults the Tax Engine, coordinates with the Monotonic Counter Manager, and produces the five security elements (fiscal number, fiscal authority ID, authentication code, trusted timestamp, QR payload) before returning a sealed response. Clients may only display or deliver those elements and must never fabricate them.
+The Cloud Signing Service (HSM-backed) is the root of trust. However, to support offline retail compliance (Arrêté 033), Bono Pay introduces a third trust mode: **Delegated Offline Signing**. 
+
+Client applications (Web Dashboard, API consumers, SDKs) are generally untrusted. They prepare canonical payloads (mandated identifiers, deterministic field ordering, 14 DGI tax groups). 
+* **Online Mode:** Clients send payloads to Bono Pay Cloud. The Cloud Signing Service validates the payload, consults the Tax Engine, coordinates with the Monotonic Counter Manager, and produces the five security elements (fiscal number, fiscal authority ID, authentication code, trusted timestamp, QR payload).
+* **Delegated Offline Mode:** A POS terminal equipped with the **Bono Pay Fiscal Extension** can request a short-lived "Delegated Credential" and a block of fiscal numbers while online. When offline, the extension acts as a semi-trusted, bounded signer, generating the security elements locally. These locally-sealed invoices are later reconciled with the Cloud Ledger.
+
+Clients without a delegated credential must queue unsigned drafts locally and wait for connectivity. Clients may only display or deliver security elements and must never fabricate them outside of the strict delegated extension sandbox.
 
 ```mermaid
 flowchart LR
@@ -35,21 +41,27 @@ flowchart LR
         Dashboard["Web Dashboard (PWA)"]
         API["API Consumers"]
         SDK["SDK & Libraries"]
-        FuturePOS["Future POS / Terminals"]
     end
-    subgraph "Trusted Zone"
+    subgraph "Semi-Trusted Zone (Bounded)"
+        FiscalExt["Fiscal Extension (Delegated Signer)"]
+    end
+    subgraph "Trusted Zone (Root)"
         Signer["Cloud Signing Service (HSM)"]
+        CredIssuer["Credential Issuer"]
         Tax["Tax Engine"]
         Counter["Monotonic Counter Manager"]
         Ledger["Fiscal Ledger"]
         Reports["Report Generator (Z/X/A + audit)"]
         Sync["Sync Agent"]
     end
-    Dashboard -->|Canonical payload + queued invoices| Signer
+    Dashboard -->|Canonical payload| Signer
+    Dashboard -->|Payload for local signing| FiscalExt
+    FiscalExt -->|Locally-sealed invoices| Signer
     API -->|Invoice requests| Signer
     SDK -->|Queued drafts & retries| Signer
-    FuturePOS -->|API-level integration| Signer
+    CredIssuer -->|Issues VC + Block| FiscalExt
     Counter --> Signer
+    Counter --> CredIssuer
     Tax --> Signer
     Signer --> Ledger
     Ledger --> Reports
@@ -59,7 +71,7 @@ flowchart LR
 ```
 
 !!! note
-    The trust boundary is enforced by the Cloud Signing Service (HSM) in Phase 1. Phase 3 reserves a role for the archived USB Fiscal Memory device as an optional trust anchor, but until DEF homologation is required the cloud produces and stores every security element. Clients can only report back statuses (`fiscalized`, `queued`, `synced`) via the API/Webhooks or the dashboard indicators.
+    The trust boundary is enforced by the Cloud Signing Service (HSM) and the Credential Issuer. See [Delegated Offline Token Architecture](delegated-offline-token.md) for details on how the Fiscal Extension securely signs offline. Phase 3 reserves a role for the archived USB Fiscal Memory device as an optional hardware trust anchor.
 
 ## Component Map
 

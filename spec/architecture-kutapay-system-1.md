@@ -40,9 +40,10 @@ This specification captures the DRC requirements for fiscalized invoices while d
 - WHEN a new user or API key is provisioned, THE SYSTEM SHALL record their role (admin, invoicer, viewer, auditor) and quota so the Invoice Policy layer enforces permission checks before allowing fiscalization.
 
 ### Offline Behavior
-- WHEN the client application is offline, THE SYSTEM SHALL queue invoice requests locally (IndexedDB in the dashboard, SQLite in SDKs), display the invoice as `Queued`, and automatically retry submission when reconnecting to Bono Pay Cloud.
-- WHEN connectivity returns, THE SYSTEM SHALL submit queued payloads to the Cloud Signing Service (HSM) for fiscalization; no sealed invoice is issued while the client remains offline.
-- WHEN retries fail three times, THE SYSTEM SHALL alert the merchant via the dashboard and keep the payload in the queue until manual intervention or successful fiscalization occurs.
+- WHEN the POS application is online, THE SYSTEM SHALL allow the Fiscal Extension to request a Delegated Credential and a block of fiscal numbers from the Cloud.
+- WHEN the POS application is offline, THE SYSTEM SHALL allow the Fiscal Extension to sign invoices locally within its allocated block using the Delegated Credential, producing legally valid receipts.
+- WHEN connectivity returns, THE SYSTEM SHALL submit locally-sealed invoices to the Cloud for reconciliation, where the Cloud verifies the signature and appends the invoice to the Fiscal Ledger.
+- WHEN the Fiscal Extension exhausts its allocated block or its credential expires, THE SYSTEM SHALL halt sales until connectivity is restored and a new block is provisioned.
 
 ### DGI Integration (MCF / e-MCF)
 - WHEN the Sync Agent pushes sealed invoices to the DGI control module (MCF/e-MCF), THE SYSTEM SHALL transmit the sealed payload, security elements, outlet/user identifiers, and ledger hash without sharing private keys or counters.

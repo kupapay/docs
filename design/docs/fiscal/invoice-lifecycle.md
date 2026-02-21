@@ -4,7 +4,7 @@
 
 Every fiscal invoice must follow the same locked-down path so the trust boundary stays intact, the canonical payload remains deterministic, and the Cloud Signing Service (HSM) retains sole authority over fiscal numbers, signatures, timestamps, and QR payloads.
 
-1. **Client apps prepare canonical payloads.** Dashboards, SDKs, and API consumers queue invoices locally if offline (IndexedDB/SQLite) and, once connectivity returns, submit deterministic JSON that includes `merchant_nif`, `outlet_id`, `pos_terminal_id`, `cashier_id`, `client` (classification), `items`, `tax_groups`, `totals`, `payments`, and `timestamp`.
+1. **Client apps prepare canonical payloads.** Dashboards, SDKs, and API consumers submit deterministic JSON that includes `merchant_nif`, `outlet_id`, `pos_terminal_id`, `cashier_id`, `client` (classification), `items`, `tax_groups`, `totals`, `payments`, and `timestamp`. In Phase 1.5, POS terminals equipped with the Fiscal Extension can sign these payloads locally when offline using a Delegated Credential.
 2. **Invoicing API validates and taxes.** The platform enforces schema, deterministic field ordering, the 14 DGI tax groups, and client classification before letting the Tax Engine compute the grouped totals and confirm the payload is well-formed.
 3. **Cloud Signing Service (HSM) fiscalizes.** The Monotonic Counter Manager guarantees sequential numbering per outlet, the HSM signs the payload (ECDSA), stamps a trusted UTC timestamp, and generates the QR code that bundles fiscal_number, auth_code, timestamp, and verification URL.
 4. **Fiscal Ledger persists sealed events.** The hash-chained, append-only ledger stores the sealed invoice, ledger hash, and security metadata so every report and audit entry can trace back to the same fiscal event.
@@ -37,7 +37,10 @@ sequenceDiagram
 ```mermaid
 stateDiagram-v2
     [*] --> Draft
-    Draft --> Submitted : API request accepted
+    Draft --> Submitted : API request accepted (Online)
+    Draft --> Locally_Sealed : Fiscal Extension signs (Offline Phase 1.5)
+    Locally_Sealed --> Reconciling : Connectivity restored
+    Reconciling --> Fiscalized : Cloud verifies signature
     Submitted --> Validated : Tax engine + payload sanity
     Validated --> Fiscalized : Cloud Signing Service (HSM) approves
     Fiscalized --> Delivered : Receipts delivered / customer notified

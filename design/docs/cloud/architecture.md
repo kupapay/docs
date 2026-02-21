@@ -6,7 +6,8 @@ The Bono Pay Cloud is the **trusted fiscal authority** in Phase 1 (Software Invo
 
 | Component | Role |
 |-----------|------|
-| **Cloud Signing Service (HSM)** | Assigns fiscal numbers via the Monotonic Counter Manager, signs canonical payloads with ECDSA keys that never leave the HSM, generates QR payloads, and produces trusted timestamps. |
+| **Cloud Signing Service (HSM)** | Assigns fiscal numbers via the Monotonic Counter Manager, signs canonical payloads with ECDSA keys that never leave the HSM, generates QR payloads, and produces trusted timestamps. In Phase 1.5, it verifies locally-sealed invoices during reconciliation. |
+| **Credential Issuer** | Issues short-lived Delegated Credentials (Verifiable Credentials) and allocates blocks of fiscal numbers to the Fiscal Extension for offline signing. |
 | **Fiscal Ledger** | Append-only, hash-chained storage of every sealed invoice. Source of truth for Z/X/A reports and audit exports. |
 | **Tax Engine** | Validates the 14 DGI tax groups, applies client classification rules, performs rounding, and rejects invalid payloads before signing. |
 | **Report Generator** | Produces Z, X, A reports and full audit exports from the Fiscal Ledger on schedule or on demand. |
@@ -15,7 +16,7 @@ The Bono Pay Cloud is the **trusted fiscal authority** in Phase 1 (Software Invo
 | **Operations Dashboard** | Surfaces sync health, invoice pipeline status, report generation, and compliance KPIs for auditors and support staff. |
 
 !!! warning "Trust boundary reminder"
-    In Phase 1 the Cloud Signing Service is the **sole authority** for fiscal numbers, signatures, timestamps, and QR metadata. Client applications (API consumers, web dashboard, SDK integrators) submit canonical payloads and receive sealed responses — they never fabricate security elements.
+    In Phase 1 the Cloud Signing Service is the **root authority** for fiscal numbers, signatures, timestamps, and QR metadata. Client applications (API consumers, web dashboard, SDK integrators) submit canonical payloads and receive sealed responses. In Phase 1.5, the **Fiscal Extension** acts as a semi-trusted signer using a Delegated Credential, but the Cloud HSM remains the ultimate verifier during reconciliation.
 
 !!! info "Phase 3 — USB Hardware"
     In Phase 3, the USB Fiscal Memory device (DEF) can replace or augment the Cloud Signing Service for merchants needing DEF homologation. The cloud then acts as a sync relay. Hardware docs are archived in `docs-archive/hardware/`.
@@ -51,9 +52,13 @@ graph LR
         API_Consumer["REST API consumers"]
         SDK["SDK integrators"]
     end
+    subgraph SemiTrusted["Semi-Trusted Zone"]
+        FiscalExt["Fiscal Extension (Phase 1.5)"]
+    end
     subgraph Cloud["Bono Pay Cloud (DRC deployment, trusted)"]
         Gateway["API Gateway"]
         TaxEng["Tax Engine"]
+        Issuer["Credential Issuer"]
         HSM["Cloud Signing Service (HSM)"]
         Ledger["Fiscal Ledger"]
         Reports["Report Generator"]
@@ -66,8 +71,12 @@ graph LR
     Dashboard --> Gateway
     API_Consumer --> Gateway
     SDK --> Gateway
+    Dashboard --> FiscalExt
+    FiscalExt --> Gateway
     Gateway --> TaxEng
     TaxEng --> HSM
+    TaxEng --> Issuer
+    Issuer --> HSM
     HSM --> Ledger
     Ledger --> Reports
     Ledger --> Sync

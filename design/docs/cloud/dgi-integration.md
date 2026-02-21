@@ -24,7 +24,7 @@ This diagram emphasizes that the Cloud Signing Service **generates** the securit
 
 - In Phase 1, the **Cloud Signing Service (HSM)** produces the sequential fiscal number, authentication code, trusted timestamp, and QR payload that make an invoice legally valid. In Phase 3, the DEF can assume this role.
 - Every submission to the DGI control modules must include the sealed canonical payload plus identifiers (fiscal_authority_id, outlet_id, merchant_nif, cashier_id / api_key_id) so that the DGI can link the invoice to its originating outlet.
-- Offline client issuance is permitted (clients queue unsigned drafts locally), but the Cloud must seal them and then upload to the DGI as soon as possible. Regulators view uptime as mandatory and expect contingency plans.
+- Offline client issuance is permitted via the **Fiscal Extension (Phase 1.5)**, which seals invoices locally using a Delegated Credential. The Cloud then verifies and reconciles these locally-sealed invoices before uploading them to the DGI. Purely unsigned drafts are not legally valid receipts.
 - The DGI control modules enforce immutability, continuous compliance, and real-time VAT surveillance (per Arrêté 033), meaning the Cloud must log every sync attempt, failure, and acknowledgement.
 - Bono Pay Cloud is also responsible for merchant/outlet registry tasks: storing activation codes, monitoring outlet health, and surfacing failure alerts to operators.
 

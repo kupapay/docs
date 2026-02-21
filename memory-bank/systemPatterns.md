@@ -4,9 +4,12 @@
 
 Bono Pay separates the untrusted client layer (web dashboard, API consumers, SDKs, future POS terminals) from the trusted cloud layer. Clients prepare canonical JSON payloads with deterministic ordering (`merchant_nif`, `outlet_id`, `pos_terminal_id`, `cashier_id`, `client`, `tax_groups`, `totals`, `payments`), queue work when offline, and submit them to Bono Pay Cloud. The Cloud Signing Service (HSM-backed) is the sole authority that validates, signs, and numbers invoices before returning the sealed response.
 
-## Offline-First Workflow
+## Offline-First Workflow (Delegated Offline Token)
 
-Offline is mission-critical. Clients cache products, customers, and invoices in IndexedDB/SQLite, keep service workers alive, and funnel drafts into local queues. The cloud processes them once connectivity returns, applies the tax engine (14 DGI groups, client classifications), signs the payload, stores it in the fiscal ledger, and delivers the sealed response back through the dashboard or API.
+Offline is mission-critical but must comply with Arrêté 033. Pure offline queuing of unsigned drafts is illegal for printed receipts. Bono Pay uses the **Delegated Offline Token Architecture (Phase 1.5)**:
+1. **Online Provisioning**: The POS Fiscal Extension requests a short-lived Delegated Credential (VC) and a block of fiscal numbers from the Cloud.
+2. **Offline Signing**: The extension signs invoices locally within its isolated sandbox, allowing legally valid receipts to be printed offline.
+3. **Online Reconciliation**: When connectivity returns, locally-sealed invoices are submitted to the Cloud, verified against the VC, and appended to the Fiscal Ledger.
 
 ## Multi-User / Multi-Terminal Scaling
 

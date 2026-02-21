@@ -6,7 +6,8 @@ The Bono Pay Web Dashboard is a Progressive Web App layer that sits in the untru
 
 - **PWA + Service Worker.** The dashboard is a single-page Progressive Web App. This design means the UI assets (HTML, CSS, JS, fonts, icons) are cached by a Service Worker, so even the cheapest Android tablet boots instantly after the first visit.
 - **IndexedDB cache & queue.** Product catalogs, customer lists, tax group manifests, and queued uploads live in IndexedDB so the UI can search instantly even while offline. The queue stores canonical invoices (deterministic field order) and tracks whether they have been uploaded to the cloud or are waiting for acknowledgement.
-- **Background sync for canonical payloads.** The UI drafts invoices locally, shows a fiscal ribbon while it sends `POST /api/v1/invoices` to Bono Pay Cloud, and waits for the HSM-backed Cloud Signing Service to reply with fiscal number, auth code, timestamp, and QR. Only after `status: ok` arrives does the UI deem the sale complete and enable receipt delivery or sync retries.
+- **Fiscal Extension Integration (Phase 1.5).** For offline retail environments, the dashboard communicates with the Bono Pay Fiscal Extension. The extension holds a Delegated Credential and signs invoices locally when the Cloud is unreachable, allowing the dashboard to print legally valid receipts immediately.
+- **Background sync for reconciliation.** The UI drafts invoices locally. If online, it sends `POST /api/v1/invoices` to Bono Pay Cloud. If offline, it requests a signature from the Fiscal Extension, stores the locally-sealed invoice in IndexedDB, and later syncs it via `POST /api/v1/invoices/reconcile` when connectivity returns.
 
 !!! note "Lessons from Odoo"
     We reuse Odoo’s single-screen checkout, IndexedDB caching, and offline resilience but overlay fiscal-status indicators, dual-currency displays, and mobile money-native chips. The dashboard feels familiar to merchants while respecting the trust boundary: the UI never fabricates fiscal numbers or tamper-resistant hashes.
@@ -45,10 +46,10 @@ Outlets, API keys, and roles (admin, invoicer, viewer, auditor) are managed here
 
 ## Offline-first operations
 
-Fiscalization always happens before anything else. When connectivity disappears, the invoice remains fiscalized (Cloud Signing Service signed) but the upload to DGI is pending. The offline queue widget sits in the footer and shows “X invoices pending cloud sync.” It is separate from the fiscal status ribbon and only tracks uploads, not fiscalization. If invoices linger for too long, the widget turns amber and surfaces a “Retry upload” action. Once connectivity returns, the Service Worker wakes up, flushes pending payloads, and updates each row’s sync badge.
+Fiscalization always happens before a receipt is printed. When connectivity disappears, the dashboard requests a signature from the **Fiscal Extension**, which uses its Delegated Credential to sign the invoice locally. The invoice is now legally valid and can be printed. The offline queue widget sits in the footer and shows “X invoices pending reconciliation.” When connectivity returns, the Service Worker wakes up, flushes pending payloads to the Cloud for verification and ledger appending, and updates each row’s sync badge.
 
 !!! tip "Offline queue vs. fiscal status"
-    Fiscal status uses green/yellow/red badges for Connected/Queued/Error states (gas green = real-time signing, yellow = invoice waiting for cloud sync, red = device or network error). The offline queue widget tracks uploads to the cloud and DGI and offers manual retry when necessary.
+    Fiscal status uses green/amber/red badges. Green = Online/Provisioned. Amber = Offline but signing locally via Fiscal Extension (shows remaining block capacity). Red = Block exhausted or credential expired (sales halted). The offline queue widget tracks reconciliation uploads to the Cloud.
 
 ## Delivery & fiscal confirmation
 
